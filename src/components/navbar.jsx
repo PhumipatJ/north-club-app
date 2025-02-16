@@ -20,19 +20,6 @@ const Navbar = () => {
           </button>
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden flex flex-col bg-white shadow-md py-4 space-y-4 text-center">
-          <a href="#" className="hover:underline hover:text-[#7CE9BF]">หน้าหลัก</a>
-          <a href="#" className="hover:underline hover:text-[#7CE9BF]">ชมรม</a>
-          <a href="#" className="hover:underline hover:text-[#7CE9BF]">เอกสาร</a>
-          <a href="#" className="hover:underline hover:text-[#7CE9BF]">สถิติ</a>
-          <button className="bg-[#7CE9BF] text-black font-bold px-4 py-1 rounded-full hover:bg-emerald-400 mx-auto">
-            Login
-          </button>
-        </div>
-      )}
     </nav>
   );
 };
