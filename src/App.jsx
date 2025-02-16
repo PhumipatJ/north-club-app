@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <div>
-      <Auth />
+      Hello World!
       </div>
     </>
   )
