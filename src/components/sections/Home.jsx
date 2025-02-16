@@ -2,7 +2,7 @@ import React from 'react';
 
 const Home = () => {
     return (
-        <div className="flex flex-col items-center justify-center px-6 py-16 bg-white">
+        <div className="flex flex-col items-center justify-center px-6 py-16 bg-white font-prompt">
             {/* Header Text */}
             <div className="pt-8">
                 <h2 className="text-lg text-right font-semibold text-gray-600 ">More creativity Better Community</h2>
