@@ -6,11 +6,11 @@ import "slick-carousel/slick/slick-theme.css";
 const Home = () => {
 
     const carouselImages = [
-        "src/assets/image 30.png",
-        "src/assets/image 31.png",
-        "src/assets/image 32.png",
-        "src/assets/image 33.png",
-        "src/assets/image 34.png"
+        "src/assets/image 30.webp",
+        "src/assets/image 31.webp",
+        "src/assets/image 32.webp",
+        "src/assets/image 33.webp",
+        "src/assets/image 34.webp"
     ];
 
     const carouselSettings = {
