@@ -6,11 +6,11 @@ import "slick-carousel/slick/slick-theme.css";
 const Home = () => {
 
     const carouselImages = [
-        "public/assets/image 30.webp",
-        "public/assets/image 31.webp",
-        "public/assets/image 32.webp",
-        "public/assets/image 33.webp",
-        "public/assets/image 34.webp"
+        "/assets/image 30.webp",
+        "/assets/image 31.webp",
+        "/assets/image 32.webp",
+        "/assets/image 33.webp",
+        "/assets/image 34.webp"
     ];
 
     const carouselSettings = {
@@ -61,7 +61,7 @@ const Home = () => {
             {/* Main Content Section */}
             <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-6xl px-4 md:px-0 mt-16">
                 {/*Background Character*/}
-                <img src="src/assets/Astro.svg" alt="Astro" className=" absolute w-200 h-200 -left-32" />
+                <img src="/assets/Astro.svg" alt="Astro" className=" absolute w-200 h-200 -left-32" />
 
                 {/*Vertical Text*/} 
                 <div className="max-w-md md:max-w-none w-full md:w-auto mb-4 md:mb-0 px-4"> {/* Added responsive width and margin */}
