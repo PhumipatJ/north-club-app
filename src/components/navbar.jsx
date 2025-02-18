@@ -1,11 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
-    <nav className="bg-neutral-200 opacity-80 shadow-md fixed top-0 left-0 w-full transition-all duration-300 z-10 h-18 font-prompt">
+    <nav className={`fixed top-0 left-0 w-full transition-all duration-300 z-10 h-18 font-prompt ${isScrolled ? "opacity-95" : "p-3"}`}>
       <div className="bg-white shadow-md max-w-6xl mx-auto px-6 flex justify-between items-center h-14 my-2 rounded-full">
         {/* LOGO */}
         <h1 className="text-xl text-[#FF7E69] font-bold">North's Club</h1>
