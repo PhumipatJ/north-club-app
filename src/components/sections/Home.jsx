@@ -6,11 +6,11 @@ import "slick-carousel/slick/slick-theme.css";
 const Home = () => {
 
     const carouselImages = [
-        "src/assets/image 30.webp",
-        "src/assets/image 31.webp",
-        "src/assets/image 32.webp",
-        "src/assets/image 33.webp",
-        "src/assets/image 34.webp"
+        "public/assets/image 30.webp",
+        "public/assets/image 31.webp",
+        "public/assets/image 32.webp",
+        "public/assets/image 33.webp",
+        "public/assets/image 34.webp"
     ];
 
     const carouselSettings = {
@@ -42,7 +42,7 @@ const Home = () => {
                 {/* Illustration */}
                 <div className="relative flex justify-center items-center w-64 h-64 md:w-96 md:h-96 my-8 md:my-0 pr-8">
                     <div className="absolute w-60 h-60 md:w-84 md:h-84 bg-[#FF7E69] rounded-full"></div>
-                    <img src="src/assets/Group.svg" alt="Illustration" className="relative w-64 md:w-96 h-auto" />
+                    <img src="public/assets/Group.svg" alt="Illustration" className="relative w-64 md:w-96 h-auto" />
                 </div>
                 
                 {/* Right Section */}
