@@ -25,7 +25,6 @@ const Login = () => {
     });
 
     console.log("Response:", data, error);
-    
     if(error){
         setMessage(error.message);
         setEmail("");
