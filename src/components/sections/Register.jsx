@@ -1,35 +1,53 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Navbar from "../navbar";
+import supabase from "../../../supabaseClient";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError("");
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setMessage("");
 
     if (!email || !password) {
-      setError("โปรดกรอกอีเมลและรหัสผ่าน");
+        setMessage("โปรดกรอกอีเมลและรหัสผ่าน");
       return;
     }
 
     console.log("Logging in with:", { email, password });
-    // authentication logic here
+    
+    const {data, error} = await supabase.auth.signUp({
+        email : email,
+        password : password,
+    });
+
+    if(error){
+        setMessage(error.message);
+        return;
+    }
+
+    if(data){
+        setMessage("User account created.");
+    }
+
+    setEmail("");
+    setPassword("");
   };
+  
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
       <div className="pt-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md mx-auto">
           <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
             ลงทะเบียน
           </h2>
+          
           <div className="mt-8 bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            {error && <p className="text-red-500 text-sm">{error}</p>}
+            {message && <p className="text-red-500 text-sm">{message}</p>}
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700">อีเมล</label>
@@ -55,7 +73,7 @@ const Register = () => {
                 type="submit"
                 className="w-full bg-[#FF7E69] text-white p-2 rounded-md hover:bg-[#ba5c4c] duration-200 active:bg-[#874337]"
               >
-                เข้าสู่ระบบ
+                ลงทะเบียน
               </button>
               <p className="text-center">
               Already have account? <Link to="/login" className="underline">LOG IN</Link>

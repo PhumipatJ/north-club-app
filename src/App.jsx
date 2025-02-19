@@ -6,6 +6,7 @@ import Home from './components/sections/Home'
 import Login from './components/sections/Login'
 import Register from './components/sections/Register'
 import Clublist from './components/sections/Clublist'
+import Wrapper from './components/sections/Wrapper';
 
 
 function App() {

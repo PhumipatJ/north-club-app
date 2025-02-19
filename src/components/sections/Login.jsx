@@ -1,23 +1,43 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import Navbar from "../navbar";
+import { Link, useNavigate } from "react-router-dom";
+import supabase from "../../../supabaseClient";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError("");
+  const [message, setMessage] = useState("");
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setMessage("");
 
     if (!email || !password) {
-      setError("โปรดกรอกอีเมลและรหัสผ่าน");
+        setMessage("โปรดกรอกอีเมลและรหัสผ่าน");
       return;
     }
 
     console.log("Logging in with:", { email, password });
-    // authentication logic here
+    
+    const {data, error} = await supabase.auth.signInWithPassword({
+        email : email,
+        password : password,
+    });
+
+    console.log("Response:", data, error);
+    
+    if(error){
+        setMessage(error.message);
+        setEmail("");
+        setPassword("");
+        return;
+    }
+
+    if(data){
+        navigate("/");
+        return null;
+    }
+
   };
 
   return (
@@ -28,7 +48,7 @@ const Login = () => {
             เข้าสู่ระบบ
           </h2>
           <div className="mt-8 bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            {error && <p className="text-red-500 text-sm">{error}</p>}
+            {message && <p className="text-red-500 text-sm">{message}</p>}
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700">อีเมล</label>
