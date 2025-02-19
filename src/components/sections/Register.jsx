@@ -7,7 +7,8 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-{/* 
+
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
     setMessage("");
@@ -31,22 +32,22 @@ const Register = () => {
 
     if(data){
         setMessage("User account created.");
-        setTimeout(() => navigate("/login"), 2000);
     }
 
     setEmail("");
     setPassword("");
   };
-*/}
+  
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      {/*
       <div className="pt-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md mx-auto">
           <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
             ลงทะเบียน
           </h2>
+          
           <div className="mt-8 bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
             {message && <p className="text-red-500 text-sm">{message}</p>}
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -84,7 +85,6 @@ const Register = () => {
           </div>
         </div>
       </div>
-      */}
     </div>
   );
 };
