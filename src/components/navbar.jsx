@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
+import supabase from "../../supabaseClient";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [session, setSession] = useState(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,6 +21,21 @@ const Navbar = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
+  }, []);
+
+  useEffect(() => {
+    const getSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      setSession(data.session);
+    };
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    getSession();
+
+    return () => authListener.subscription.unsubscribe();
   }, []);
 
   return (
@@ -41,9 +58,22 @@ const Navbar = () => {
           <Link to="/clubs" className="hover:underline hover:text-[#7CE9BF] pt-1.5">ชมรม</Link>
           <Link to="/docs" className="hover:underline hover:text-[#7CE9BF] pt-1.5">เอกสาร</Link>
           <Link to="/stats" className="hover:underline hover:text-[#7CE9BF] pt-1.5">สถิติ</Link>
-          <Link to="/login" className="bg-[#7CE9BF] text-black font-bold px-4 py-1 rounded-full hover:bg-emerald-400">
-            Login
-          </Link>
+          
+          {session ? (
+            <button
+              onClick={async () => {
+                await supabase.auth.signOut();
+              }}
+              className="bg-[#7CE9BF] text-black font-bold px-4 py-1 rounded-full hover:bg-emerald-400"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link to="/login" className="bg-[#7CE9BF] text-black font-bold px-4 py-1 rounded-full hover:bg-emerald-400">
+              Login
+            </Link>
+          )}
+
         </div>
       </div>
       
