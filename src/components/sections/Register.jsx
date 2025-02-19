@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../navbar";
 
-const Login = () => {
+const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -26,7 +26,7 @@ const Login = () => {
       <div className="pt-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md mx-auto">
           <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
-            เข้าสู่ระบบ
+            ลงทะเบียน
           </h2>
           <div className="mt-8 bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
             {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -58,7 +58,7 @@ const Login = () => {
                 เข้าสู่ระบบ
               </button>
               <p className="text-center">
-              Need an account? <Link to="/register" className="underline">SIGN UP</Link>
+              Already have account? <Link to="/login" className="underline">LOG IN</Link>
               </p>
 
             </form>
@@ -69,4 +69,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
