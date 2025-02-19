@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import supabase from "../../../supabaseClient";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -30,7 +31,8 @@ const Register = () => {
     }
 
     if(data){
-        setMessage("User account created.");
+        navigate("/");
+        return null;
     }
 
     setEmail("");
