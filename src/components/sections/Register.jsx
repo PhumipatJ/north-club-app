@@ -41,6 +41,7 @@ const Register = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
+      {/*
       <div className="pt-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md mx-auto">
           <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
@@ -83,6 +84,7 @@ const Register = () => {
           </div>
         </div>
       </div>
+      */}
     </div>
   );
 };
