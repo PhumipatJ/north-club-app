@@ -16,7 +16,7 @@ const clubs = [
   { name: "KMUTNB Media Club", image: "/assets/media.png" },
 ];
 
-const ClubList = () =>{
+const Clublist = () =>{
   const [search, setSearch] = useState("");
 
   const filteredClubs = clubs.filter((club) =>
@@ -57,4 +57,4 @@ const ClubList = () =>{
   );
 }
 
-export default ClubList;
+export default Clublist;
