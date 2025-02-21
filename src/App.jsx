@@ -7,7 +7,7 @@ import Login from './components/sections/Login'
 import Register from './components/sections/Register'
 import Clublist from './components/sections/Clublist'
 import Wrapper from './components/sections/Wrapper';
-
+import Footer from './components/Footer';
 
 function App() {
 
@@ -21,6 +21,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/clubs" element={<Clublist />} />
         </Routes>
+        <Footer />
       </Router>
     </>
   )
