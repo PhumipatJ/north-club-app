@@ -2,6 +2,7 @@ import React from 'react';
 import Slider from 'react-slick'; 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Calendar from '../Calendar';
 
 const Home = () => {
 
@@ -117,6 +118,12 @@ const Home = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Test Calendar */}
+            <div className="mt-50 max-w-xl w-full min-h-screen">
+                <Calendar />
+            </div>
+            
         </div>
     );
 };
