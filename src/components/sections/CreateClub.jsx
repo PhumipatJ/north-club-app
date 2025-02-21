@@ -95,9 +95,8 @@ const CreateClub = () => {
     }
     
     const clubId = clubData[0]?.club_id;
-    console.log(clubId)
+    //console.log(clubId)
     
-    /*
     if (clubId) {
       const memberData = members.filter(m => m.email.trim() !== "").map(m => ({
         club_id: clubId,
@@ -106,13 +105,13 @@ const CreateClub = () => {
       }));
       
       if (memberData.length > 0) {
-        const { error: memberError } = await supabase.from("members").insert(memberData);
+        const { error: memberError } = await supabase.from("clubMembers").insert(memberData);
         if (memberError) {
           console.error("Members insert error", memberError);
           return;
         }
       }
-    } */
+    }
     
     alert("Club created successfully");
   };
