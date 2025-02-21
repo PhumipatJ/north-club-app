@@ -47,6 +47,33 @@ const CreateClub = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     alert("Creating club...");
+
+    // Get a list of all unique emails from the members
+    const emails = members.map((m) => m.email.trim()).filter((email) => email !== "");
+
+    //console.log("Checking these emails:", emails);
+
+    const { data: existingUsers, error: emailError } = await supabase
+        .from("user") 
+        .select("email")
+        .in("email", emails);
+
+    //console.log("Existing Users:", existingUsers);
+    //console.log("Supabase error:", emailError);
+
+  if (emailError) {
+    console.error("Error checking emails:", emailError);
+    alert("Error checking member emails.");
+    return;
+  }
+
+  const existingEmails = existingUsers.map((user) => user.email);
+  const invalidEmails = emails.filter((email) => !existingEmails.includes(email));
+
+  if (invalidEmails.length > 0) {
+    alert(`The following emails are not registered: ${invalidEmails.join(", ")}`);
+    return;
+  }
     
     const avatarUrl = await uploadFile(clubAvatar, "club-avatars");
     const docUrl = await uploadFile(applicationDocument, "club-documents");
@@ -67,8 +94,10 @@ const CreateClub = () => {
       return;
     }
     
-    /* const clubId = clubData[0]?.club_id;
+    const clubId = clubData[0]?.club_id;
+    console.log(clubId)
     
+    /*
     if (clubId) {
       const memberData = members.filter(m => m.email.trim() !== "").map(m => ({
         club_id: clubId,
