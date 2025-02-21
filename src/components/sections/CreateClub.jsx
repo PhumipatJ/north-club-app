@@ -32,7 +32,7 @@ const CreateClub = () => {
     e.preventDefault();
     let docUrl = "";
     let avatarUrl = "";
-
+  
     if (applicationDocument) {
       const { data, error } = await supabase.storage
         .from("club-documents")
@@ -43,7 +43,7 @@ const CreateClub = () => {
       }
       docUrl = data.path;
     }
-
+  
     if (clubAvatar) {
       const { data, error } = await supabase.storage
         .from("club-avatars")
@@ -54,24 +54,49 @@ const CreateClub = () => {
       }
       avatarUrl = data.path;
     }
-
-    const { error } = await supabase.from("clubs").insert([
-      {
-        club_name: clubName,
-        club_type: clubType,
-        club_quote: clubQuote,
-        club_description: clubDescription,
-        application_document: docUrl,
-        club_avatar: avatarUrl,
-        members,
-      },
-    ]);
-
-    if (error) {
-      console.error("Insert error", error);
-    } else {
-      alert("Club created successfully");
+  
+    // Insert club first
+    const { data: clubData, error: clubError } = await supabase
+      .from("clubs")
+      .insert([
+        {
+          club_name: clubName,
+          club_type: clubType,
+          club_quote: clubQuote,
+          club_description: clubDescription,
+          application_document: docUrl,
+          club_avatar: avatarUrl,
+        },
+      ])
+      .select("club_id")
+      .single();
+  
+    if (clubError) {
+      console.error("Club insert error", clubError);
+      return;
     }
+  
+    const clubId = clubData.club_id;
+  
+    // Insert members
+    const memberData = members
+      .filter((m) => m.email.trim() !== "") // Ensure no empty emails
+      .map((m) => ({
+        club_id: clubId,
+        email: m.email,
+        position: m.position,
+      }));
+  
+    if (memberData.length > 0) {
+      const { error: memberError } = await supabase.from("members").insert(memberData);
+  
+      if (memberError) {
+        console.error("Members insert error", memberError);
+        return;
+      }
+    }
+  
+    alert("Club created successfully");
   };
 
   return (
