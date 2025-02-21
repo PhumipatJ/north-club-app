@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, TextField, FormControl, FormControlLabel, Checkbox, Container, Typography, Box } from "@mui/material";
-import { createClient } from "@supabase/supabase-js";
+import supabase from "../../../supabaseClient";
 
 const CreateClub = () => {
   const [clubName, setClubName] = useState("");
@@ -28,74 +28,63 @@ const CreateClub = () => {
     setMembers(updatedMembers);
   };
 
+  const uploadFile = async (file, bucket) => {
+    if (!file) return "";
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${Date.now()}.${fileExt}`;
+    
+    const { data, error } = await supabase.storage.from(bucket).upload(fileName, file, {
+      contentType: file.type,
+    });
+    
+    if (error) {
+      console.error(`Upload error (${bucket}):`, error);
+      return "";
+    }
+    return data.path;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let docUrl = "";
-    let avatarUrl = "";
-  
-    if (applicationDocument) {
-      const { data, error } = await supabase.storage
-        .from("club-documents")
-        .upload(`documents/${applicationDocument.name}`, applicationDocument);
-      if (error) {
-        console.error("Upload error", error);
-        return;
-      }
-      docUrl = data.path;
-    }
-  
-    if (clubAvatar) {
-      const { data, error } = await supabase.storage
-        .from("club-avatars")
-        .upload(`avatars/${clubAvatar.name}`, clubAvatar);
-      if (error) {
-        console.error("Avatar upload error", error);
-        return;
-      }
-      avatarUrl = data.path;
-    }
-  
-    // Insert club first
-    const { data: clubData, error: clubError } = await supabase
-      .from("clubs")
-      .insert([
-        {
-          club_name: clubName,
-          club_type: clubType,
-          club_quote: clubQuote,
-          club_description: clubDescription,
-          application_document: docUrl,
-          club_avatar: avatarUrl,
-        },
-      ])
-      .select("club_id")
-      .single();
-  
+    alert("Creating club...");
+    
+    const avatarUrl = await uploadFile(clubAvatar, "club-avatars");
+    const docUrl = await uploadFile(applicationDocument, "club-documents");
+
+    const { data: clubData, error: clubError } = await supabase.from("clubs").insert([
+      {
+        club_name: clubName,
+        club_type: clubType,
+        club_quote: clubQuote,
+        club_description: clubDescription,
+        application_document: docUrl,
+        club_avatar: avatarUrl,
+      },
+    ]).select("club_id");
+    
     if (clubError) {
       console.error("Club insert error", clubError);
       return;
     }
-  
-    const clubId = clubData.club_id;
-  
-    // Insert members
-    const memberData = members
-      .filter((m) => m.email.trim() !== "") // Ensure no empty emails
-      .map((m) => ({
+    
+    /* const clubId = clubData[0]?.club_id;
+    
+    if (clubId) {
+      const memberData = members.filter(m => m.email.trim() !== "").map(m => ({
         club_id: clubId,
         email: m.email,
         position: m.position,
       }));
-  
-    if (memberData.length > 0) {
-      const { error: memberError } = await supabase.from("members").insert(memberData);
-  
-      if (memberError) {
-        console.error("Members insert error", memberError);
-        return;
+      
+      if (memberData.length > 0) {
+        const { error: memberError } = await supabase.from("members").insert(memberData);
+        if (memberError) {
+          console.error("Members insert error", memberError);
+          return;
+        }
       }
-    }
-  
+    } */
+    
     alert("Club created successfully");
   };
 
@@ -106,7 +95,6 @@ const CreateClub = () => {
         <FormControl fullWidth margin="normal">
           <TextField label="Club Name" value={clubName} onChange={(e) => setClubName(e.target.value)} required />
         </FormControl>
-
         <FormControl fullWidth margin="normal">
           <Typography variant="body1">Club Type</Typography>
           {clubTypes.map((type) => (
@@ -117,25 +105,20 @@ const CreateClub = () => {
             />
           ))}
         </FormControl>
-
         <FormControl fullWidth margin="normal">
           <TextField label="Club Quote" value={clubQuote} onChange={(e) => setClubQuote(e.target.value)} />
         </FormControl>
-
         <FormControl fullWidth margin="normal">
           <TextField label="Club Description" multiline rows={4} value={clubDescription} onChange={(e) => setClubDescription(e.target.value)} />
         </FormControl>
-
         <FormControl fullWidth margin="normal">
           <Typography variant="body1">Upload Club Avatar</Typography>
           <input type="file" onChange={(e) => setClubAvatar(e.target.files[0])} />
         </FormControl>
-
         <FormControl fullWidth margin="normal">
           <Typography variant="body1">Upload Application Document</Typography>
           <input type="file" onChange={(e) => setApplicationDocument(e.target.files[0])} />
         </FormControl>
-
         <Typography variant="h6">Club Members</Typography>
         {members.map((member, index) => (
           <Box key={index} display="flex" gap={2} marginBottom={2}>
@@ -143,7 +126,6 @@ const CreateClub = () => {
             <TextField label="Position" value={member.position} fullWidth disabled />
           </Box>
         ))}
-
         <Button variant="contained" color="primary" type="submit" sx={{ mt: 2 }}>Create Club</Button>
       </form>
     </Container>
