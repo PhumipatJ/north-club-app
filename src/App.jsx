@@ -8,6 +8,7 @@ import Register from './components/sections/Register'
 import Clublist from './components/sections/Clublist'
 import Wrapper from './components/sections/Wrapper';
 import Footer from './components/Footer';
+import CreateClub from './components/sections/createClub';
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/clubs" element={<Clublist />} />
+          <Route path="/createClub" element={<CreateClub />} />
         </Routes>
         <Footer />
       </Router>
