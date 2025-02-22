@@ -12,8 +12,10 @@ const CreateClub = () => {
   const [clubDescription, setClubDescription] = useState("");
   const [applicationDocument, setApplicationDocument] = useState(null);
   const [clubAvatar, setClubAvatar] = useState(null);
-  //const positions = ["ประธานชมรม", "รองประธานชมรม", "กรรมการ", "กรรมการ", "กรรมการ", "กรรมการ", "เลขานุการ", "ผู้ช่วยเลขานุการ"];
+  // change on positionFrontEnd to display on Club Member text field not the positions na
+  //const positionFrontEnd = ["ประธานชมรม", "รองประธานชมรม", "กรรมการ", "กรรมการ", "กรรมการ", "กรรมการ", "เลขานุการ", "ผู้ช่วยเลขานุการ"];
   const positions = ["club_president", "vice_president", "committee_member", "committee_member", "committee_member", "committee_member", "secretary", "assistant_secretary"];
+  // don't change positions. it use on database na frontend hua kuy
   const [members, setMembers] = useState(
     positions.map(position => ({ email: "", position }))
   );
