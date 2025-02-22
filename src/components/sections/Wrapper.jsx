@@ -11,6 +11,7 @@ function Wrapper({ children }) {
       const {
         data: { session },
       } = await supabase.auth.getSession();
+      console.log(session)
       setAuthenticated(!!session);
       setLoading(false);
     };
@@ -24,6 +25,7 @@ function Wrapper({ children }) {
     if (authenticated) {
       return <>{children}</>;
     }
+    alert("log in required")
     return <Navigate to="/login" />;
   }
 }
