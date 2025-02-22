@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import supabase from "../../../supabaseClient";
+import authService from "../../service/AuthService";
 
 function Wrapper({ children, allowedRoles }) {
   const [authenticated, setAuthenticated] = useState(false);
@@ -10,21 +10,12 @@ function Wrapper({ children, allowedRoles }) {
 
   useEffect(() => {
     const getSessionAndRole = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const session = await authService.getSession();
 
       if (session) {
         setAuthenticated(true);
-        
-        // Fetch user role from Supabase
-        const { data: userData, error } = await supabase
-          .from("user")
-          .select("role")
-          .eq("id", session.user.id)
-          .single();
-
-        if (!error && userData) {
-          setUserRole(userData.role);
-        }
+        const role = await authService.getUserRole(session.user.id);
+        setUserRole(role);
       }
 
       setLoading(false);
@@ -33,7 +24,7 @@ function Wrapper({ children, allowedRoles }) {
     getSessionAndRole();
   }, []);
 
-  console.log(userRole);
+  //console.log(userRole);
   
   if (loading) {
     return <div>Loading...</div>;
