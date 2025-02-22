@@ -3,7 +3,7 @@ import { Container, Button, Table, TableBody, TableCell, TableContainer, TableHe
 import { useNavigate } from "react-router-dom"; 
 import supabase from "../../../supabaseClient";
 
-const AdminApprove = () => {
+const RespondHistory = () => {
   const [pendingClubs, setPendingClubs] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -55,12 +55,12 @@ const AdminApprove = () => {
   return (
     <Container sx={{ mt: 10 }}>
       <Typography variant="h4" gutterBottom>
-        ชมรมทั้งหมด
+      คำขอที่ตอบแล้ว
       </Typography>
       <Button variant="contained" color="primary" sx={{ mr: 2 }} onClick={() => navigate("/adminRespond")}>
         คำขอสร้างชมรม
       </Button>
-      <Button variant="contained" color="primary" sx={{ mr: 2 }} onClick={() => navigate("/respondHistory")}>
+      <Button variant="contained" color="primary" sx={{ mr: 2 }}>
         คำขอที่ตอบแล้ว
       </Button>
       
@@ -114,4 +114,4 @@ const AdminApprove = () => {
   );
 };
 
-export default AdminApprove;
+export default RespondHistory;

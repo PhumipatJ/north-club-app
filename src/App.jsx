@@ -11,6 +11,8 @@ import Wrapper from './components/sections/Wrapper';
 import Footer from './components/Footer';
 import CreateClub from './components/sections/createClub';
 import AdminApprove from './components/sections/AdminApprove';
+import AdminRespond from './components/sections/AdminRespond';
+import RespondHistory from './components/sections/RespondHistory';
 
 function App() {
 
@@ -26,6 +28,8 @@ function App() {
           <Route path="/createClub" element={<Wrapper allowedRoles={['student', 'club', 'admin']} ><CreateClub /></Wrapper>} />
           <Route path="/docs" element={<Clubfile />} />
           <Route path="/adminApprove" element={<Wrapper allowedRoles={['admin']} ><AdminApprove /></Wrapper>} />
+          <Route path="/adminRespond" element={<Wrapper allowedRoles={['admin']} ><AdminRespond /></Wrapper>} />
+          <Route path="/respondHistory" element={<Wrapper allowedRoles={['admin']} ><RespondHistory /></Wrapper>} />
         </Routes>
         <Footer />
       </Router>
