@@ -3,7 +3,7 @@ import { Container, Button, Table, TableBody, TableCell, TableContainer, TableHe
 import { useNavigate } from "react-router-dom"; 
 import supabase from "../../../supabaseClient";
 
-const AdminRespond = () => {
+const AdminRespond= () => {
   const [pendingClubs, setPendingClubs] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -12,52 +12,38 @@ const AdminRespond = () => {
     const fetchPendingClubs = async () => {
       const { data, error } = await supabase
         .from("clubs")
-        .select("*")
-        .eq("status", "FALSE");
-
+        .select("*, member_count:clubMembers(count)")
+        .eq("club_approval", false);
+    
       if (error) {
         console.error("Error fetching clubs:", error);
       } else {
-        setPendingClubs(data);
+        setPendingClubs(
+          data.map((club) => ({
+            ...club,
+            member_count: club.member_count[0]?.count || 0,
+            founded_date: new Date(club.created_at)
+              .toLocaleDateString("th-TH", { day: "2-digit", month: "2-digit", year: "numeric" })
+          }))
+        );
       }
       setLoading(false);
     };
+    
+     
 
     fetchPendingClubs();
   }, []);
-
-  const handleApprove = async (clubId) => {
-    const { error } = await supabase
-      .from("clubs")
-      .update({ status: "TRUE" })
-      .eq("club_id", clubId);
-
-    if (error) {
-      console.error("Error approving club:", error);
-    } else {
-      setPendingClubs(pendingClubs.filter((club) => club.club_id !== clubId));
-    }
-  };
-
-  const handleReject = async (clubId) => {
-    const { error } = await supabase
-      .from("clubs")
-      .update({ status: "rejected" })
-      .eq("club_id", clubId);
-
-    if (error) {
-      console.error("Error rejecting club:", error);
-    } else {
-      setPendingClubs(pendingClubs.filter((club) => club.club_id !== clubId));
-    }
-  };
 
   return (
     <Container sx={{ mt: 10 }}>
       <Typography variant="h4" gutterBottom>
       คำขอสร้างชมรม
       </Typography>
-      <Button variant="contained" color="primary" sx={{ mr: 2 }} >
+      <Button variant="contained" color="primary" sx={{ mr: 2 }} onClick={() => navigate("/adminApprove")}>
+        ชมรมทั้งหมด
+      </Button>
+      <Button variant="contained" color="primary" sx={{ mr: 2 }}>
         คำขอสร้างชมรม
       </Button>
       <Button variant="contained" color="primary" sx={{ mr: 2 }} onClick={() => navigate("/respondHistory")}>
@@ -72,9 +58,9 @@ const AdminRespond = () => {
               <TableCell>ชื่อชมรม</TableCell>
               <TableCell>ประเภท</TableCell>
               <TableCell>จำนวนสมาชิก</TableCell>
-              <TableCell>วันก่อตั้งชมรม</TableCell>
+              <TableCell>วันที่ขอก่อตั้งชมรม</TableCell>
               <TableCell>อาจารย์ที่ปรึกษา</TableCell>
-              <TableCell>สถานะ</TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -87,14 +73,14 @@ const AdminRespond = () => {
             ) : pendingClubs.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={8} align="center">
-                  ไม่มีคำขอที่รอดำเนินการ
+                  ไม่มีชมรม
                 </TableCell>
               </TableRow>
             ) : (
               pendingClubs.map((club) => (
                 <TableRow key={club.club_id}>
                   <TableCell>
-                    <Avatar src={club.club_avatar} alt={club.club_name} />
+                  <Avatar src={`${supabase.storage.from("club-avatars").getPublicUrl(club.club_avatar).data.publicUrl}`} alt={club.club_name} />
                   </TableCell>
                   <TableCell>{club.club_name}</TableCell>
                   <TableCell>{club.club_type}</TableCell>
@@ -102,7 +88,9 @@ const AdminRespond = () => {
                   <TableCell>{club.founded_date || "N/A"}</TableCell>
                   <TableCell>{club.club_adviser}</TableCell>
                   <TableCell>
-                    <Chip label="รออนุมัติ" color="warning" />
+                    <Button variant="contained" color="primary" sx={{ mr: 2 }}  onClick={() => navigate(`/approvalDetail/${club.club_id}`)}>
+                        รายละเอียด
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))

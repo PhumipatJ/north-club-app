@@ -13,6 +13,7 @@ import CreateClub from './components/sections/createClub';
 import AdminApprove from './components/sections/AdminApprove';
 import AdminRespond from './components/sections/AdminRespond';
 import RespondHistory from './components/sections/RespondHistory';
+import ApprovalDetail from './components/sections/ApprovalDetail';
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
           <Route path="/adminApprove" element={<Wrapper allowedRoles={['admin']} ><AdminApprove /></Wrapper>} />
           <Route path="/adminRespond" element={<Wrapper allowedRoles={['admin']} ><AdminRespond /></Wrapper>} />
           <Route path="/respondHistory" element={<Wrapper allowedRoles={['admin']} ><RespondHistory /></Wrapper>} />
+          <Route path="/approvalDetail/:clubId" element={<Wrapper allowedRoles={['admin']} ><ApprovalDetail /></Wrapper>} />
         </Routes>
         <Footer />
       </Router>
