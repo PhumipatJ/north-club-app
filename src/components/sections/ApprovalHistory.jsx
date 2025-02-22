@@ -3,7 +3,7 @@ import { Container, Button, Table, TableBody, TableCell, TableContainer, TableHe
 import { useNavigate } from "react-router-dom"; 
 import supabase from "../../../supabaseClient";
 
-const RespondHistory = () => {
+const ApprovalHistory = () => {
   const [pendingClubs, setPendingClubs] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -11,52 +11,35 @@ const RespondHistory = () => {
   useEffect(() => {
     const fetchPendingClubs = async () => {
       const { data, error } = await supabase
-        .from("clubs")
+        .from("approvalHistory")
         .select("*")
-        .eq("status", "FALSE");
-
+    
       if (error) {
         console.error("Error fetching clubs:", error);
       } else {
-        setPendingClubs(data);
+        setPendingClubs(
+          data.map((club) => ({
+            ...club,
+            approve_date: new Date(club.approve_date)
+              .toLocaleDateString("th-TH", { day: "2-digit", month: "2-digit", year: "numeric" })
+          }))
+        );
       }
       setLoading(false);
     };
+    
 
     fetchPendingClubs();
   }, []);
 
-  const handleApprove = async (clubId) => {
-    const { error } = await supabase
-      .from("clubs")
-      .update({ status: "TRUE" })
-      .eq("club_id", clubId);
-
-    if (error) {
-      console.error("Error approving club:", error);
-    } else {
-      setPendingClubs(pendingClubs.filter((club) => club.club_id !== clubId));
-    }
-  };
-
-  const handleReject = async (clubId) => {
-    const { error } = await supabase
-      .from("clubs")
-      .update({ status: "rejected" })
-      .eq("club_id", clubId);
-
-    if (error) {
-      console.error("Error rejecting club:", error);
-    } else {
-      setPendingClubs(pendingClubs.filter((club) => club.club_id !== clubId));
-    }
-  };
-
   return (
     <Container sx={{ mt: 10 }}>
       <Typography variant="h4" gutterBottom>
-      คำขอที่ตอบแล้ว
+        คำขอที่ตอบแล้ว
       </Typography>
+      <Button variant="contained" color="primary" sx={{ mr: 2 }} onClick={() => navigate("/adminApprove")}>
+        ชมรมทั้งหมด
+      </Button>
       <Button variant="contained" color="primary" sx={{ mr: 2 }} onClick={() => navigate("/adminRespond")}>
         คำขอสร้างชมรม
       </Button>
@@ -87,22 +70,26 @@ const RespondHistory = () => {
             ) : pendingClubs.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={8} align="center">
-                  ไม่มีคำขอที่รอดำเนินการ
+                  ไม่มีประวัติ
                 </TableCell>
               </TableRow>
             ) : (
               pendingClubs.map((club) => (
                 <TableRow key={club.club_id}>
                   <TableCell>
-                    <Avatar src={club.club_avatar} alt={club.club_name} />
+                  <Avatar src={`${supabase.storage.from("club-avatars").getPublicUrl(club.club_avatar).data.publicUrl}`} alt={club.club_name} />
                   </TableCell>
                   <TableCell>{club.club_name}</TableCell>
                   <TableCell>{club.club_type}</TableCell>
                   <TableCell>{club.member_count || "N/A"}</TableCell>
-                  <TableCell>{club.founded_date || "N/A"}</TableCell>
+                  <TableCell>{club.approve_date || "N/A"}</TableCell>
                   <TableCell>{club.club_adviser}</TableCell>
                   <TableCell>
-                    <Chip label="รออนุมัติ" color="warning" />
+                    {club.approval_status ? (
+                      <Chip label="อนุมัติ" color="success" />
+                    ) : (
+                      <Chip label="ปฏิเสธ" color="error" />
+                    )}
                   </TableCell>
                 </TableRow>
               ))
@@ -114,4 +101,4 @@ const RespondHistory = () => {
   );
 };
 
-export default RespondHistory;
+export default ApprovalHistory;

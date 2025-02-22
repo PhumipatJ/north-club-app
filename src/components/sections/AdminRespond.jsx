@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Container, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Paper, Avatar, Chip } from "@mui/material";
+import { Container, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Paper, Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom"; 
 import supabase from "../../../supabaseClient";
 
@@ -46,7 +46,7 @@ const AdminRespond= () => {
       <Button variant="contained" color="primary" sx={{ mr: 2 }}>
         คำขอสร้างชมรม
       </Button>
-      <Button variant="contained" color="primary" sx={{ mr: 2 }} onClick={() => navigate("/respondHistory")}>
+      <Button variant="contained" color="primary" sx={{ mr: 2 }} onClick={() => navigate("/approvalHistory")}>
         คำขอที่ตอบแล้ว
       </Button>
       
@@ -88,7 +88,7 @@ const AdminRespond= () => {
                   <TableCell>{club.founded_date || "N/A"}</TableCell>
                   <TableCell>{club.club_adviser}</TableCell>
                   <TableCell>
-                    <Button variant="contained" color="primary" sx={{ mr: 2 }}  onClick={() => navigate(`/approvalDetail/${club.club_id}`)}>
+                    <Button variant="contained" color="primary" sx={{ mr: 2 }}  onClick={() => navigate(`/approvalDetail/${club.club_id}`, { state: { member_count: club.member_count }})}>
                         รายละเอียด
                     </Button>
                   </TableCell>

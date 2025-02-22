@@ -30,7 +30,6 @@ const AdminApprove = () => {
       setLoading(false);
     };
     
-     
 
     fetchPendingClubs();
   }, []);
@@ -46,7 +45,7 @@ const AdminApprove = () => {
       <Button variant="contained" color="primary" sx={{ mr: 2 }} onClick={() => navigate("/adminRespond")}>
         คำขอสร้างชมรม
       </Button>
-      <Button variant="contained" color="primary" sx={{ mr: 2 }} onClick={() => navigate("/respondHistory")}>
+      <Button variant="contained" color="primary" sx={{ mr: 2 }} onClick={() => navigate("/approvalHistory")}>
         คำขอที่ตอบแล้ว
       </Button>
       
@@ -73,7 +72,7 @@ const AdminApprove = () => {
             ) : pendingClubs.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={8} align="center">
-                  ไม่มีคำขอสร้างชมรม
+                  ไม่มีชมรม
                 </TableCell>
               </TableRow>
             ) : (
