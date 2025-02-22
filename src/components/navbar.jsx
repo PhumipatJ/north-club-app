@@ -63,6 +63,7 @@ const Navbar = () => {
             <button
               onClick={async () => {
                 await supabase.auth.signOut();
+                window.location.reload();
               }}
               className="bg-[#7CE9BF] text-black font-bold px-4 py-1 rounded-full hover:bg-emerald-400"
             >
