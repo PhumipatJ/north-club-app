@@ -37,6 +37,15 @@ class AuthService {
       .single();
     return error ? null : data.role;
   }
+
+  async getEmail(userId) {
+    const { data, error } = await this.supabase
+      .from("user")
+      .select("email")
+      .eq("id", userId)
+      .single();
+    return error ? null : data.email;
+  }
 }
 
 const authService = new AuthService();
