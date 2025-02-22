@@ -21,7 +21,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/clubs" element={<Clublist />} />
-          <Route path="/createClub" element={<Wrapper><CreateClub /></Wrapper>} />
+          <Route path="/createClub" element={<Wrapper allowedRoles={['student', 'club', 'admin']} ><CreateClub /></Wrapper>} />
         </Routes>
         <Footer />
       </Router>
