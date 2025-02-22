@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import supabase from "../../../supabaseClient";
+import authService from "../../service/AuthService";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -20,10 +20,11 @@ const Register = () => {
 
     console.log("Logging in with:", { email, password });
     
-    const {data, error} = await supabase.auth.signUp({
+    const { data, error } = await authService.register(email, password);
+    /* const {data, error} = await supabase.auth.signUp({
         email : email,
         password : password,
-    });
+    }); */
 
     if(error){
         setMessage(error.message);

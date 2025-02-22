@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import supabase from "../../supabaseClient";
+import authService from "../service/AuthService"; 
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,28 +10,24 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 0) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 0);
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
     const getSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      setSession(data.session);
+      const sessionData = await authService.getSession();
+      setSession(sessionData);
     };
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
+    const { data: authListener } = authService.supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+      }
+    );
 
     getSession();
 
@@ -58,11 +54,11 @@ const Navbar = () => {
           <Link to="/clubs" className="hover:underline hover:text-[#7CE9BF] pt-1.5">ชมรม</Link>
           <Link to="/docs" className="hover:underline hover:text-[#7CE9BF] pt-1.5">เอกสาร</Link>
           <Link to="/stats" className="hover:underline hover:text-[#7CE9BF] pt-1.5">สถิติ</Link>
-          
+
           {session ? (
             <button
               onClick={async () => {
-                await supabase.auth.signOut();
+                await authService.logout();
               }}
               className="bg-[#7CE9BF] text-black font-bold px-4 py-1 rounded-full hover:bg-emerald-400"
             >
@@ -73,10 +69,9 @@ const Navbar = () => {
               Login
             </Link>
           )}
-
         </div>
       </div>
-      
+
       {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-white shadow-md rounded-lg p-4 flex flex-col space-y-4 text-[#FF7E69] text-center mt-2 mx-4">

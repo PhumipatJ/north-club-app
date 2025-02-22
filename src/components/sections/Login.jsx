@@ -2,9 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
-import supabase from "../../../supabaseClient";
 import { FcGoogle } from "react-icons/fc";
-import { BorderBottom, BorderBottomOutlined, BorderBottomSharp } from "@mui/icons-material";
+import authService from "../../service/AuthService";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiInputLabel-root': {
@@ -55,10 +54,11 @@ const Login = () => {
       return;
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await authService.login(email, password);
+    /* const { data, error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
-    });
+    }); */
 
     if (error) {
       setMessage(error.message);
