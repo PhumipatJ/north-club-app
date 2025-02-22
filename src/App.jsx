@@ -6,6 +6,7 @@ import Home from './components/sections/Home'
 import Login from './components/sections/Login'
 import Register from './components/sections/Register'
 import Clublist from './components/sections/Clublist'
+import Clubfile from './components/sections/Clubfile';
 import Wrapper from './components/sections/Wrapper';
 import Footer from './components/Footer';
 
@@ -20,6 +21,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/clubs" element={<Clublist />} />
+          <Route path="/docs" element={<Clubfile />} />
         </Routes>
         <Footer />
       </Router>
