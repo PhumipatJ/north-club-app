@@ -1,10 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { FaFacebook } from "react-icons/fa";
 import { FaSquareInstagram } from "react-icons/fa6";
 import { Mail, ChevronDown } from "lucide-react";
-import Calendar from "../Calendar"
 
 const clubInfo = [
   {
@@ -44,14 +42,18 @@ const clubInfo = [
       { name: "น.ส.วิลสม กาสิ", role: "กรรมการ" },
       { name: "น.ส.วิลสม กาสิ", role: "กรรมการ" },
       { name: "น.ส.วิลสม กาสิ", role: "กรรมการ" },
+      { name: "น.ส.วิลสม กาสิ", role: "กรรมการ" },
+      { name: "น.ส.วิลสม กาสิ", role: "กรรมการ" },
+      { name: "น.ส.วิลสม กาสิ", role: "กรรมการ" },
+      { name: "น.ส.วิลสม กาสิ", role: "กรรมการ" },
+      { name: "น.ส.วิลสม กาสิ", role: "กรรมการ" },
+      { name: "น.ส.วิลสม กาสิ", role: "กรรมการ" },
     ],
   },
 ];
 
-const Clubpage = () => {
+const Clubmember = () => {
   const { clubname } = useParams();
-  
-  const navigate = useNavigate();
 
   // Find the club that matches the URL parameter
   const club = clubInfo.find((c) => c.name === decodeURIComponent(clubname));
@@ -103,45 +105,24 @@ const Clubpage = () => {
         </div>
       </div>
 
-      <div className="">
+      <div className=" shadow-md">
         {/* Members List */}
         <div div className="p-6 mt-8">
-          <h2 className="text-xl font-semibold">สมาชิก ({club.members.length} คน)</h2>
+          <h2 className="text-xl text-center font-semibold">สมาชิก ({club.members.length} คน)</h2>
           <div className="grid grid-cols-5 gap-4 mt-4">
-            {club.members.slice(0, 4).map((member, index) => (
+            {club.members.slice(0, club.members.length).map((member, index) => (
               <div key={index} className="bg-white p-4 rounded-lg flex flex-col items-center">
                 <img src={member.image || "/assets/Maskgroup.png"} alt="Member" className="w-20 h-20 rounded-full object-cover" />
                 <p className="mt-2 font-semibold text-center">{member.name}</p>
                 <p className="text-gray-500 text-sm text-center">{member.role}</p>
               </div>
             ))}
-            
-            {/* View All Members Block */}
-              <div className="bg-white p-4 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100"
-                   onClick={() => navigate(`/clubs/${club.name}/members`)}>
-                <div className="bg-amber-100 rounded-full">
-                  <img src={"/assets/Maskgroup.png"} alt="Member" className="w-20 h-20 rounded-full object-cover" />
-                </div>
-                <p className="text-[#FF7E69]">สมาชิกทั้งหมด</p>
-              </div>
             </div>
           </div>
         </div>
-
-        <div className="flex flex-row p-6 mt-8 items-center justify-between">
-          <div className="">
-            <h1 className="text-xl font-semibold mb-2"> Calendar</h1>
-            <Calendar/>
-          </div>
-          <div className="">
-            <h1 className="text-xl font-semibold mb-2"> Calendar</h1>
-            <Calendar/>
-          </div>
-        </div>
-
       </div>
     </div>
   );
 };
 
-export default Clubpage;
+export default Clubmember;

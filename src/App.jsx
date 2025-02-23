@@ -8,6 +8,7 @@ import Register from './components/sections/Register'
 import Clublist from './components/sections/Clublist'
 import Clubfile from './components/sections/Clubfile';
 import Clubpage from './components/sections/Clubpage';
+import Clubmember from './components/sections/Clubmember';
 import Statpage from './components/sections/Statpage';
 import Wrapper from './components/sections/Wrapper';
 import Footer from './components/Footer';
@@ -30,6 +31,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/clubs" element={<Clublist />} />
           <Route path="/clubs/:clubname" element={<Clubpage />} />
+          <Route path="/clubs/:clubname/members" element={<Clubmember/>} />
           <Route path="/stats" element={<Statpage />} />
           <Route path="/clubApplication" element={<Wrapper allowedRoles={['student', 'club', 'admin']} ><ClubApplication /></Wrapper>} />
           <Route path="/docs" element={<Clubfile />} />
