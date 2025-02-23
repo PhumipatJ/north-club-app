@@ -19,7 +19,7 @@ const ClubApplication = () => {
   const [members, setMembers] = useState(
     positions.map(position => ({ email: "", position }))
   );
-  const clubTypes = ["Sports", "Academic", "Volunteer", "Arts"];
+  const clubTypes = ["กีฬา", "วิชาการ", "อาสาและบำเพ็ญประโยชน์", "ศิลปะและวัฒนธรรม"];
 
   useEffect(() => {
     const fetchUserEmail = async () => {
