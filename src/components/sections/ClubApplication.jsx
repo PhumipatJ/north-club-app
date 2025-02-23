@@ -92,14 +92,14 @@ const ClubApplication = () => {
     
     const avatarUrl = await uploadFile(clubAvatar, "club-avatars");
     const docUrl = await uploadFile(applicationDocument, "club-documents");
-
+    const club_tag = clubDescription.split(",").map(tag => tag.trim());
     const { data: clubData, error: clubError } = await supabase.from("clubs").insert([
       {
         club_name: clubName,
         club_type: clubType, 
         club_adviser: clubAdviser,
         club_quote: clubQuote,
-        club_description: clubDescription,
+        club_description: club_tag,
         application_document: docUrl,
         club_avatar: avatarUrl,
       },
@@ -114,8 +114,8 @@ const ClubApplication = () => {
     
     if (clubId) {
       const memberData = members.filter(m => m.email.trim() !== "").map(m => ({
-        email: m.email,
         club_id: clubId,
+        email: m.email,
         position: m.position,
       }));
       
@@ -155,7 +155,7 @@ const ClubApplication = () => {
           <TextField label="Club Quote" value={clubQuote} onChange={(e) => setClubQuote(e.target.value)} />
         </FormControl>
         <FormControl fullWidth margin="normal">
-          <TextField label="Club Description" multiline rows={4} value={clubDescription} onChange={(e) => setClubDescription(e.target.value)} />
+          <TextField label="Tag" multiline rows={4} value={clubDescription} onChange={(e) => setClubDescription(e.target.value)} />
         </FormControl>
         <FormControl fullWidth margin="normal">
           <Typography variant="body1">Upload Club Avatar</Typography>
