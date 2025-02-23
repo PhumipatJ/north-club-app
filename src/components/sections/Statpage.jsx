@@ -118,8 +118,7 @@ const Stat = () => {
                   <div className="bg-white rounded-xl shadow p-4 flex flex-col">
                     <h2 className="text-gray-600 font-bold text-lg">นักศึกษาที่สังกัดชมรม</h2>
                     <div className="items-center text-gray-500 text-right">
-                        <p className="text-gray-500 text-lg mt-2">
-                            ทั้งหมด <span className="text-[#FF7E69] font-bold text-3xl">512</span>
+                        <p className="text-gray-500 mt-2">ทั้งหมด <span className="text-[#FF7E69] font-bold text-3xl">512</span>
                         </p>
                     </div>
                     <div className="flex flex-row justify-between items-center max-w-2xl">
