@@ -10,6 +10,7 @@ import Clubfile from './components/sections/Clubfile';
 import Clubpage from './components/sections/Clubpage';
 import Wrapper from './components/sections/Wrapper';
 import Footer from './components/Footer';
+import CreateClub from './components/sections/createClub';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path="/clubs" element={<Clublist />} />
           <Route path="/clubs/:clubname" element={<Clubpage />} />
           <Route path="/docs" element={<Clubfile />} />
+          <Route path="/createClub" element={<CreateClub />} />
         </Routes>
         <Footer />
       </Router>
