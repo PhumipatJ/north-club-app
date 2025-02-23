@@ -4,7 +4,7 @@ import { Doughnut } from "react-chartjs-2";
 
 import { Chart as ChartJS, LineElement, PointElement, LinearScale, Title, CategoryScale, Tooltip, ArcElement, BarElement } from "chart.js";
 
-ChartJS.register(LineElement, PointElement, LinearScale, Title, CategoryScale,  ArcElement, BarElement);
+ChartJS.register(LineElement, PointElement, LinearScale, Title, CategoryScale, ArcElement, BarElement, Tooltip);
 
 const Stat = () => {
   const lineData = {
@@ -29,6 +29,13 @@ const Stat = () => {
       },
     ],
   };
+
+  const labelColors = [
+    { label: "นักศึกษาปี 1", color: "#FF6B6B", value: "52.1 %" },
+    { label: "นักศึกษาปี 2", color: "#FF8E8E", value: "22.8 %" },
+    { label: "นักศึกษาปี 3", color: "#FFCFCF", value: "13.9 %" },
+    { label: "อื่นๆ", color: "#FFECEC", value: "11.2 %" },
+];
 
   const pieData = {
     labels: ["นักศึกษาปี 1", "นักศึกษาปี 2", "นักศึกษาปี 3", "อื่นๆ"],
@@ -99,34 +106,49 @@ const Stat = () => {
             <div className="flex flex-col md:flex-row w-full justify-center px-6 m-8">
                 <div className="flex-1 flex flex-col max-w-2xl w-full">
                     <div className="flex flex-row items-center justify-between mb-6">
-                    <div className="w-48 p-4 bg-white rounded-xl shadow">
+                      <div className="w-48 p-4 bg-white rounded-xl shadow">
                         <p className="text-gray-500">จำนวนครั้งผู้เข้าเยี่ยมชม</p>
                         <h2 className="text-3xl font-bold text-[#FF7E69]">452</h2>
-                    </div>
-                    <div className="w-48 p-4 bg-white rounded-xl shadow">
+                      </div>
+                      <div className="w-48 p-4 bg-white rounded-xl shadow">
                         <p className="text-gray-500">จำนวนกิจกรรม</p>
                         <h2 className="text-3xl font-bold text-[#FF7E69]">452</h2>
+                      </div>
                     </div>
+                  <div className="bg-white rounded-xl shadow p-4 flex flex-col">
+                    <h2 className="text-gray-600 font-bold text-lg">นักศึกษาที่สังกัดชมรม</h2>
+                    <div className="items-center text-gray-500 text-right">
+                        <p className="text-gray-500 text-lg mt-2">
+                            ทั้งหมด <span className="text-[#FF7E69] font-bold text-3xl">512</span>
+                        </p>
                     </div>
-                    <div className="bg-white rounded-xl shadow p-4">
-                        <div className="w-1/2">
-                            <h2 className="text-gray-600 font-bold text-lg">นักศึกษาที่สังกัดชมรม</h2>
-                            <p className="text-gray-500 text-sm text-right mt-2">ทั้งหมด <span className="text-[#FF6B6B] font-bold text-2xl">512</span></p>
+                    <div className="flex flex-row justify-between items-center max-w-2xl">
+                      <div className="w-1/2">
+                      <Doughnut data={pieData} />
+                      </div>
+                        <div className="flex flex-col gap-4">
+                          {labelColors.map((item, index) => (
+                            <div key={index} className="flex items-center gap-2 text-right">
+                              <span className="w-2 h-2 rounded-full"
+                                    style={{ backgroundColor: item.color }}
+                              ></span>
+                                <p className="text-sm text-gray-600">{item.label}</p>
+                                <p className="text-sm font-bold text-gray-700 ml-auto">{item.value}</p>
+                            </div>
+                             ))}
                         </div>
-                        <div className="w-1/2">
-                            <Doughnut data={pieData} />
-                        </div>  
-                    </div>
-                    <div className="mt-6 w-full bg-white p-6 rounded-xl shadow">
-                        <h2 className="text-lg font-bold mb-4">หมวดหมู่กิจกรรม</h2>
-                        <Bar data={barData} options={options} />
                     </div>
                 </div>
-                <div className="flex-1 md:max-w-3xl w-full h-fit bg-white p-6 rounded-xl shadow md:ml-6">
-                    <h2 className="text-lg font-bold mb-4">กราฟกิจกรรม</h2>
-                    <Line data={lineData} options={options} />
+                <div className="mt-6 w-full bg-white p-6 rounded-xl shadow">
+                    <h2 className="text-lg font-bold mb-4">หมวดหมู่กิจกรรม</h2>
+                    <Bar data={barData} options={options} />
                 </div>
+              </div>
+            <div className="flex-1 md:max-w-3xl w-full h-fit bg-white p-6 rounded-xl shadow md:ml-6">
+              <h2 className="text-lg font-bold mb-4">กราฟกิจกรรม</h2>
+              <Line data={lineData} options={options} />
             </div>
+          </div>
         </div>
     </div>
 
