@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Filter, Search, Info, ChevronDown } from "lucide-react";
 
 const clubs = [
@@ -24,10 +25,13 @@ const Clublist = () => {
   const [selectedTags, setSelectedTags] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleTagChange = (tag) => {
     setSelectedTags((prev) =>
       prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
     );
+
   };
 
   const filteredClubs = clubs.filter((club) =>
@@ -84,7 +88,10 @@ const Clublist = () => {
             </div>
             <img src={club.image} alt={club.name} className="w-32 h-32 mx-auto rounded-full" />
             <p className={`mt-2 font-medium ${club.name.length > 20 ? "text-sm" : "text-lg"}`}>{club.name}</p>
-            <button className="w-full mt-4 bg-[#FF7E69] hover:bg-[#d66857] duration-300 text-white px-4 py-2 rounded-lg">
+            <button  
+              className="w-full mt-4 bg-[#FF7E69] hover:bg-[#d66857] duration-300 text-white px-4 py-2 rounded-lg"
+              onClick={() => navigate(`/clubs/${club.name}`)} // Navigate on click
+            >
               รายละเอียด
             </button>
 

@@ -7,6 +7,7 @@ import Login from './components/sections/Login'
 import Register from './components/sections/Register'
 import Clublist from './components/sections/Clublist'
 import Clubfile from './components/sections/Clubfile';
+import Clubpage from './components/sections/Clubpage';
 import Wrapper from './components/sections/Wrapper';
 import Footer from './components/Footer';
 import ClubApplication from './components/sections/ClubApplication';
@@ -14,6 +15,7 @@ import AdminApprove from './components/sections/AdminApprove';
 import AdminRespond from './components/sections/AdminRespond';
 import ApprovalHistory from './components/sections/ApprovalHistory';
 import ApprovalDetail from './components/sections/ApprovalDetail';
+
 
 function App() {
 
@@ -26,6 +28,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/clubs" element={<Clublist />} />
+          <Route path="/clubs/:clubname" element={<Clubpage />} />
           <Route path="/clubApplication" element={<Wrapper allowedRoles={['student', 'club', 'admin']} ><ClubApplication /></Wrapper>} />
           <Route path="/docs" element={<Clubfile />} />
           <Route path="/adminApprove" element={<Wrapper allowedRoles={['admin']} ><AdminApprove /></Wrapper>} />
