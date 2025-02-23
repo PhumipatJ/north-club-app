@@ -3,7 +3,7 @@ import { Button, TextField, FormControl, FormControlLabel, Radio, RadioGroup, Co
 import supabase from "../../../supabaseClient";
 import authService from "../../service/AuthService";
 
-const CreateClub = () => {
+const ClubApplication = () => {
   const [currentUserEmail, setCurrentUserEmail] = useState("");
   const [clubName, setClubName] = useState("");
   const [clubType, setClubType] = useState(""); // Single selection
@@ -178,4 +178,4 @@ const CreateClub = () => {
   );
 };
 
-export default CreateClub;
+export default ClubApplication;
