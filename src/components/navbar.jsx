@@ -110,7 +110,10 @@ const Navbar = () => {
                       <p className="text-gray-500 text-sm">นักศึกษา</p>
                     </div>
                   </div>
-                  <SquarePen className="text-gray-400 hover:text-gray-500" />
+                  <Link to="/user">
+                    <SquarePen className="text-gray-400 hover:text-gray-500" />
+                  </Link>
+                  
                 </div>
           
                 <div className="mt-3 border-b pb-2">
