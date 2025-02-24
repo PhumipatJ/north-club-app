@@ -30,8 +30,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/clubs" element={<Clublist />} />
-          <Route path="/clubs/:clubname" element={<Clubpage />} />
-          <Route path="/clubs/:clubname/members" element={<Clubmember/>} />
+          <Route path="/clubs/:clubId" element={<Clubpage />} />
+          <Route path="/clubmember/:clubId" element={<Clubmember/>} />
           <Route path="/stats" element={<Statpage />} />
           <Route path="/clubApplication" element={<Wrapper allowedRoles={['student', 'club', 'admin']} ><ClubApplication /></Wrapper>} />
           <Route path="/docs" element={<Clubfile />} />
