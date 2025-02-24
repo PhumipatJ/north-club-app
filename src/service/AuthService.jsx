@@ -22,6 +22,7 @@ class AuthService {
   async logout() {
     await this.supabase.auth.signOut();
     window.location.reload();
+
   }
 
   async getSession() {

@@ -3,7 +3,7 @@ import { Button, TextField, FormControl, FormControlLabel, Radio, RadioGroup, Co
 import supabase from "../../../supabaseClient";
 import authService from "../../service/AuthService";
 
-const CreateClub = () => {
+const ClubApplication = () => {
   const [currentUserEmail, setCurrentUserEmail] = useState("");
   const [clubName, setClubName] = useState("");
   const [clubType, setClubType] = useState(""); // Single selection
@@ -12,12 +12,14 @@ const CreateClub = () => {
   const [clubDescription, setClubDescription] = useState("");
   const [applicationDocument, setApplicationDocument] = useState(null);
   const [clubAvatar, setClubAvatar] = useState(null);
-  //const positions = ["ประธานชมรม", "รองประธานชมรม", "กรรมการ", "กรรมการ", "กรรมการ", "กรรมการ", "เลขานุการ", "ผู้ช่วยเลขานุการ"];
+  // change on positionFrontEnd to display on Club Member text field not the positions na
+  //const positionFrontEnd = ["ประธานชมรม", "รองประธานชมรม", "กรรมการ", "กรรมการ", "กรรมการ", "กรรมการ", "เลขานุการ", "ผู้ช่วยเลขานุการ"];
   const positions = ["club_president", "vice_president", "committee_member", "committee_member", "committee_member", "committee_member", "secretary", "assistant_secretary"];
+  // don't change positions. it use on database na frontend hua kuy
   const [members, setMembers] = useState(
     positions.map(position => ({ email: "", position }))
   );
-  const clubTypes = ["Sports", "Academic", "Volunteer", "Arts"];
+  const clubTypes = ["กีฬา", "วิชาการ", "อาสาและบำเพ็ญประโยชน์", "ศิลปะและวัฒนธรรม"];
 
   useEffect(() => {
     const fetchUserEmail = async () => {
@@ -90,14 +92,14 @@ const CreateClub = () => {
     
     const avatarUrl = await uploadFile(clubAvatar, "club-avatars");
     const docUrl = await uploadFile(applicationDocument, "club-documents");
-
+    const club_tag = clubDescription.split(",").map(tag => tag.trim());
     const { data: clubData, error: clubError } = await supabase.from("clubs").insert([
       {
         club_name: clubName,
         club_type: clubType, 
         club_adviser: clubAdviser,
         club_quote: clubQuote,
-        club_description: clubDescription,
+        club_description: club_tag,
         application_document: docUrl,
         club_avatar: avatarUrl,
       },
@@ -112,8 +114,8 @@ const CreateClub = () => {
     
     if (clubId) {
       const memberData = members.filter(m => m.email.trim() !== "").map(m => ({
-        email: m.email,
         club_id: clubId,
+        email: m.email,
         position: m.position,
       }));
       
@@ -153,7 +155,7 @@ const CreateClub = () => {
           <TextField label="Club Quote" value={clubQuote} onChange={(e) => setClubQuote(e.target.value)} />
         </FormControl>
         <FormControl fullWidth margin="normal">
-          <TextField label="Club Description" multiline rows={4} value={clubDescription} onChange={(e) => setClubDescription(e.target.value)} />
+          <TextField label="Tag" multiline rows={4} value={clubDescription} onChange={(e) => setClubDescription(e.target.value)} />
         </FormControl>
         <FormControl fullWidth margin="normal">
           <Typography variant="body1">Upload Club Avatar</Typography>
@@ -176,4 +178,4 @@ const CreateClub = () => {
   );
 };
 
-export default CreateClub;
+export default ClubApplication;

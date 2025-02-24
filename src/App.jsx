@@ -7,9 +7,17 @@ import Login from './components/sections/Login'
 import Register from './components/sections/Register'
 import Clublist from './components/sections/Clublist'
 import Clubfile from './components/sections/Clubfile';
+import Clubpage from './components/sections/Clubpage';
+import Clubmember from './components/sections/Clubmember';
+import Statpage from './components/sections/Statpage';
 import Wrapper from './components/sections/Wrapper';
 import Footer from './components/Footer';
-import CreateClub from './components/sections/createClub';
+import ClubApplication from './components/sections/ClubApplication';
+import AdminApprove from './components/sections/AdminApprove';
+import AdminRespond from './components/sections/AdminRespond';
+import ApprovalHistory from './components/sections/ApprovalHistory';
+import ApprovalDetail from './components/sections/ApprovalDetail';
+
 
 function App() {
 
@@ -22,8 +30,15 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/clubs" element={<Clublist />} />
-          <Route path="/createClub" element={<Wrapper allowedRoles={['student', 'club', 'admin']} ><CreateClub /></Wrapper>} />
+          <Route path="/clubs/:clubname" element={<Clubpage />} />
+          <Route path="/clubs/:clubname/members" element={<Clubmember/>} />
+          <Route path="/stats" element={<Statpage />} />
+          <Route path="/clubApplication" element={<Wrapper allowedRoles={['student', 'club', 'admin']} ><ClubApplication /></Wrapper>} />
           <Route path="/docs" element={<Clubfile />} />
+          <Route path="/adminApprove" element={<Wrapper allowedRoles={['admin']} ><AdminApprove /></Wrapper>} />
+          <Route path="/adminRespond" element={<Wrapper allowedRoles={['admin']} ><AdminRespond /></Wrapper>} />
+          <Route path="/approvalHistory" element={<Wrapper allowedRoles={['admin']} ><ApprovalHistory /></Wrapper>} />
+          <Route path="/approvalDetail/:clubId" element={<Wrapper allowedRoles={['admin']} ><ApprovalDetail /></Wrapper>} />
         </Routes>
         <Footer />
       </Router>
