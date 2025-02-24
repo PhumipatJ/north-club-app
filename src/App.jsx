@@ -31,7 +31,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/clubs" element={<Clublist />} />
           <Route path="/clubs/:clubId" element={<Clubpage />} />
-          <Route path="/clubs/:clubname/members" element={<Clubmember/>} />
+          <Route path="/clubmember/:clubId" element={<Clubmember/>} />
           <Route path="/stats" element={<Statpage />} />
           <Route path="/clubApplication" element={<Wrapper allowedRoles={['student', 'club', 'admin']} ><ClubApplication /></Wrapper>} />
           <Route path="/docs" element={<Clubfile />} />

@@ -134,7 +134,7 @@ const Clubpage = () => {
       <div className="bg-white drop-shadow-lg mt-24">
         {/* Club Banner */}
         <div className="relative bg-[#FF7E69] h-64 flex items-center justify-start">
-            <button onClick={() => console.log(members)}>test</button>
+
         </div>
   
         {/* Club Details */}
@@ -186,7 +186,7 @@ const Clubpage = () => {
             
             {/* View All Members Block */}
               <div className="bg-white p-4 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100"
-                   onClick={() => navigate(`/clubs/${club.name}/members`)}>
+                   onClick={() => navigate(`/clubmember/${clubId}`)}>
                 <div className="bg-amber-100 rounded-full">
                   <img src={"/assets/Maskgroup.png"} alt="Member" className="w-20 h-20 rounded-full object-cover" />
                 </div>
@@ -204,7 +204,6 @@ const Clubpage = () => {
           </div>
           <div className="">
             <h1 className="text-xl font-semibold mb-2"> Calendar</h1>
-            <Calendar/>
           </div>
         </div>
 
