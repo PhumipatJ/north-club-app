@@ -165,7 +165,7 @@ const Clublist = () => {
             <p className="mt-2 font-medium text-sm">"{club.quote}"</p>
             <button  
               className="w-full mt-4 bg-[#FF7E69] hover:bg-[#d66857] duration-300 text-white px-4 py-2 rounded-lg"
-              onClick={() => navigate(`/clubs/${club.name}`)} // Navigate on click
+              onClick={() => navigate(`/clubs/${club.clubID}`)} // Navigate on click
             >
               รายละเอียด
             </button>
