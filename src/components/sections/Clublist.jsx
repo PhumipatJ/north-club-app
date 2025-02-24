@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Filter, Search, Info, ChevronDown } from "lucide-react";
+import supabase from "../../../supabaseClient";
 
+/*
 const clubs = [
   { name: "KMUTNB Esport", image: "/assets/esport.png", tag:["กีฬา","ศิลปะและวัฒนธรรม"], members: 46, founded: "1/1/2020", president: "นายเชิดชู ชาบูเชิด" },
   { name: "KMUTNB Boxing Club", image: "/assets/boxing.png", tag: ["วิชา","กีฬา","ศิลปะและวัฒนธรรม"], members: 46, founded: "1/1/2020", president: "นายเชิดชู ชาบูเชิด"  },
@@ -16,15 +18,17 @@ const clubs = [
   { name: "KMUTNB Cycling Club", image: "/assets/cycling.png", tag: ["กีฬา"], members: 46, founded: "1/1/2020", president: "นายเชิดชู ชาบูเชิด"  },
   { name: "KMUTNB Media Club", image: "/assets/media.png", tag:["อาสาและบำเพ็ญประโยชน์"], members: 46, founded: "1/1/2020", president: "นายเชิดชู ชาบูเชิด"  },
 ];
+*/
 
-const tags = ["วิชา","กีฬา","ศิลปะและวัฒนธรรม","อาสาและบำเพ็ญประโยชน์"];
+let clubs = [];
+const tags = ["วิชาการ","กีฬา","ศิลปะและวัฒนธรรม","อาสาและบำเพ็ญประโยชน์"];
 
 const Clublist = () => {
   const [search, setSearch] = useState("");
   const [hoveredClub, setHoveredClub] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
-
+  const [activeClubs, setActiveClubs] = useState([]);
   const navigate = useNavigate();
 
   const handleTagChange = (tag) => {
@@ -39,10 +43,59 @@ const Clublist = () => {
     (selectedTags.length === 0 || club.tag.some((t) => selectedTags.includes(t)))
   );
 
+  useEffect(() => {
+    const fetchActiveClubs = async () => {
+    const { data: clubsData, error: clubsError } = await supabase
+      .from("clubs")
+      .select("*, member_count:clubMembers(count)")
+      .eq("club_approval", true);
+
+    const { data: presidentsData, error: presidentsError } = await supabase
+      .from("clubMembers")
+      .select("club_id, email")
+      .eq("position", "club_president");
+    
+      console.log(presidentsData)
+    if (clubsError) console.error("Error fetching clubs:", clubsError);
+    if (presidentsError) console.error("Error fetching presidents:", presidentsError);
+
+    if (clubsData) {
+      setActiveClubs(
+        clubsData.map((club) => {
+          const president = presidentsData?.find(p => p.club_id === club.club_id);
+          return {
+            ...club,
+            member_count: club.member_count[0]?.count || 0,
+            founded_date: new Date(club.approve_date)
+              .toLocaleDateString("th-TH", { day: "2-digit", month: "2-digit", year: "numeric" }),
+            president: president ? president.email : "Unknown"
+          };
+        })
+      );
+    }
+  };
+    
+    fetchActiveClubs();
+  }, []);
+  
+  clubs = activeClubs.map(club => ({
+    clubID: club.club_id,
+    name: club.club_name,
+    image: `${supabase.storage.from("club-avatars").getPublicUrl(club.club_avatar).data.publicUrl}`,
+    tag: club.club_description,
+    members: club.member_count,
+    founded: club.founded_date,
+    president: club.president // Placeholder as president info is missing
+
+  }));
+  
+  
   return (
     <div className="max-w-4xl mx-auto p-4 mt-24 ">
       <div className="flex flex-row items-center justify-between">
         <h1 className="text-4xl font-bold mb-4">Club list</h1>
+        <button onClick={() => console.log(clubs)}>test clubs</button>
+        
 
         {/* Search bar */}
         <div className="relative mb-6">
