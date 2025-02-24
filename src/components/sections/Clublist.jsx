@@ -49,38 +49,57 @@ const Clublist = () => {
 
   useEffect(() => {
     const fetchActiveClubs = async () => {
-    const { data: clubsData, error: clubsError } = await supabase
-      .from("clubs")
-      .select("*, member_count:clubMembers(count)")
-      .eq("club_approval", true);
-
-    const { data: presidentsData, error: presidentsError } = await supabase
-      .from("clubMembers")
-      .select("club_id, email")
-      .eq("position", "club_president");
-    
-      console.log(presidentsData)
-    if (clubsError) console.error("Error fetching clubs:", clubsError);
-    if (presidentsError) console.error("Error fetching presidents:", presidentsError);
-
-    if (clubsData) {
-      setActiveClubs(
-        clubsData.map((club) => {
-          const president = presidentsData?.find(p => p.club_id === club.club_id);
-          return {
-            ...club,
-            member_count: club.member_count[0]?.count || 0,
-            founded_date: new Date(club.approve_date)
-              .toLocaleDateString("th-TH", { day: "2-digit", month: "2-digit", year: "numeric" }),
-            president: president ? president.email : "Unknown"
-          };
-        })
-      );
-    }
-  };
-    
+      const { data: clubsData, error: clubsError } = await supabase
+        .from("clubs")
+        .select("*, member_count:clubMembers(count)")
+        .eq("club_approval", true);
+  
+      const { data: presidentsData, error: presidentsError } = await supabase
+        .from("clubMembers")
+        .select("club_id, email")
+        .eq("position", "club_president");
+  
+      if (clubsError) console.error("Error fetching clubs:", clubsError);
+      if (presidentsError) console.error("Error fetching presidents:", presidentsError);
+  
+      // Fetch user names for the presidents
+      let presidentsWithNames = [];
+      if (presidentsData?.length) {
+        const emails = presidentsData.map(p => p.email);
+  
+        const { data: usersData, error: usersError } = await supabase
+          .from("user")
+          .select("email, name")
+          .in("email", emails);
+  
+        if (usersError) console.error("Error fetching user names:", usersError);
+  
+        presidentsWithNames = presidentsData.map(president => {
+          const user = usersData?.find(user => user.email === president.email);
+          return { ...president, name: user ? user.name : "Unknown" };
+        });
+      }
+  
+      // Set active clubs with president names
+      if (clubsData) {
+        setActiveClubs(
+          clubsData.map(club => {
+            const president = presidentsWithNames.find(p => p.club_id === club.club_id);
+            return {
+              ...club,
+              member_count: club.member_count[0]?.count || 0,
+              founded_date: new Date(club.approve_date)
+                .toLocaleDateString("th-TH", { day: "2-digit", month: "2-digit", year: "numeric" }),
+              president: president ? president.name : "Unknown"
+            };
+          })
+        );
+      }
+    };
+  
     fetchActiveClubs();
   }, []);
+  
   
   clubs = activeClubs.map(club => ({
     clubID: club.club_id,
@@ -89,7 +108,8 @@ const Clublist = () => {
     tag: club.club_description,
     members: club.member_count,
     founded: club.founded_date,
-    president: club.president, // Placeholder as president info is missing
+    quote: club.club_quote,
+    president: club.president, 
     type: club.club_type
   }));
   
@@ -131,7 +151,7 @@ const Clublist = () => {
       {filteredClubs.map((club, index) => (
           <div
             key={index}
-            className="text-center relative bg-white p-4 rounded-lg shadow-lg"
+            className="relative bg-white p-4 rounded-lg shadow-lg h-75 flex flex-col justify-between text-center"
           >
             <div className="absolute top-2 right-2">
               <Info 
@@ -142,6 +162,7 @@ const Clublist = () => {
             </div>
             <img src={club.image} alt={club.name} className="w-32 h-32 mx-auto rounded-full" />
             <p className={`mt-2 font-medium ${club.name.length > 20 ? "text-sm" : "text-lg"}`}>{club.name}</p>
+            <p className="mt-2 font-medium text-sm">"{club.quote}"</p>
             <button  
               className="w-full mt-4 bg-[#FF7E69] hover:bg-[#d66857] duration-300 text-white px-4 py-2 rounded-lg"
               onClick={() => navigate(`/clubs/${club.name}`)} // Navigate on click
