@@ -127,13 +127,13 @@ const Navbar = () => {
                   </div>
                 </div>
           
-                <div className="flex flex-row items-center justify-between mt-3 p-2 border border-gray-200 hover:bg-gray-100 rounded-md">
+                <Link to="/clubApplication" className="flex flex-row items-center justify-between mt-3 p-2 border border-gray-200 hover:bg-gray-100 rounded-md">
                   <div>
                     <p className="text-[#7CE9BF] text-sm font-semibold">ไอเดียใหม่ ชมรมใหม่!</p>
                     <p className="text-xs text-gray-500">ยื่นคำขอสร้างชมรมใหม่เลย</p>  
                   </div>
                   <SquarePlus className="text-gray-400" />
-                </div>
+                </Link>
           
                 <button 
                   className="w-full mt-3 bg-[#FF7E69] text-white py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-red-600"
