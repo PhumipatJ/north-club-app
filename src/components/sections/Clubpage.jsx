@@ -58,7 +58,7 @@ const Clubpage = () => {
   const club = clubInfo[0];
 
   const [clubTest, setClub] = useState(null);
-  const [members, setMembers] = useState(null);
+  const [members, setMembers] = useState([]);
 
   useEffect(() => {
     const fetchClubData = async () => {
@@ -124,7 +124,8 @@ const Clubpage = () => {
   
   
   //console.log(clubTest);
-  //console.log(members);
+  console.log(members);
+
 
 
   return (
@@ -168,7 +169,8 @@ const Clubpage = () => {
           </div>
         </div>
       </div>
-
+      
+      
       <div className="">
         {/* Members List */}
         <div div className="p-6 mt-8">
@@ -193,6 +195,7 @@ const Clubpage = () => {
             </div>
           </div>
         </div>
+        
 
         <div className="flex flex-row p-6 mt-8 items-center justify-between">
           <div className="">
