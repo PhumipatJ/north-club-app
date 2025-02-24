@@ -98,9 +98,7 @@ const Clublist = () => {
     <div className="max-w-4xl mx-auto p-4 mt-24 ">
       <div className="flex flex-row items-center justify-between">
         <h1 className="text-4xl font-bold mb-4">Club list</h1>
-        <button onClick={() => console.log(activeClubs)}>test clubs</button>
         
-
         {/* Search bar */}
         <div className="relative mb-6">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -138,9 +136,8 @@ const Clublist = () => {
             <div className="absolute top-2 right-2">
               <Info 
                 size={24} 
-                className="cursor-pointer text-white fill-[#7CE9BF] "
-                onMouseEnter={() => setHoveredClub(index)}
-                onMouseLeave={() => setHoveredClub(null)}
+                className="cursor-pointer text-white fill-[#7CE9BF] hover:fill-emerald-400"
+                onClick={() => setHoveredClub(index)}
               />
             </div>
             <img src={club.image} alt={club.name} className="w-32 h-32 mx-auto rounded-full" />
@@ -153,7 +150,10 @@ const Clublist = () => {
             </button>
 
             {hoveredClub === index && (
-              <div className="absolute top-0 left-0 transform translate-x-2/3 bg-gray-50 shadow-lg p-4 rounded-lg w-96 text-black z-10">
+              <div className={`absolute top-0 bg-gray-50 shadow-lg p-4 rounded-lg w-96 text-black z-10 
+                  ${index % 3 === 2 ? "right-0" : "left-0 translate-x-2/3"}`}
+                  onMouseLeave={() => setHoveredClub(null)}
+                >
                 <div className="flex flex-col">
                   <div className="flex flex-row items-center gap-12">
                     <img src={club.image} alt={club.name} className="w-16 h-16 rounded-full" />
