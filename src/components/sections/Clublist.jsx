@@ -40,8 +40,12 @@ const Clublist = () => {
 
   const filteredClubs = clubs.filter((club) =>
     club.name.toLowerCase().includes(search.toLowerCase()) &&
-    (selectedTags.length === 0 || club.tag.some((t) => selectedTags.includes(t)))
+    (selectedTags.length === 0 || 
+      (Array.isArray(club.type) ? club.type.some(t => selectedTags.includes(t)) : selectedTags.includes(club.type)))
   );
+  
+  
+  
 
   useEffect(() => {
     const fetchActiveClubs = async () => {
@@ -85,8 +89,8 @@ const Clublist = () => {
     tag: club.club_description,
     members: club.member_count,
     founded: club.founded_date,
-    president: club.president // Placeholder as president info is missing
-
+    president: club.president, // Placeholder as president info is missing
+    type: club.club_type
   }));
   
   
@@ -94,7 +98,7 @@ const Clublist = () => {
     <div className="max-w-4xl mx-auto p-4 mt-24 ">
       <div className="flex flex-row items-center justify-between">
         <h1 className="text-4xl font-bold mb-4">Club list</h1>
-        <button onClick={() => console.log(clubs)}>test clubs</button>
+        <button onClick={() => console.log(activeClubs)}>test clubs</button>
         
 
         {/* Search bar */}
