@@ -3,23 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Filter, Search, Info, ChevronDown } from "lucide-react";
 import supabase from "../../../supabaseClient";
 
-/*
-const clubs = [
-  { name: "KMUTNB Esport", image: "/assets/esport.png", tag:["กีฬา","ศิลปะและวัฒนธรรม"], members: 46, founded: "1/1/2020", president: "นายเชิดชู ชาบูเชิด" },
-  { name: "KMUTNB Boxing Club", image: "/assets/boxing.png", tag: ["วิชา","กีฬา","ศิลปะและวัฒนธรรม"], members: 46, founded: "1/1/2020", president: "นายเชิดชู ชาบูเชิด"  },
-  { name: "KMUTNB Photo Club", image: "/assets/photo.png", tag: ["ศิลปะและวัฒนธรรม","อาสาและบำเพ็ญประโยชน์"], members: 46, founded: "1/1/2020", president: "นายเชิดชู ชาบูเชิด"  },
-  { name: "ชมรมชีวิตและสุขภาพ", image: "/assets/health.png", tag: ["ศิลปะและวัฒนธรรม"], members: 46, founded: "1/1/2020", president: "นายเชิดชู ชาบูเชิด"  },
-  { name: "ชมรมเทควันโดพระจอมเกล้าพระนครเหนือ", image: "/assets/taekwondo.png", tag: ["วิชา","กีฬา","ศิลปะและวัฒนธรรม"], members: 46, founded: "1/1/2020", president: "นายเชิดชู ชาบูเชิด"  },
-  { name: "Esan Club KMUTNB", image: "/assets/esan.png", tag: ["วิชา","กีฬา","ศิลปะและวัฒนธรรม","อาสาและบำเพ็ญประโยชน์"], members: 46, founded: "1/1/2020", president: "นายเชิดชู ชาบูเชิด"  },
-  { name: "ชมรมดนตรีไทย บางอุดม", image: "/assets/thaimusic.png", tag: ["วิชา","ศิลปะและวัฒนธรรม"], members: 46, founded: "1/1/2020", president: "นายเชิดชู ชาบูเชิด"  },
-  { name: "KMUTNB Running", image: "/assets/running.png", tag: ["กีฬา","ศิลปะและวัฒนธรรม","อาสาและบำเพ็ญประโยชน์"], members: 46, founded: "1/1/2020", president: "นายเชิดชู ชาบูเชิด"  },
-  { name: "ชมรมชาวเหนือ", image: "/assets/north.png", tag: ["ศิลปะและวัฒนธรรม"], members: 46, founded: "1/1/2020", president: "นายเชิดชู ชาบูเชิด"  },
-  { name: "KMUTNB Shooting Club", image: "/assets/shooting.png", tag: ["กีฬา"], members: 46, founded: "1/1/2020", president: "นายเชิดชู ชาบูเชิด"  },
-  { name: "KMUTNB Cycling Club", image: "/assets/cycling.png", tag: ["กีฬา"], members: 46, founded: "1/1/2020", president: "นายเชิดชู ชาบูเชิด"  },
-  { name: "KMUTNB Media Club", image: "/assets/media.png", tag:["อาสาและบำเพ็ญประโยชน์"], members: 46, founded: "1/1/2020", president: "นายเชิดชู ชาบูเชิด"  },
-];
-*/
-
 let clubs = [];
 const tags = ["วิชาการ","กีฬา","ศิลปะและวัฒนธรรม","อาสาและบำเพ็ญประโยชน์"];
 
