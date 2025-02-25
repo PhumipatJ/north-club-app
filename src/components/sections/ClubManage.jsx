@@ -3,16 +3,23 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { FaFacebook } from "react-icons/fa";
 import { FaSquareInstagram } from "react-icons/fa6";
-import { Mail } from "lucide-react";
+import { Mail, ChevronDown, Upload, Settings} from "lucide-react";
+import { Avatar } from "@mui/material";
+import EventModal from "../EventModal"; 
 import Calendar from "../Calendar"
 import supabase from "../../../supabaseClient";
 
-const Clubpage = () => {
+const ClubManage = () => {
   const { clubId } = useParams();
   const navigate = useNavigate();
 
   const [club, setClub] = useState(null);
   const [members, setMembers] = useState([]);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => setIsOpen(false);
 
   useEffect(() => {
     const fetchClubData = async () => {
@@ -151,13 +158,34 @@ const Clubpage = () => {
         </div>
         
 
-        <div className="flex flex-row p-6 mt-8 items-center justify-between">
-          <div className="">
-            <h1 className="text-xl font-semibold mb-2"> Calendar</h1>
-            <Calendar/>
+        <div className="flex flex-row p-6 mt-8 justify-between">
+          <div className="w-fit">
+            <h1 className="text-2xl ">ปฎิทินกิจกรรม</h1>
+            <Calendar className=""/>
           </div>
-          <div className="">
-            <h1 className="text-xl font-semibold mb-2"> Calendar</h1>
+          <div className="w-2/3 justify-start ">
+            <div className="bg-white shadow-lg rounded-lg pt-4 flex flex-col min-h-[25vh] items-center justify-center overflow-hidden
+                hover:bg-gray-100 group"
+                onClick={openModal}>
+                
+                {/* Create Event */}
+                <div className="flex items-center flex-row">
+                    <div className="flex flex-col items-center">
+                        <Upload className="w-10 h-10 text-[#FF7E69]" />
+                        <p className="text-gray-300 mt-2 text-center duration-300 group-hover:text-[#FF7E69]">
+                        สร้างกิจกรรม <br /> หรือประกาศใหม่
+                        </p>
+                    </div>
+                    <div>
+                        <img src="/assets/walkinghalf.png" alt="Illustration" 
+                            className="relative w-36 translate-x-1/2 duration-300 group-hover:translate-x-1/5"/>
+                    </div>
+                </div>
+
+                {/* Create Event Modal*/}
+                <EventModal isOpen={isOpen} onClose={closeModal}/> 
+                
+            </div>
           </div>
         </div>
 
@@ -166,4 +194,4 @@ const Clubpage = () => {
   );
 };
 
-export default Clubpage;
+export default ClubManage;
