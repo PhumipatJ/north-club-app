@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { FaFacebook } from "react-icons/fa";
 import { FaSquareInstagram } from "react-icons/fa6";
-import { Mail, ChevronDown, Upload, RefreshCcw } from "lucide-react";
+import { Mail, ChevronDown, Upload, Settings} from "lucide-react";
 import { Avatar } from "@mui/material";
 import EventModal from "../EventModal"; 
 import Calendar from "../Calendar"
@@ -169,8 +169,11 @@ const ClubManage = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col items-end flex-grow">
-              <button className="mt-4 bg-[#7CE9BF] shadow-lg px-4 py-2 rounded-lg">สมัครเข้าชมรม</button>
+            <div className="flex flex-col items-end flex-grow pr-4">
+              <button className="mt-4 bg-[#7CE9BF] hover:bg-emerald-400 shadow-lg px-4 py-2 rounded-lg">เปิดรับสมัคร</button>
+            </div>
+            <div className="pt-6">
+                <Settings className="text-[#7CE9BF] hover:animate-spin" />
             </div>
           </div>
         </div>
