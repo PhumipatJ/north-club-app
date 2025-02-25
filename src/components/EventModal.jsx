@@ -201,7 +201,7 @@ const EventModal = ({ isOpen, onClose }) => {
                 {/* Upload & Submit */}
                 <div className="flex flex-col space-x-4 justify-between items-center">
                     {/* Image Upload Section */}
-                    <label htmlFor="file-upload" className="cursor-pointer h-80 w-full">
+                    <label htmlFor="file-upload" className="cursor-pointer h-50 w-full">
                         <div className="border-2 border-gray-300 rounded-2xl flex flex-col items-center justify-center p-4 mb-8 w-full h-full hover:bg-gray-100">
                             <Upload className="w-10 h-10 text-[#FF7E69]" />
                             <p className="text-gray-400 text-center whitespace-pre-line">{imageName}</p>
