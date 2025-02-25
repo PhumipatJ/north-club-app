@@ -34,10 +34,10 @@ function App() {
           <Route path="/stats" element={<><Statpage /><Footer /></>} />
           <Route path="/clubApplication" element={<Wrapper allowedRoles={['student', 'club', 'admin']} ><ClubApplication /><Footer /></Wrapper>} />
           <Route path="/docs" element={<><Clubfile /><Footer /></>} />
-          <Route path="/database" element={<Wrapper allowedRoles={['admin']} ><AdminApprove /><Footer /></Wrapper>} />
-          <Route path="/adminRespond" element={<Wrapper allowedRoles={['admin']} ><AdminRespond /><Footer /></Wrapper>} />
-          <Route path="/approvalHistory" element={<Wrapper allowedRoles={['admin']} ><ApprovalHistory /><Footer /></Wrapper>} />
-          <Route path="/approvalDetail/:clubId" element={<Wrapper allowedRoles={['admin']} ><ApprovalDetail /><Footer /></Wrapper>} />
+          <Route path="/database" element={<Wrapper allowedRoles={['admin']} ><AdminApprove /></Wrapper>} />
+          <Route path="/database/adminRespond" element={<Wrapper allowedRoles={['admin']} ><AdminRespond /></Wrapper>} />
+          <Route path="/database/approvalHistory" element={<Wrapper allowedRoles={['admin']} ><ApprovalHistory /></Wrapper>} />
+          <Route path="/database/approvalDetail/:clubId" element={<Wrapper allowedRoles={['admin']} ><ApprovalDetail /><Footer /></Wrapper>} />
         </Routes>
       </Router>
     </>

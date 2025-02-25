@@ -154,7 +154,7 @@ const Navbar = () => {
           {/* Conditional Rendering Based on Role */}
 
           {userRole === "admin" &&
-            (location.pathname === "/database" ? (
+            (location.pathname === "/database" || location.pathname==='/database/adminRespond' ||location.pathname==='/database/approvalHistory'? (
               <Link
                 to="/database"
                 className="hover:underline hover:text-[#7CE9BF] pt-1.5 text-[#7CE9BF]"
@@ -296,7 +296,7 @@ const Navbar = () => {
 
           {userRole === "admin" && (
             <Link
-              to="/database"
+            to={"/database"} 
               className="hover:underline hover:text-[#7CE9BF]"
               onClick={() => setIsOpen(false)}
             >
