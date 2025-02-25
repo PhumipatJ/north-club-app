@@ -231,7 +231,7 @@ const AdminRespond = () => {
                         color="primary"
                         sx={{ mr: 2 }}
                         onClick={() =>
-                          navigate(`/approvalDetail/${club.club_id}`, {
+                          navigate(`/database/approvalDetail/${club.club_id}`, {
                             state: { member_count: club.member_count },
                           })
                         }

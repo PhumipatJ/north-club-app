@@ -18,7 +18,6 @@ import AdminApprove from './components/sections/AdminApprove';
 import AdminRespond from './components/sections/AdminRespond';
 import ApprovalHistory from './components/sections/ApprovalHistory';
 import ApprovalDetail from './components/sections/ApprovalDetail';
-
 function App() {
 
   return (
@@ -31,8 +30,8 @@ function App() {
           <Route path="/login" element={<><Login /><Footer /></>} />
           <Route path="/register" element={<><Register /><Footer /></>} />
           <Route path="/clubs" element={<><Clublist /><Footer /></>} />
-          <Route path="/clubs/:clubname" element={<><Clubpage /><Footer /></>} />
-          <Route path="/clubs/:clubname/members" element={<><Clubmember/><Footer /></>} />
+          <Route path="/clubs/:clubId" element={<><Clubpage /><Footer /></>} />
+          <Route path="/clubmember/:clubId" element={<><Clubmember/><Footer /></>} />
           <Route path="/stats" element={<><Statpage /><Footer /></>} />
           <Route path="/clubApplication" element={<Wrapper allowedRoles={['student', 'club', 'admin']} ><ClubApplication /><Footer /></Wrapper>} />
           <Route path="/docs" element={<><Clubfile /><Footer /></>} />
@@ -40,6 +39,7 @@ function App() {
           <Route path="/database/adminRespond" element={<Wrapper allowedRoles={['admin']} ><AdminRespond /></Wrapper>} />
           <Route path="/database/approvalHistory" element={<Wrapper allowedRoles={['admin']} ><ApprovalHistory /></Wrapper>} />
           <Route path="/database/approvalDetail/:clubId" element={<Wrapper allowedRoles={['admin']} ><ApprovalDetail /><Footer /></Wrapper>} />
+          <Route path="/userprofile" element={<Wrapper allowedRoles={['student','club','admin']}><UserProfile /><Footer /></Wrapper>} />
         </Routes>
       </Router>
     </>
