@@ -11,12 +11,12 @@ const ClubApplication = () => {
   const [clubQuote, setClubQuote] = useState("");
   const [clubDescription, setClubDescription] = useState("");
   const [applicationDocument, setApplicationDocument] = useState(null);
-  const [clubAvatar, setClubAvatar] = useState(null);
+  const [clubAvatar, setClubAvatar] = useState("using (png, jpg, webp)");
   const [isOpen, setIsOpen] = useState(false);
   const [fileName, setFileName] = useState("using (png, jpg, webp)");
   // change on positionFrontEnd to display on Club Member text field not the positions na
   const positionFrontEnd = ["ประธานชมรม", "รองประธานชมรม", "กรรมการ", "กรรมการ", "กรรมการ", "กรรมการ", "เลขานุการ", "ผู้ช่วยเลขานุการ"];
-  const positions = ["club_president", "vice_president", "committee_member", "committee_member", "committee_member", "committee_member", "secretary", "assistant_secretary"];
+  //const positions = ["club_president", "vice_president", "committee_member", "committee_member", "committee_member", "committee_member", "secretary", "assistant_secretary"];
   // don't change positions. it use on database na frontend hua kuy
   const [members, setMembers] = useState(
     positionFrontEnd.map(position => ({ email: "", position }))
@@ -141,7 +141,7 @@ const ClubApplication = () => {
       <h2 className="text-2xl font-bold mb-6">คำขอสร้างชมรม</h2>
       <div className="grid grid-cols-2 gap-6">
         <div>
-          <label className="block text-lg font-semibold mb-1">Club logo</label>
+          <label className="block text-lg font-semibold mb-1">โลโก้ชมรม</label>
           <div className="flex flex-col">
             <div className="flex flex-row items-center p-4 rounded-md text-center">
               <img src={"/assets/Maskgroup.png"} alt="Member" className="w-32 h-32 mx-4 rounded-full opacity-50" />
@@ -149,10 +149,10 @@ const ClubApplication = () => {
                 <div className="flex flex-row items-center">
                   <label className="cursor-pointer flex items-center gap-2">
                     <FileUp size={50} className="text-white fill-[#7CE9BF]" />
-                    <span className="text-gray-300">{fileName}</span>
+                    <span className="text-gray-300">{clubAvatar}</span>
                     <input
                       type="file"
-                      onChange={(e) => setFileName(e.target.files[0]?.name || "using (png, jpg, webp)")}
+                      onChange={(e) => setClubAvatar(e.target.files[0]?.name || "using (png, jpg, webp)")}
                       className="hidden"
                     />
                   </label>
@@ -162,7 +162,7 @@ const ClubApplication = () => {
             </div>
             <div className="mb-6">
               <label className="block font-medium mb-1">ชื่อชมรม</label>
-              <input type="text" placeholder="ชื่อชมรม" className="border border-[#FF7E69] rounded-md w-full p-2" />
+              <input type="text" placeholder="ชื่อชมรม" className="border border-[#FF7E69] rounded-md w-full p-2" onChange={(e) => setClubName(e.target.value)}/>
             </div>
             <div className="mb-5">
               <label className="block font-medium mb-2">อาจารย์ที่ปรึกษา</label>
