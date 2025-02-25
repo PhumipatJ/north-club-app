@@ -90,11 +90,38 @@ const ClubApplication = () => {
     return data.path;
   };
 
+  const isFormValid = () => {
+    console.log(clubType);
+    if (clubType === "") {
+      return false;
+    }
+  
+    //console.log(members);
+  
+    // Check for duplicate emails
+    const emailSet = new Set();
+    for (const member of members) {
+      if (emailSet.has(member.email)) {
+        return false; // Duplicate found
+      }
+      emailSet.add(member.email);
+    }
+  
+    return true; // No duplicates
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-     alert(`Creating club... (Logged-in user: ${currentUserEmail})`);
 
+    if (!isFormValid()) {
+      alert("Email duplicated or not select clubType");
+      return;
+    }
+
+    alert(`Creating club... (Logged-in user: ${currentUserEmail})`);
+    
     const emails = members.map((m) => m.email.trim()).filter((email) => email !== "");
+    console.log(emails);
 
     const { data: existingUsers, error: emailError } = await supabase
         .from("user") 
@@ -159,6 +186,7 @@ const ClubApplication = () => {
   };
 
   return (
+    <form>
     <div className="max-w-5xl mx-auto mt-24 p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-bold mb-6">คำขอสร้างชมรม</h2>
       <div className="grid grid-cols-2 gap-6">
@@ -189,12 +217,13 @@ const ClubApplication = () => {
               <input type="text" placeholder="ชื่อชมรม" className="border border-[#FF7E69] rounded-md w-full p-2" onChange={(e) => setClubName(e.target.value)} required/>
             </div>
             <div className="mb-5">
-              <label className="block font-medium mb-2">อาจารย์ที่ปรึกษา</label>
+              <label className="block font-medium mb-2" >อาจารย์ที่ปรึกษา</label>
               <input type="text" placeholder="ชื่อ นามสกุล" className="border border-[#FF7E69] rounded-md w-full p-2 mb-2" onChange={(e) => setClubAdviser(e.target.value)} required/>
-              <input type="email" placeholder="Gmail อาจารย์ที่ปรึกษา" className="border border-[#FF7E69] rounded-md w-full p-2 mb-1" />
+              <input type="email" placeholder="Gmail อาจารย์ที่ปรึกษา" className="border border-[#FF7E69] rounded-md w-full p-2 mb-1" required/>
             </div>
             <div className="relative">
       <button 
+        type="button"
         onClick={() => setIsOpen(!isOpen)} 
         className="border border-[#FF7E69] rounded-md w-full p-2 text-left bg-white"
       >
@@ -207,7 +236,7 @@ const ClubApplication = () => {
           </div>
         </div>
       </button>
-
+      
       {isOpen && (
         <ul className="absolute w-full mt-1 rounded-md bg-white shadow-md z-10">
           {clubTypes.map((type, index) => (
@@ -255,7 +284,7 @@ const ClubApplication = () => {
 
       <div className="mt-4">
         <label className="block font-medium mb-1">Tag* (ใช้ "," คั่นระหว่าง tag)</label>
-        <input type="text" className="border border-[#FF7E69] rounded-md w-full p-2" onChange={(e) => setClubDescription(e.target.value)}/>
+        <input type="text" className="border border-[#FF7E69] rounded-md w-full p-2" onChange={(e) => setClubDescription(e.target.value)} required/>
       </div>
 
       <div className="mt-4">
@@ -269,6 +298,7 @@ const ClubApplication = () => {
                 type="file"
                 onChange={handleDocumentFileChange}
                 className="hidden"
+                required
               />
             </label>
           </div>
@@ -283,6 +313,7 @@ const ClubApplication = () => {
         </button>
       </div>
     </div>
+    </form>
   );
 };
 

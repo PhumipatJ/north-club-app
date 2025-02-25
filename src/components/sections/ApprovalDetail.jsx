@@ -14,7 +14,7 @@ const ApprovalDetail = () => {
 
   useEffect(() => {
     const fetchClubDetails = async () => {
-    console.log(member_count)
+    
       const { data, error } = await supabase
         .from("clubs")
         .select("*")
@@ -62,7 +62,7 @@ const ApprovalDetail = () => {
     ]);
 
     if (insertError) {
-        console.error("updated history failed:", error);
+        console.error("updated history failed:", insertError);
         return;
       }
 
@@ -123,6 +123,11 @@ const handleReject = async (clubId) => {
         approval_status: false,
         },
     ]);
+    
+    if (insertError) {
+      console.error("updated history failed:", insertError);
+      return;
+    }
 
     // Delete club and clubMembers from database
     const { Cerror } = await supabase.from("clubMembers").delete().eq("club_id", clubId);
