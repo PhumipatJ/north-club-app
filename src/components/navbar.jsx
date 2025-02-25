@@ -255,14 +255,13 @@ const Navbar = () => {
                     </div>
                   </div>
                 <Link to="/clubApplication" className="flex flex-row items-center justify-between mt-3 p-2 border border-gray-200 hover:bg-gray-100 rounded-md">
-                <div className="flex flex-row items-center justify-between mt-3 p-2 border border-gray-200 hover:bg-gray-100 rounded-md"
-                  onClick={() => navigate("/clubApplication")}>
+                
                   <div>
                     <p className="text-[#7CE9BF] text-sm font-semibold">ไอเดียใหม่ ชมรมใหม่!</p>
                     <p className="text-xs text-gray-500">ยื่นคำขอสร้างชมรมใหม่เลย</p>  
                   </div>
                   <SquarePlus className="text-gray-400" />
-                  </div>
+                  
                 </Link>
           
                 <button 

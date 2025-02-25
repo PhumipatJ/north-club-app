@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Filter, Search, Info, ChevronDown } from "lucide-react";
 import supabase from "../../../supabaseClient";
+import Loading from "../loading";
 
 let clubs = [];
 const tags = ["วิชาการ","กีฬา","ศิลปะและวัฒนธรรม","อาสาและบำเพ็ญประโยชน์"];
@@ -12,6 +13,8 @@ const Clublist = () => {
   const [selectedTags, setSelectedTags] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [activeClubs, setActiveClubs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
 
   const handleTagChange = (tag) => {
@@ -79,7 +82,9 @@ const Clublist = () => {
         );
       }
     };
-  
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
     fetchActiveClubs();
   }, []);
   
@@ -96,7 +101,12 @@ const Clublist = () => {
     type: club.club_type
   }));
   
-  
+  if(loading){
+    return <>
+    <Loading/>
+    <div className="h-[100dvh]"></div>
+    </>
+  }
   return (
     <div className="max-w-4xl mx-auto p-4 mt-24 ">
       <div className="flex flex-row items-center justify-between">
