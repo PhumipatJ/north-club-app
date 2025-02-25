@@ -9,6 +9,7 @@ import Clublist from './components/sections/Clublist'
 import Clubfile from './components/sections/Clubfile';
 import Clubpage from './components/sections/Clubpage';
 import Clubmember from './components/sections/Clubmember';
+import ClubManage from './components/sections/ClubManage';
 import Statpage from './components/sections/Statpage';
 import UserProfile from './components/sections/UserProfile';
 import Wrapper from './components/sections/Wrapper';
@@ -25,7 +26,6 @@ function App() {
       <Router>
         <Navbar />
         <Routes>
-
           <Route path="/" element={<><Home /><Footer /></>} />
           <Route path="/login" element={<><Login /><Footer /></>} />
           <Route path="/register" element={<><Register /><Footer /></>} />
@@ -34,6 +34,7 @@ function App() {
           <Route path="/clubmember/:clubId" element={<><Clubmember/><Footer /></>} />
           <Route path="/stats" element={<><Statpage /><Footer /></>} />
           <Route path="/clubApplication" element={<Wrapper allowedRoles={['student', 'club', 'admin']} ><ClubApplication /><Footer /></Wrapper>} />
+           <Route path="/clubmanage" element={<Wrapper allowedRoles={['club']} ><ClubManage /><Footer /></Wrapper>} />
           <Route path="/docs" element={<><Clubfile /><Footer /></>} />
           <Route path="/database" element={<Wrapper allowedRoles={['admin']} ><AdminApprove /></Wrapper>} />
           <Route path="/database/adminRespond" element={<Wrapper allowedRoles={['admin']} ><AdminRespond /></Wrapper>} />
