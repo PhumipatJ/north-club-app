@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button, TextField, FormControl, FormControlLabel, Radio, RadioGroup, Container, Typography, Box } from "@mui/material";
+import { FileUp, ChevronDown, ChevronUp } from "lucide-react";
 import supabase from "../../../supabaseClient";
 import authService from "../../service/AuthService";
 
@@ -11,14 +11,17 @@ const ClubApplication = () => {
   const [clubQuote, setClubQuote] = useState("");
   const [clubDescription, setClubDescription] = useState("");
   const [applicationDocument, setApplicationDocument] = useState(null);
-  const [clubAvatar, setClubAvatar] = useState(null);
+  const [clubAvatar, setClubAvatar] = useState("using (png, jpg, webp)");
+  const [isOpen, setIsOpen] = useState(false);
+  const [fileName, setFileName] = useState("using (png, jpg, webp)");
   // change on positionFrontEnd to display on Club Member text field not the positions na
-  //const positionFrontEnd = ["ประธานชมรม", "รองประธานชมรม", "กรรมการ", "กรรมการ", "กรรมการ", "กรรมการ", "เลขานุการ", "ผู้ช่วยเลขานุการ"];
-  const positions = ["club_president", "vice_president", "committee_member", "committee_member", "committee_member", "committee_member", "secretary", "assistant_secretary"];
+  const positionFrontEnd = ["ประธานชมรม", "รองประธานชมรม", "กรรมการ", "กรรมการ", "กรรมการ", "กรรมการ", "เลขานุการ", "ผู้ช่วยเลขานุการ"];
+  //const positions = ["club_president", "vice_president", "committee_member", "committee_member", "committee_member", "committee_member", "secretary", "assistant_secretary"];
   // don't change positions. it use on database na frontend hua kuy
   const [members, setMembers] = useState(
-    positions.map(position => ({ email: "", position }))
+    positionFrontEnd.map(position => ({ email: "", position }))
   );
+
   const clubTypes = ["กีฬา", "วิชาการ", "อาสาและบำเพ็ญประโยชน์", "ศิลปะและวัฒนธรรม"];
 
   useEffect(() => {
@@ -39,8 +42,8 @@ const ClubApplication = () => {
     fetchUserEmail();
   }, []);
 
-  const handleClubTypeChange = (e) => {
-    setClubType(e.target.value);
+  const handleClubTypeChange = (type) => {
+    setClubType(type);
   };
 
   const handleMemberChange = (index, value) => {
@@ -134,47 +137,122 @@ const ClubApplication = () => {
   };
 
   return (
-    <Container className="pt-8">
-      <Typography variant="h4">Create a Club</Typography>
-      <form onSubmit={handleSubmit}>
-        <FormControl fullWidth margin="normal">
-          <TextField label="Club Name" value={clubName} onChange={(e) => setClubName(e.target.value)} required />
-        </FormControl>
-        <FormControl fullWidth margin="normal">
-          <Typography variant="body1">Club Type</Typography>
-          <RadioGroup value={clubType} onChange={handleClubTypeChange}>
-            {clubTypes.map((type) => (
-              <FormControlLabel key={type} value={type} control={<Radio />} label={type} />
+    <div className="max-w-5xl mx-auto mt-24 p-6 bg-white shadow-md rounded-lg">
+      <h2 className="text-2xl font-bold mb-6">คำขอสร้างชมรม</h2>
+      <div className="grid grid-cols-2 gap-6">
+        <div>
+          <label className="block text-lg font-semibold mb-1">โลโก้ชมรม</label>
+          <div className="flex flex-col">
+            <div className="flex flex-row items-center p-4 rounded-md text-center">
+              <img src={"/assets/Maskgroup.png"} alt="Member" className="w-32 h-32 mx-4 rounded-full opacity-50" />
+              <div className="flex flex-col">
+                <div className="flex flex-row items-center">
+                  <label className="cursor-pointer flex items-center gap-2">
+                    <FileUp size={50} className="text-white fill-[#7CE9BF]" />
+                    <span className="text-gray-300">{clubAvatar}</span>
+                    <input
+                      type="file"
+                      onChange={(e) => setClubAvatar(e.target.files[0]?.name || "using (png, jpg, webp)")}
+                      className="hidden"
+                    />
+                  </label>
+                  </div>
+                <h2 className="text-left text-gray-400">Upload</h2>
+              </div>
+            </div>
+            <div className="mb-6">
+              <label className="block font-medium mb-1">ชื่อชมรม</label>
+              <input type="text" placeholder="ชื่อชมรม" className="border border-[#FF7E69] rounded-md w-full p-2" onChange={(e) => setClubName(e.target.value)}/>
+            </div>
+            <div className="mb-5">
+              <label className="block font-medium mb-2">อาจารย์ที่ปรึกษา</label>
+              <input type="text" placeholder="ชื่อ นามสกุล" className="border border-[#FF7E69] rounded-md w-full p-2 mb-2" />
+              <input type="email" placeholder="Gmail อาจารย์ที่ปรึกษา" className="border border-[#FF7E69] rounded-md w-full p-2 mb-1" />
+            </div>
+            <div className="relative">
+      <button 
+        onClick={() => setIsOpen(!isOpen)} 
+        className="border border-[#FF7E69] rounded-md w-full p-2 text-left bg-white"
+      >
+        <div className="flex flex-row items-center justify-between">
+          <div>
+            {clubType || "เลือกประเภทชมรม"}
+          </div>
+          <div className="text-[#FF7E69]">
+            {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+          </div>
+        </div>
+      </button>
+
+      {isOpen && (
+        <ul className="absolute w-full mt-1 rounded-md bg-white shadow-md z-10">
+          {clubTypes.map((type, index) => (
+            <li 
+              key={index} 
+              onClick={() => { handleClubTypeChange(type); setIsOpen(false); }} 
+              className="p-2 cursor-pointer hover:bg-[#FF7E69] hover:rounded-md"
+            >
+              {type}
+            </li>
+            
+          ))}
+        </ul>
+      )}
+    </div>
+          </div>
+        </div>
+        <div>
+          <label className="block font-medium mb-2">Gmail นักศึกษา</label>
+          <div className="space-y-2">
+            {positionFrontEnd.map((role, index) => (
+              <div className="flex flex-row mb-2">
+                <input
+                  key={index}
+                  type="email"
+                  placeholder="Gmail นักศึกษา"
+                  className="border-1 border-[#FF7E69] rounded-md max-w-2/3 w-full p-2 mb-3"
+                />
+                <h2 className="text-left pl-4">{role}</h2>
+              </div>
             ))}
-          </RadioGroup>
-        </FormControl>
-        <FormControl fullWidth margin="normal">
-          <TextField label="Club Adviser" value={clubAdviser} onChange={(e) => setClubAdviser(e.target.value)} required />
-        </FormControl>
-        <FormControl fullWidth margin="normal">
-          <TextField label="Club Quote" value={clubQuote} onChange={(e) => setClubQuote(e.target.value)} />
-        </FormControl>
-        <FormControl fullWidth margin="normal">
-          <TextField label="Tag" multiline rows={4} value={clubDescription} onChange={(e) => setClubDescription(e.target.value)} />
-        </FormControl>
-        <FormControl fullWidth margin="normal">
-          <Typography variant="body1">Upload Club Avatar</Typography>
-          <input type="file" onChange={(e) => setClubAvatar(e.target.files[0])} />
-        </FormControl>
-        <FormControl fullWidth margin="normal">
-          <Typography variant="body1">Upload Application Document</Typography>
-          <input type="file" onChange={(e) => setApplicationDocument(e.target.files[0])} />
-        </FormControl>
-        <Typography variant="h6">Club Members</Typography>
-        {members.map((member, index) => (
-          <Box key={index} display="flex" gap={2} marginBottom={2}>
-            <TextField label="Member Email" type="email" value={member.email} onChange={(e) => handleMemberChange(index, e.target.value)} fullWidth required disabled={index === 0}/>
-            <TextField label="Position" value={member.position} fullWidth disabled />
-          </Box>
-        ))}
-        <Button variant="contained" color="primary" type="submit" sx={{ mt: 2 }}>Create Club</Button>
-      </form>
-    </Container>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4">
+        <label className="block font-medium mb-1">Quote</label>
+        <textarea className="border border-[#FF7E69] rounded-md w-full p-2 h-20"></textarea>
+      </div>
+
+      <div className="mt-4">
+        <label className="block font-medium mb-1">Tag* (ใช้ "," คั่นระหว่าง tag)</label>
+        <input type="text" className="border border-[#FF7E69] rounded-md w-full p-2" />
+      </div>
+
+      <div className="mt-4">
+        <label className="block font-medium mb-1">ไฟล์เอกสาร</label>
+        <div className="flex flex-col">
+          <div className="flex flex-row items-center">
+            <label className="cursor-pointer flex items-center gap-2">
+              <FileUp size={50} className="text-white fill-[#7CE9BF]" />
+              <span className="text-gray-300">{fileName}</span>
+              <input
+                type="file"
+                onChange={(e) => setFileName(e.target.files[0]?.name || "using (png, jpg, webp)")}
+                className="hidden"
+              />
+            </label>
+          </div>
+          <h2 className="text-left text-gray-400">Upload</h2>
+        </div>
+      </div>
+
+      <div className="flex justify-end">
+        <button className="mt-6 w-1/4 bg-[#7CE9BF] text-white py-2 rounded-md hover:bg-emerald-400 active:bg-emerald-500 ">
+          ส่งคำขอ
+        </button>
+      </div>
+    </div>
   );
 };
 

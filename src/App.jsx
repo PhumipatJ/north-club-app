@@ -39,7 +39,6 @@ function App() {
           <Route path="/approvalHistory" element={<Wrapper allowedRoles={['admin']} ><ApprovalHistory /><Footer /></Wrapper>} />
           <Route path="/approvalDetail/:clubId" element={<Wrapper allowedRoles={['admin']} ><ApprovalDetail /><Footer /></Wrapper>} />
         </Routes>
-        
       </Router>
     </>
   )

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation ,useNavigate} from "react-router-dom";
 import {
   Menu,
   X,
@@ -19,6 +19,7 @@ const Navbar = () => {
   const [userRole, setUserRole] = useState(null);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileMenuRef = useRef(null); // Reference for detecting outside clicks
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -229,28 +230,25 @@ const Navbar = () => {
                       <SquareArrowOutUpRight className="text-gray-400" />
                     </div>
                   </div>
-
-                  <div className="flex flex-row items-center justify-between mt-3 p-2 border border-gray-200 hover:bg-gray-100 rounded-md">
-                    <div>
-                      <p className="text-[#7CE9BF] text-sm font-semibold">
-                        ไอเดียใหม่ ชมรมใหม่!
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        ยื่นคำขอสร้างชมรมใหม่เลย
-                      </p>
-                    </div>
-                    <SquarePlus className="text-gray-400" />
+  
+                <div className="flex flex-row items-center justify-between mt-3 p-2 border border-gray-200 hover:bg-gray-100 rounded-md"
+                  onClick={() => navigate("/clubApplication")}>
+                  <div>
+                    <p className="text-[#7CE9BF] text-sm font-semibold">ไอเดียใหม่ ชมรมใหม่!</p>
+                    <p className="text-xs text-gray-500">ยื่นคำขอสร้างชมรมใหม่เลย</p>  
                   </div>
-
-                  <button
-                    className="w-full mt-3 bg-[#FF7E69] text-white py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-red-600"
-                    onClick={async () => {
-                      await authService.logout();
-                    }}
-                  >
-                    <span>ออกจากระบบ</span>
-                  </button>
+                  <SquarePlus className="text-gray-400" />
                 </div>
+          
+                <button 
+                  className="w-full mt-3 bg-[#FF7E69] text-white py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-red-600"
+                  onClick={async () => {
+                    await authService.logout();
+                  }}
+                >
+                  <span>ออกจากระบบ</span>
+                </button>
+              </div>
               )}
             </div>
           ) : (
