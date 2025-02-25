@@ -3,61 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { FaFacebook } from "react-icons/fa";
 import { FaSquareInstagram } from "react-icons/fa6";
-import { Mail, ChevronDown } from "lucide-react";
-import { Avatar } from "@mui/material";
+import { Mail } from "lucide-react";
 import Calendar from "../Calendar"
 import supabase from "../../../supabaseClient";
-
-const clubInfo = [
-  {
-    name: "KMUTNB Esport",
-    avatar: "/assets/esport.png",
-    banner: "/assets/esport.png",
-    createdDate: "1 Jan 2020",
-    locate: "ชั้น 6 อาคาร 40 ปี มจพ. กรุงเทพ",
-    socialLinks: {
-      facebook: "#",
-      instagram: "#",
-      email: "kmutnbphotoclub.bkk@gmail.com",
-    },
-    members: [
-      { name: "น.ส.วิลสม กาสิ", role: "ประธานชมรม" },
-      { name: "นายภัทร เครื่องาม", role: "รองประธานชมรม" },
-      { name: "น.ส.วิลสม กาสิ", role: "กรรมการ" },
-      { name: "น.ส.วิลสม กาสิ", role: "กรรมการ" },
-    ],
-  },
-  {
-    name: "KMUTNB Boxing Club",
-    avatar: "/assets/boxing.png",
-    banner: "/assets/boxing.png",
-    createdDate: "2 Jan 2022",
-    locate: "ชั้น 6 อาคาร 40 ปี มจพ. กรุงเทพ",
-    socialLinks: {
-      facebook: "#",
-      instagram: "l_uod_l",
-      email: "kmutnbphotoclub.bkk@gmail.com",
-    },
-    members: [
-      { name: "น.ส.วิลสม กาสิ", role: "ประธานชมรม" },
-      { name: "นายภัทร เครื่องาม", role: "รองประธานชมรม" },
-      { name: "น.ส.วิลสม กาสิ", role: "กรรมการ" },
-      { name: "น.ส.วิลสม กาสิ", role: "กรรมการ" },
-      { name: "น.ส.วิลสม กาสิ", role: "กรรมการ" },
-      { name: "น.ส.วิลสม กาสิ", role: "กรรมการ" },
-      { name: "น.ส.วิลสม กาสิ", role: "กรรมการ" },
-    ],
-  },
-];
 
 const Clubpage = () => {
   const { clubId } = useParams();
   const navigate = useNavigate();
 
-  // Find the club that matches the URL parameter
-  const club = clubInfo[0];
-
-  const [clubTest, setClub] = useState(null);
+  const [club, setClub] = useState(null);
   const [members, setMembers] = useState([]);
 
   useEffect(() => {
@@ -124,7 +78,7 @@ const Clubpage = () => {
   
   
   //console.log(clubTest);
-  console.log(members);
+  //console.log(members);
 
 
 
@@ -141,25 +95,25 @@ const Clubpage = () => {
         <div className="flex flex-col">
           <div className="flex flex-row p-6 h-fit">
             <div className="relative rounded-full flex items-center justify-center mx-12">
-            <img className="w-48 h-48 rounded-full -translate-y-1/2" src={`${supabase.storage.from("club-avatars").getPublicUrl(clubTest?.club_avatar).data.publicUrl}`} alt={clubTest?.club_name } />
+            <img className="w-48 h-48 rounded-full -translate-y-1/2" src={`${supabase.storage.from("club-avatars").getPublicUrl(club?.club_avatar).data.publicUrl}`} alt={club?.club_name } />
             </div>
             <div className="flex flex-col h-fit">
-              <h1 className="text-5xl font-bold text-left">{clubTest?.club_name}</h1>
+              <h1 className="text-5xl font-bold text-left">{club?.club_name}</h1>
               <div className="text-gray-500 text-left">
-                <p>สร้างเมื่อ: { new Date(clubTest?.approve_date)
+                <p>สร้างเมื่อ: { new Date(club?.approve_date)
               .toLocaleDateString("th-TH", { day: "2-digit", month: "2-digit", year: "numeric" })}</p>
-                <p>ที่ตั้งชมรม: {clubTest?.location}</p>
+                <p>ที่ตั้งชมรม: {club?.location}</p>
                 <div className="flex items-center"> {/* Container for email */}
                   <Mail className="w-5 h-5 text-[#7CE9BF]"/>
-                  <p className="px-4">{clubTest?.mail}</p>
+                  <p className="px-4">{club?.mail}</p>
                 </div>
                 <div className="flex items-center"> {/* Container for Facebook */}
                   <FaFacebook className="w-5 h-5 text-[#7CE9BF]"/>
-                  <p className="px-4">{clubTest?.facebook}</p>
+                  <p className="px-4">{club?.facebook}</p>
                 </div>
                 <div className="flex items-center"> {/* Container for Instagram */}
                   <FaSquareInstagram className="w-5 h-5 text-[#7CE9BF]" />
-                  <a href="https://www.instagram.com/l_uod_l_/" target="_blank" className="px-4">{clubTest?.instagram}</a>
+                  <a href="https://www.instagram.com/l_uod_l_/" target="_blank" className="px-4">{club?.instagram}</a>
                 </div>
               </div>
             </div>
