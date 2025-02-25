@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, UserCircle, SquareArrowOutUpRight, SquarePlus, SquarePen, User } from "lucide-react";
 import authService from "../service/AuthService"; 
 
@@ -12,6 +12,7 @@ const Navbar = () => {
   const profileMenuRef = useRef(null); // Reference for detecting outside clicks
   const [showClubCard, setShowClubCard] = useState(false);
   const clubCardRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -137,7 +138,10 @@ const Navbar = () => {
                       <p className="text-gray-500 text-sm">นักศึกษา</p>
                     </div>
                   </div>
-                  <SquarePen className="text-gray-400 hover:text-gray-500" />
+                  <Link to="/user">
+                    <SquarePen className="text-gray-400 hover:text-gray-500" />
+                  </Link>
+                  
                 </div>
           
                 <div className="mt-3 border-b pb-2">
@@ -153,8 +157,10 @@ const Navbar = () => {
                     <SquareArrowOutUpRight className="text-gray-400" />
                   </div>
                 </div>
-          
+
                 <Link to="/clubApplication" className="flex flex-row items-center justify-between mt-3 p-2 border border-gray-200 hover:bg-gray-100 rounded-md">
+                <div className="flex flex-row items-center justify-between mt-3 p-2 border border-gray-200 hover:bg-gray-100 rounded-md"
+                  onClick={() => navigate("/clubApplication")}>
                   <div>
                     <p className="text-[#7CE9BF] text-sm font-semibold">ไอเดียใหม่ ชมรมใหม่!</p>
                     <p className="text-xs text-gray-500">ยื่นคำขอสร้างชมรมใหม่เลย</p>  
