@@ -18,7 +18,6 @@ import AdminRespond from './components/sections/AdminRespond';
 import ApprovalHistory from './components/sections/ApprovalHistory';
 import ApprovalDetail from './components/sections/ApprovalDetail';
 
-
 function App() {
 
   return (
@@ -26,21 +25,21 @@ function App() {
       <Router>
         <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/clubs" element={<Clublist />} />
-          <Route path="/clubs/:clubname" element={<Clubpage />} />
-          <Route path="/clubs/:clubname/members" element={<Clubmember/>} />
-          <Route path="/stats" element={<Statpage />} />
-          <Route path="/clubApplication" element={<Wrapper allowedRoles={['student', 'club', 'admin']} ><ClubApplication /></Wrapper>} />
-          <Route path="/docs" element={<Clubfile />} />
-          <Route path="/adminApprove" element={<Wrapper allowedRoles={['admin']} ><AdminApprove /></Wrapper>} />
-          <Route path="/adminRespond" element={<Wrapper allowedRoles={['admin']} ><AdminRespond /></Wrapper>} />
-          <Route path="/approvalHistory" element={<Wrapper allowedRoles={['admin']} ><ApprovalHistory /></Wrapper>} />
-          <Route path="/approvalDetail/:clubId" element={<Wrapper allowedRoles={['admin']} ><ApprovalDetail /></Wrapper>} />
+          <Route path="/" element={<><Home /><Footer /></>} />
+          <Route path="/login" element={<><Login /><Footer /></>} />
+          <Route path="/register" element={<><Register /><Footer /></>} />
+          <Route path="/clubs" element={<><Clublist /><Footer /></>} />
+          <Route path="/clubs/:clubname" element={<><Clubpage /><Footer /></>} />
+          <Route path="/clubs/:clubname/members" element={<><Clubmember/><Footer /></>} />
+          <Route path="/stats" element={<><Statpage /><Footer /></>} />
+          <Route path="/clubApplication" element={<Wrapper allowedRoles={['student', 'club', 'admin']} ><ClubApplication /><Footer /></Wrapper>} />
+          <Route path="/docs" element={<><Clubfile /><Footer /></>} />
+          <Route path="/database" element={<Wrapper allowedRoles={['admin']} ><AdminApprove /></Wrapper>} />
+          <Route path="/adminRespond" element={<Wrapper allowedRoles={['admin']} ><AdminRespond /><Footer /></Wrapper>} />
+          <Route path="/approvalHistory" element={<Wrapper allowedRoles={['admin']} ><ApprovalHistory /><Footer /></Wrapper>} />
+          <Route path="/approvalDetail/:clubId" element={<Wrapper allowedRoles={['admin']} ><ApprovalDetail /><Footer /></Wrapper>} />
         </Routes>
-        <Footer />
+        
       </Router>
     </>
   )
