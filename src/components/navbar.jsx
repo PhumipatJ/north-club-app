@@ -166,6 +166,7 @@ const Navbar = () => {
                     <p className="text-xs text-gray-500">ยื่นคำขอสร้างชมรมใหม่เลย</p>  
                   </div>
                   <SquarePlus className="text-gray-400" />
+                  </div>
                 </Link>
           
                 <button 
