@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import { FileUp, ChevronDown, ChevronUp } from "lucide-react";
 import supabase from "../../../supabaseClient";
 import authService from "../../service/AuthService";
+import { useNavigate } from "react-router-dom"; 
 
 const ClubApplication = () => {
+  const navigate = useNavigate();
   const [currentUserEmail, setCurrentUserEmail] = useState("");
   const [clubName, setClubName] = useState("");
   const [clubType, setClubType] = useState(""); // Single selection
@@ -183,6 +185,7 @@ const ClubApplication = () => {
     }
     
     alert("Club created successfully");
+    navigate("/")
   };
 
   return (
