@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Container, Typography, Avatar, CircularProgress, Button } from "@mui/material";
+import { Container, Typography, Avatar, CircularProgress, Button,ThemeProvider} from "@mui/material";
 import { useLocation } from "react-router-dom";
 import supabase from "../../../supabaseClient";
+import theme from "../Theme";
 
 const ApprovalDetail = () => {
   const { clubId } = useParams();
@@ -108,7 +109,7 @@ const ApprovalDetail = () => {
 
   
 const handleReject = async (clubId) => {
-    
+    console.log(member_count)
     // Insert into approvalHistory
     const { error: insertError } = await supabase
     .from("approvalHistory")
@@ -117,12 +118,17 @@ const handleReject = async (clubId) => {
         club_name: club.club_name,
         club_avatar: club.club_avatar,
         club_type: club.club_type,
-        member_count: club.member_count,
+        member_count: member_count,
         approve_date: today,
         club_adviser: club.club_adviser,
         approval_status: false,
         },
     ]);
+
+    if (insertError) {
+      console.error("updated history failed:", insertError);
+      return;
+    }
 
     // Delete club and clubMembers from database
     const { Cerror } = await supabase.from("clubMembers").delete().eq("club_id", clubId);
