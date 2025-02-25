@@ -80,7 +80,6 @@ const ClubManage = () => {
         setClub(data);
       }
     };
-  
     fetchClubData();
   }, [clubId]);
   
@@ -215,6 +214,7 @@ const ClubManage = () => {
             <div className="bg-white shadow-lg rounded-lg pt-4 flex flex-col min-h-[25vh] items-center justify-center overflow-hidden
                 hover:bg-gray-100 group"
                 onClick={openModal}>
+                
                 {/* Create Event */}
                 <div className="flex items-center flex-row">
                     <div className="flex flex-col items-center">
@@ -230,7 +230,7 @@ const ClubManage = () => {
                 </div>
 
                 {/* Create Event Modal*/}
-                <EventModal isOpen={isOpen} onClose={closeModal} /> 
+                <EventModal isOpen={isOpen} onClose={closeModal}/> 
             </div>
           </div>
         </div>
