@@ -10,6 +10,8 @@ const Navbar = () => {
   const [userRole, setUserRole] = useState(null);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileMenuRef = useRef(null); // Reference for detecting outside clicks
+  const [showClubCard, setShowClubCard] = useState(false);
+  const clubCardRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,6 +56,9 @@ const Navbar = () => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
         setShowProfileMenu(false);
       }
+      if (clubCardRef.current && !clubCardRef.current.contains(event.target)) {
+        setShowClubCard(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -86,7 +91,29 @@ const Navbar = () => {
             <Link to="/database" className="hover:underline hover:text-[#7CE9BF] pt-1.5">ฐานข้อมูล</Link>
           )}
           {userRole === "club" && (
-            <Link to="/clubManage" className="hover:underline hover:text-[#7CE9BF] pt-1.5">จัดการชมรม</Link>
+            <div className="relative" ref={clubCardRef}>
+            <button
+              onClick={() => setShowClubCard(!showClubCard)}
+              className="hover:underline hover:text-[#7CE9BF] pt-1.5"
+            >
+              จัดการชมรม
+            </button>
+            {showClubCard && (
+              <div className="absolute right-0 mt-6 w-72 bg-white shadow-lg rounded-lg p-4 z-20">
+                <p className="text-gray-500 text-sm">ชมรมที่สังกัด</p>
+                <div className="flex items-center gap-2 mt-1 p-2 border border-gray-200 hover:bg-gray-100 rounded-md">
+                  <img src="/assets/esport.png" alt="KMUTNB Esport" className="w-8 h-8 rounded-full" />
+                  <p className="text-sm">KMUTNB Esport (Admin)</p>
+                  <SquareArrowOutUpRight className="text-gray-400" />
+                </div>
+                <div className="flex items-center gap-2 mt-1 p-2 border border-gray-200 hover:bg-gray-100 rounded-md">
+                  <img src="/assets/boxing.png" alt="KMUTNB Boxing" className="w-8 h-8 rounded-full" />
+                  <p className="text-sm">KMUTNB Boxing (Admin)</p>
+                  <SquareArrowOutUpRight className="text-gray-400" />
+                </div>
+              </div>
+            )}
+          </div>
           )}
 
           {session ? (
@@ -130,7 +157,8 @@ const Navbar = () => {
                     <SquareArrowOutUpRight className="text-gray-400" />
                   </div>
                 </div>
-          
+
+                <Link to="/clubApplication" className="flex flex-row items-center justify-between mt-3 p-2 border border-gray-200 hover:bg-gray-100 rounded-md">
                 <div className="flex flex-row items-center justify-between mt-3 p-2 border border-gray-200 hover:bg-gray-100 rounded-md"
                   onClick={() => navigate("/clubApplication")}>
                   <div>
@@ -138,7 +166,7 @@ const Navbar = () => {
                     <p className="text-xs text-gray-500">ยื่นคำขอสร้างชมรมใหม่เลย</p>  
                   </div>
                   <SquarePlus className="text-gray-400" />
-                </div>
+                </Link>
           
                 <button 
                   className="w-full mt-3 bg-[#FF7E69] text-white py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-red-600"
@@ -171,7 +199,19 @@ const Navbar = () => {
             <Link to="/database" className="hover:underline hover:text-[#7CE9BF]">ฐานข้อมูล</Link>
           )}
           {userRole === "club" && (
-            <Link to="/clubManage" className="hover:underline hover:text-[#7CE9BF]">จัดการชมรม</Link>
+            <div className="flex flex-col items-center space-y-2">
+            <UserCircle size={40} className="text-[#7CE9BF]" />
+            <Link to="/profile" className="hover:underline text-gray-700">Profile</Link>
+            <button
+              onClick={async () => {
+                await authService.logout();
+              }}
+              className="bg-red-500 text-white font-bold px-4 py-1 rounded-full hover:bg-red-400"
+            >
+              Logout
+            </button>
+          </div>
+            
           )}
 
           {session ? (
