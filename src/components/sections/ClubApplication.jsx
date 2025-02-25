@@ -10,11 +10,16 @@ const ClubApplication = () => {
   const [clubAdviser, setClubAdviser] = useState(""); // New field
   const [clubQuote, setClubQuote] = useState("");
   const [clubDescription, setClubDescription] = useState("");
-  const [applicationDocument, setApplicationDocument] = useState(null);
-  const [clubAvatar, setClubAvatar] = useState("using (png, jpg, webp)");
+
+  const [clubAvatar, setClubAvatar] = useState(null);
+  const [clubAvatarName, setClubAvatarName] = useState("using (png, jpg, webp)");
   const [clubAvatarPreview, setClubAvatarPreview] = useState(null);
+
   const [isOpen, setIsOpen] = useState(false);
+  
+  const [applicationDocument, setApplicationDocument] = useState(null);
   const [fileName, setFileName] = useState("using (png, jpg, webp)");
+
   const positionFrontEnd = ["ประธานชมรม", "รองประธานชมรม", "กรรมการ", "กรรมการ", "กรรมการ", "กรรมการ", "เลขานุการ", "ผู้ช่วยเลขานุการ"];
   //const positions = ["club_president", "vice_president", "committee_member", "committee_member", "committee_member", "committee_member", "secretary", "assistant_secretary"];
   const [members, setMembers] = useState(
@@ -49,7 +54,16 @@ const ClubApplication = () => {
     const file = e.target.files[0];
     if (file) {
       setClubAvatarPreview(URL.createObjectURL(file));
-      setClubAvatar(e.target.files[0]?.name || "using (png, jpg, webp)")
+      setClubAvatarName(e.target.files[0]?.name || "using (png, jpg, webp)");
+      setClubAvatar(e.target.files[0]);
+    }
+  };
+
+  const handleDocumentFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFileName(e.target.files[0]?.name || "using (png, jpg, webp)");
+      setApplicationDocument(e.target.files[0]);
     }
   };
 
@@ -157,7 +171,7 @@ const ClubApplication = () => {
                 <div className="flex flex-row items-center">
                   <label className="cursor-pointer flex items-center gap-2">
                     <FileUp size={50} className="text-white fill-[#7CE9BF]" />
-                    <span className="text-gray-300">{clubAvatar}</span>
+                    <span className="text-gray-300">{clubAvatarName}</span>
                     <input
                       type="file"
                       /*onChange={(e) => setClubAvatar(e.target.files[0]?.name || "using (png, jpg, webp)")}*/
@@ -253,7 +267,7 @@ const ClubApplication = () => {
               <span className="text-gray-300">{fileName}</span>
               <input
                 type="file"
-                onChange={(e) => setFileName(e.target.files[0]?.name || "using (png, jpg, webp)")}
+                onChange={handleDocumentFileChange}
                 className="hidden"
               />
             </label>
