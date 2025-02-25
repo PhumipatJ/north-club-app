@@ -109,7 +109,7 @@ const ApprovalDetail = () => {
 
   
 const handleReject = async (clubId) => {
-    
+    console.log(member_count)
     // Insert into approvalHistory
     const { error: insertError } = await supabase
     .from("approvalHistory")
@@ -118,16 +118,18 @@ const handleReject = async (clubId) => {
         club_name: club.club_name,
         club_avatar: club.club_avatar,
         club_type: club.club_type,
-        member_count: club.member_count,
+        member_count: member_count,
         approve_date: today,
         club_adviser: club.club_adviser,
         approval_status: false,
         },
     ]);
+
     if (insertError) {
-      console.error("updated history failed:", error);
+      console.error("updated history failed:", insertError);
       return;
     }
+
     // Delete club and clubMembers from database
     const { Cerror } = await supabase.from("clubMembers").delete().eq("club_id", clubId);
     const { CMerror } = await supabase.from("clubs").delete().eq("club_id", clubId);

@@ -10,6 +10,7 @@ import Clubfile from './components/sections/Clubfile';
 import Clubpage from './components/sections/Clubpage';
 import Clubmember from './components/sections/Clubmember';
 import Statpage from './components/sections/Statpage';
+import UserProfile from './components/sections/UserProfile';
 import Wrapper from './components/sections/Wrapper';
 import Footer from './components/Footer';
 import ClubApplication from './components/sections/ClubApplication';
@@ -25,6 +26,7 @@ function App() {
       <Router>
         <Navbar />
         <Routes>
+
           <Route path="/" element={<><Home /><Footer /></>} />
           <Route path="/login" element={<><Login /><Footer /></>} />
           <Route path="/register" element={<><Register /><Footer /></>} />

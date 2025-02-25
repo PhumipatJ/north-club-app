@@ -2,22 +2,28 @@ import { useState, useEffect } from "react";
 import { FileUp, ChevronDown, ChevronUp } from "lucide-react";
 import supabase from "../../../supabaseClient";
 import authService from "../../service/AuthService";
+import { useNavigate } from "react-router-dom"; 
 
 const ClubApplication = () => {
+  const navigate = useNavigate();
   const [currentUserEmail, setCurrentUserEmail] = useState("");
   const [clubName, setClubName] = useState("");
   const [clubType, setClubType] = useState(""); // Single selection
   const [clubAdviser, setClubAdviser] = useState(""); // New field
   const [clubQuote, setClubQuote] = useState("");
   const [clubDescription, setClubDescription] = useState("");
-  const [applicationDocument, setApplicationDocument] = useState(null);
-  const [clubAvatar, setClubAvatar] = useState("using (png, jpg, webp)");
+
+  const [clubAvatar, setClubAvatar] = useState(null);
+  const [clubAvatarName, setClubAvatarName] = useState("using (png, jpg, webp)");
+  const [clubAvatarPreview, setClubAvatarPreview] = useState(null);
+
   const [isOpen, setIsOpen] = useState(false);
+  
+  const [applicationDocument, setApplicationDocument] = useState(null);
   const [fileName, setFileName] = useState("using (png, jpg, webp)");
-  // change on positionFrontEnd to display on Club Member text field not the positions na
+
   const positionFrontEnd = ["ประธานชมรม", "รองประธานชมรม", "กรรมการ", "กรรมการ", "กรรมการ", "กรรมการ", "เลขานุการ", "ผู้ช่วยเลขานุการ"];
   //const positions = ["club_president", "vice_president", "committee_member", "committee_member", "committee_member", "committee_member", "secretary", "assistant_secretary"];
-  // don't change positions. it use on database na frontend hua kuy
   const [members, setMembers] = useState(
     positionFrontEnd.map(position => ({ email: "", position }))
   );
@@ -46,6 +52,23 @@ const ClubApplication = () => {
     setClubType(type);
   };
 
+  const handleAvatarFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setClubAvatarPreview(URL.createObjectURL(file));
+      setClubAvatarName(e.target.files[0]?.name || "using (png, jpg, webp)");
+      setClubAvatar(e.target.files[0]);
+    }
+  };
+
+  const handleDocumentFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFileName(e.target.files[0]?.name || "using (png, jpg, webp)");
+      setApplicationDocument(e.target.files[0]);
+    }
+  };
+
   const handleMemberChange = (index, value) => {
     const updatedMembers = [...members];
     updatedMembers[index].email = value;
@@ -53,6 +76,7 @@ const ClubApplication = () => {
   };
 
   const uploadFile = async (file, bucket) => {
+    console.log(file)
     if (!file) return "";
     const fileExt = file.name.split(".").pop();
     const fileName = `${Date.now()}.${fileExt}`;
@@ -68,11 +92,38 @@ const ClubApplication = () => {
     return data.path;
   };
 
+  const isFormValid = () => {
+    console.log(clubType);
+    if (clubType === "") {
+      return false;
+    }
+  
+    //console.log(members);
+  
+    // Check for duplicate emails
+    const emailSet = new Set();
+    for (const member of members) {
+      if (emailSet.has(member.email)) {
+        return false; // Duplicate found
+      }
+      emailSet.add(member.email);
+    }
+  
+    return true; // No duplicates
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-     alert(`Creating club... (Logged-in user: ${currentUserEmail})`);
 
+    if (!isFormValid()) {
+      alert("Email duplicated or not select clubType");
+      return;
+    }
+
+    alert(`Creating club... (Logged-in user: ${currentUserEmail})`);
+    
     const emails = members.map((m) => m.email.trim()).filter((email) => email !== "");
+    console.log(emails);
 
     const { data: existingUsers, error: emailError } = await supabase
         .from("user") 
@@ -134,9 +185,11 @@ const ClubApplication = () => {
     }
     
     alert("Club created successfully");
+    navigate("/")
   };
 
   return (
+    <form>
     <div className="max-w-5xl mx-auto mt-24 p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-bold mb-6">คำขอสร้างชมรม</h2>
       <div className="grid grid-cols-2 gap-6">
@@ -144,16 +197,18 @@ const ClubApplication = () => {
           <label className="block text-lg font-semibold mb-1">โลโก้ชมรม</label>
           <div className="flex flex-col">
             <div className="flex flex-row items-center p-4 rounded-md text-center">
-              <img src={"/assets/Maskgroup.png"} alt="Member" className="w-32 h-32 mx-4 rounded-full opacity-50" />
+              <img src={clubAvatarPreview || "/assets/Maskgroup.png"} alt="Member" className="w-32 h-32 mx-4 rounded-full " />
               <div className="flex flex-col">
                 <div className="flex flex-row items-center">
                   <label className="cursor-pointer flex items-center gap-2">
                     <FileUp size={50} className="text-white fill-[#7CE9BF]" />
-                    <span className="text-gray-300">{clubAvatar}</span>
+                    <span className="text-gray-300">{clubAvatarName}</span>
                     <input
                       type="file"
-                      onChange={(e) => setClubAvatar(e.target.files[0]?.name || "using (png, jpg, webp)")}
+                      /*onChange={(e) => setClubAvatar(e.target.files[0]?.name || "using (png, jpg, webp)")}*/
+                      onChange={handleAvatarFileChange}
                       className="hidden"
+                      required
                     />
                   </label>
                   </div>
@@ -162,15 +217,16 @@ const ClubApplication = () => {
             </div>
             <div className="mb-6">
               <label className="block font-medium mb-1">ชื่อชมรม</label>
-              <input type="text" placeholder="ชื่อชมรม" className="border border-[#FF7E69] rounded-md w-full p-2" onChange={(e) => setClubName(e.target.value)}/>
+              <input type="text" placeholder="ชื่อชมรม" className="border border-[#FF7E69] rounded-md w-full p-2" onChange={(e) => setClubName(e.target.value)} required/>
             </div>
             <div className="mb-5">
-              <label className="block font-medium mb-2">อาจารย์ที่ปรึกษา</label>
-              <input type="text" placeholder="ชื่อ นามสกุล" className="border border-[#FF7E69] rounded-md w-full p-2 mb-2" />
-              <input type="email" placeholder="Gmail อาจารย์ที่ปรึกษา" className="border border-[#FF7E69] rounded-md w-full p-2 mb-1" />
+              <label className="block font-medium mb-2" >อาจารย์ที่ปรึกษา</label>
+              <input type="text" placeholder="ชื่อ นามสกุล" className="border border-[#FF7E69] rounded-md w-full p-2 mb-2" onChange={(e) => setClubAdviser(e.target.value)} required/>
+              <input type="email" placeholder="Gmail อาจารย์ที่ปรึกษา" className="border border-[#FF7E69] rounded-md w-full p-2 mb-1" required/>
             </div>
             <div className="relative">
       <button 
+        type="button"
         onClick={() => setIsOpen(!isOpen)} 
         className="border border-[#FF7E69] rounded-md w-full p-2 text-left bg-white"
       >
@@ -183,7 +239,7 @@ const ClubApplication = () => {
           </div>
         </div>
       </button>
-
+      
       {isOpen && (
         <ul className="absolute w-full mt-1 rounded-md bg-white shadow-md z-10">
           {clubTypes.map((type, index) => (
@@ -204,15 +260,20 @@ const ClubApplication = () => {
         <div>
           <label className="block font-medium mb-2">Gmail นักศึกษา</label>
           <div className="space-y-2">
-            {positionFrontEnd.map((role, index) => (
+            {members.map((member, index) => (
               <div className="flex flex-row mb-2">
                 <input
                   key={index}
                   type="email"
                   placeholder="Gmail นักศึกษา"
                   className="border-1 border-[#FF7E69] rounded-md max-w-2/3 w-full p-2 mb-3"
+                  value={member.email}
+                  onChange={(e) => handleMemberChange(index, e.target.value)}
+                  disabled={index === 0}
+                  required
+                  style={{ opacity: index === 0 ? 0.5 : 1 }}
                 />
-                <h2 className="text-left pl-4">{role}</h2>
+                <h2 className="text-left pl-4">{member.position}</h2>
               </div>
             ))}
           </div>
@@ -221,12 +282,12 @@ const ClubApplication = () => {
 
       <div className="mt-4">
         <label className="block font-medium mb-1">Quote</label>
-        <textarea className="border border-[#FF7E69] rounded-md w-full p-2 h-20"></textarea>
+        <textarea className="border border-[#FF7E69] rounded-md w-full p-2 h-20" onChange={(e) => setClubQuote(e.target.value)} required></textarea>
       </div>
 
       <div className="mt-4">
         <label className="block font-medium mb-1">Tag* (ใช้ "," คั่นระหว่าง tag)</label>
-        <input type="text" className="border border-[#FF7E69] rounded-md w-full p-2" />
+        <input type="text" className="border border-[#FF7E69] rounded-md w-full p-2" onChange={(e) => setClubDescription(e.target.value)} required/>
       </div>
 
       <div className="mt-4">
@@ -238,8 +299,9 @@ const ClubApplication = () => {
               <span className="text-gray-300">{fileName}</span>
               <input
                 type="file"
-                onChange={(e) => setFileName(e.target.files[0]?.name || "using (png, jpg, webp)")}
+                onChange={handleDocumentFileChange}
                 className="hidden"
+                required
               />
             </label>
           </div>
@@ -248,11 +310,13 @@ const ClubApplication = () => {
       </div>
 
       <div className="flex justify-end">
-        <button className="mt-6 w-1/4 bg-[#7CE9BF] text-white py-2 rounded-md hover:bg-emerald-400 active:bg-emerald-500 ">
+        <button className="mt-6 w-1/4 bg-[#7CE9BF] text-white py-2 rounded-md hover:bg-emerald-400 active:bg-emerald-500 "  
+        onClick={handleSubmit}>
           ส่งคำขอ
         </button>
       </div>
     </div>
+    </form>
   );
 };
 
