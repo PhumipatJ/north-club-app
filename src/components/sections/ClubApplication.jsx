@@ -12,12 +12,11 @@ const ClubApplication = () => {
   const [clubDescription, setClubDescription] = useState("");
   const [applicationDocument, setApplicationDocument] = useState(null);
   const [clubAvatar, setClubAvatar] = useState("using (png, jpg, webp)");
+  const [clubAvatarPreview, setClubAvatarPreview] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [fileName, setFileName] = useState("using (png, jpg, webp)");
-  // change on positionFrontEnd to display on Club Member text field not the positions na
   const positionFrontEnd = ["ประธานชมรม", "รองประธานชมรม", "กรรมการ", "กรรมการ", "กรรมการ", "กรรมการ", "เลขานุการ", "ผู้ช่วยเลขานุการ"];
   //const positions = ["club_president", "vice_president", "committee_member", "committee_member", "committee_member", "committee_member", "secretary", "assistant_secretary"];
-  // don't change positions. it use on database na frontend hua kuy
   const [members, setMembers] = useState(
     positionFrontEnd.map(position => ({ email: "", position }))
   );
@@ -46,6 +45,14 @@ const ClubApplication = () => {
     setClubType(type);
   };
 
+  const handleAvatarFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setClubAvatarPreview(URL.createObjectURL(file));
+      setClubAvatar(e.target.files[0]?.name || "using (png, jpg, webp)")
+    }
+  };
+
   const handleMemberChange = (index, value) => {
     const updatedMembers = [...members];
     updatedMembers[index].email = value;
@@ -53,6 +60,7 @@ const ClubApplication = () => {
   };
 
   const uploadFile = async (file, bucket) => {
+    console.log(file)
     if (!file) return "";
     const fileExt = file.name.split(".").pop();
     const fileName = `${Date.now()}.${fileExt}`;
@@ -144,7 +152,7 @@ const ClubApplication = () => {
           <label className="block text-lg font-semibold mb-1">โลโก้ชมรม</label>
           <div className="flex flex-col">
             <div className="flex flex-row items-center p-4 rounded-md text-center">
-              <img src={"/assets/Maskgroup.png"} alt="Member" className="w-32 h-32 mx-4 rounded-full opacity-50" />
+              <img src={clubAvatarPreview || "/assets/Maskgroup.png"} alt="Member" className="w-32 h-32 mx-4 rounded-full " />
               <div className="flex flex-col">
                 <div className="flex flex-row items-center">
                   <label className="cursor-pointer flex items-center gap-2">
@@ -152,8 +160,10 @@ const ClubApplication = () => {
                     <span className="text-gray-300">{clubAvatar}</span>
                     <input
                       type="file"
-                      onChange={(e) => setClubAvatar(e.target.files[0]?.name || "using (png, jpg, webp)")}
+                      /*onChange={(e) => setClubAvatar(e.target.files[0]?.name || "using (png, jpg, webp)")}*/
+                      onChange={handleAvatarFileChange}
                       className="hidden"
+                      required
                     />
                   </label>
                   </div>
@@ -162,11 +172,11 @@ const ClubApplication = () => {
             </div>
             <div className="mb-6">
               <label className="block font-medium mb-1">ชื่อชมรม</label>
-              <input type="text" placeholder="ชื่อชมรม" className="border border-[#FF7E69] rounded-md w-full p-2" onChange={(e) => setClubName(e.target.value)}/>
+              <input type="text" placeholder="ชื่อชมรม" className="border border-[#FF7E69] rounded-md w-full p-2" onChange={(e) => setClubName(e.target.value)} required/>
             </div>
             <div className="mb-5">
               <label className="block font-medium mb-2">อาจารย์ที่ปรึกษา</label>
-              <input type="text" placeholder="ชื่อ นามสกุล" className="border border-[#FF7E69] rounded-md w-full p-2 mb-2" />
+              <input type="text" placeholder="ชื่อ นามสกุล" className="border border-[#FF7E69] rounded-md w-full p-2 mb-2" onChange={(e) => setClubAdviser(e.target.value)} required/>
               <input type="email" placeholder="Gmail อาจารย์ที่ปรึกษา" className="border border-[#FF7E69] rounded-md w-full p-2 mb-1" />
             </div>
             <div className="relative">
@@ -204,15 +214,20 @@ const ClubApplication = () => {
         <div>
           <label className="block font-medium mb-2">Gmail นักศึกษา</label>
           <div className="space-y-2">
-            {positionFrontEnd.map((role, index) => (
+            {members.map((member, index) => (
               <div className="flex flex-row mb-2">
                 <input
                   key={index}
                   type="email"
                   placeholder="Gmail นักศึกษา"
                   className="border-1 border-[#FF7E69] rounded-md max-w-2/3 w-full p-2 mb-3"
+                  value={member.email}
+                  onChange={(e) => handleMemberChange(index, e.target.value)}
+                  disabled={index === 0}
+                  required
+                  style={{ opacity: index === 0 ? 0.5 : 1 }}
                 />
-                <h2 className="text-left pl-4">{role}</h2>
+                <h2 className="text-left pl-4">{member.position}</h2>
               </div>
             ))}
           </div>
@@ -221,12 +236,12 @@ const ClubApplication = () => {
 
       <div className="mt-4">
         <label className="block font-medium mb-1">Quote</label>
-        <textarea className="border border-[#FF7E69] rounded-md w-full p-2 h-20"></textarea>
+        <textarea className="border border-[#FF7E69] rounded-md w-full p-2 h-20" onChange={(e) => setClubQuote(e.target.value)} required></textarea>
       </div>
 
       <div className="mt-4">
         <label className="block font-medium mb-1">Tag* (ใช้ "," คั่นระหว่าง tag)</label>
-        <input type="text" className="border border-[#FF7E69] rounded-md w-full p-2" />
+        <input type="text" className="border border-[#FF7E69] rounded-md w-full p-2" onChange={(e) => setClubDescription(e.target.value)}/>
       </div>
 
       <div className="mt-4">
@@ -248,7 +263,8 @@ const ClubApplication = () => {
       </div>
 
       <div className="flex justify-end">
-        <button className="mt-6 w-1/4 bg-[#7CE9BF] text-white py-2 rounded-md hover:bg-emerald-400 active:bg-emerald-500 ">
+        <button className="mt-6 w-1/4 bg-[#7CE9BF] text-white py-2 rounded-md hover:bg-emerald-400 active:bg-emerald-500 "  
+        onClick={handleSubmit}>
           ส่งคำขอ
         </button>
       </div>
