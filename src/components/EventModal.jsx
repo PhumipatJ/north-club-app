@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Upload, RefreshCw } from "lucide-react";
+import ConfirmCard from "../components/confirmCard"
 
 const EventModal = ({ isOpen, onClose }) => {
     const [eventText, setEventText] = useState("กิจกรรม");
@@ -14,7 +15,7 @@ const EventModal = ({ isOpen, onClose }) => {
 
     const [place, setPlace] = useState("");
     const [url, setUrl] = useState("");
-
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [imageName, setImageName] = useState("Upload Poster\nClick Here");
 
     if (!isOpen) return null;
@@ -214,14 +215,18 @@ const EventModal = ({ isOpen, onClose }) => {
                             onChange={handleImageUpload}
                         />
                     <div className="flex items-end">
-                        <button className="bg-[#7CE9BF] hover:bg-emerald-400 active:bg-emerald-500 px-6 py-2 rounded shadow" type="submit">
+                    <button
+                            className="bg-[#7CE9BF] hover:bg-emerald-400 active:bg-emerald-500 px-6 py-2 rounded shadow"
+                            type="button"
+                            onClick={() => setIsConfirmOpen(true)}
+                            >
                             สร้างกิจกรรม
                         </button>
                     </div>
                 </div>
                 </div>
-                
-                
+                {/* ConfirmCard Modal */}
+                <ConfirmCard isOpen={isConfirmOpen} onClose={() => setIsConfirmOpen(false)} type="event" />
             </div>
         </div>
     );
