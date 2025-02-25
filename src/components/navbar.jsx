@@ -10,6 +10,7 @@ import {
   User,
 } from "lucide-react";
 import authService from "../service/AuthService";
+import supabase from "../../supabaseClient";
 
 const Navbar = () => {
   const location = useLocation();
@@ -22,6 +23,9 @@ const Navbar = () => {
   const [showClubCard, setShowClubCard] = useState(false);
   const clubCardRef = useRef(null);
   const navigate = useNavigate();
+
+  const [userClub, setUserClub] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -75,6 +79,39 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+
+  useEffect(() => {
+    const getPersonalInfo = async () => {
+      const { data, error } = await supabase
+        .from("user")
+        .select("*")
+        .eq("id", session?.user?.id)
+        .single();
+  
+      if (error) {
+        console.error("Error fetching user data:", error);
+      }
+      setUserInfo(data)
+
+      const { data: clubData, error: clubError } = await supabase
+      .from("clubMembers")
+      .select("club_id, position, clubs(club_name, club_avatar)")
+      .eq("email", data?.email)
+
+      if (clubError) {
+        console.error("Error fetching club data:", clubError);
+      }
+      setUserClub(clubData);
+      
+    
+    };
+  
+    if (session?.user?.id) {
+      getPersonalInfo();
+    }
+  }, [session]); 
+  
   return (
     <nav
       className={`fixed top-0 left-0 w-full transition-all duration-300 z-10 font-prompt ${
@@ -83,7 +120,8 @@ const Navbar = () => {
     >
       <div className="bg-white shadow-md max-w-6xl mx-auto px-6 flex justify-between items-center h-14 my-2 rounded-full">
         {/* LOGO */}
-        <h1 className="text-xl text-[#FF7E69] font-bold pt-2">North's Club</h1>
+        <h1 className="text-xl text-[#FF7E69] font-bold pt-2">North's Club </h1>
+        <button onClick={console.log(userClub)}>test</button>
 
         {/* Mobile Menu Button */}
         <button
@@ -212,7 +250,7 @@ const Navbar = () => {
 
               {/* Profile Dropdown */}
               {showProfileMenu && (
-                <div className="absolute right-0 mt-4 w-72 bg-white shadow-lg rounded-lg p-4 font-[Prompt]">
+                <div className="absolute right-0 mt-4 w-80 bg-white shadow-lg rounded-lg p-4 font-[Prompt] ">
                   <div className="flex flex-row items-center justify-between gap-3 border-b pb-2">
                     <img
                       src="/assets/Maskgroup.png"
@@ -221,11 +259,17 @@ const Navbar = () => {
                     />
                     <div>
                       <p className=" text-lg font-semibold">
-                        นาย จิรายุ ภักดีโต
+                        {userInfo?.gender === "M" ? "นาย" : "นาง"} {userInfo?.name}
                       </p>
                       <div className="flex flex-row">
                         <User className="text-[#7CE9BF] fill-[#7CE9BF]" />
-                        <p className="text-gray-500 text-sm">นักศึกษา</p>
+                        <p className="text-gray-500 text-sm">
+                        {userInfo?.role === "student"
+                          ? "นักศึกษา"
+                          : userInfo?.role === "club"
+                          ? "กรรมการชมรม"
+                          : "กองกิจการนักศึกษา"}
+                        </p>
                       </div>
                     </div>
                     <Link to="/userprofile">
@@ -233,36 +277,50 @@ const Navbar = () => {
                   </Link>
                   </div>
 
-                  <div className="mt-3 border-b pb-2">
-                    <p className="text-gray-500 text-sm">ชมรมที่สังกัด</p>
-                    <div className="flex items-center gap-2 mt-1 p-2 border border-gray-200 hover:bg-gray-100 rounded-md">
-                      <img
-                        src="/assets/esport.png"
-                        alt="KMUTNB Esport"
-                        className="w-8 h-8 rounded-full"
-                      />
-                      <p className="text-sm">KMUTNB Esport (Admin)</p>
-                      <SquareArrowOutUpRight className="text-gray-400" />
-                    </div>
-                    <div className="flex items-center gap-2 mt-1 p-2 border border-gray-200 hover:bg-gray-100 rounded-md">
-                      <img
-                        src="/assets/boxing.png"
-                        alt="KMUTNB Esport"
-                        className="w-8 h-8 rounded-full"
-                      />
-                      <p className="text-sm">KMUTNB Esport (Admin)</p>
-                      <SquareArrowOutUpRight className="text-gray-400" />
-                    </div>
-                  </div>
-                <Link to="/clubApplication" className="flex flex-row items-center justify-between mt-3 p-2 border border-gray-200 hover:bg-gray-100 rounded-md">
-                
-                  <div>
-                    <p className="text-[#7CE9BF] text-sm font-semibold">ไอเดียใหม่ ชมรมใหม่!</p>
-                    <p className="text-xs text-gray-500">ยื่นคำขอสร้างชมรมใหม่เลย</p>  
-                  </div>
-                  <SquarePlus className="text-gray-400" />
-                  
-                </Link>
+                  {userInfo?.role !== "admin" && (
+                    <>
+                      {userClub?.length > 0 && (
+                        <div className="mt-3 border-b pb-2">
+                          <p className="text-gray-500 text-sm">ชมรมที่สังกัด</p>
+                          <div className="max-h-40 overflow-y-auto space-y-2"> {/* Scrollable container */}
+                            {userClub.map((club, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center gap-2 p-2 border border-gray-200 hover:bg-gray-100 rounded-md"
+                              >
+                                <img
+                                  src={`${
+                                    supabase.storage
+                                      .from("club-avatars")
+                                      .getPublicUrl(club?.clubs.club_avatar).data.publicUrl
+                                  }`}
+                                  alt={club.club_id}
+                                  className="w-8 h-8 rounded-full"
+                                />
+                                <div className="flex justify-between items-center w-full">
+                                  <p className="text-sm">{club?.clubs.club_name} <br/> ({club.position})</p>
+                                  <SquareArrowOutUpRight size={20} className="text-gray-400" onClick={() => navigate(`/clubs/${club.club_id}`)}/>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+
+                      <Link
+                        to="/clubApplication"
+                        className="flex flex-row items-center justify-between mt-3 p-2 border border-gray-200 hover:bg-gray-100 rounded-md"
+                      >
+                        <div>
+                          <p className="text-[#7CE9BF] text-sm font-semibold">ไอเดียใหม่ ชมรมใหม่!</p>
+                          <p className="text-xs text-gray-500">ยื่นคำขอสร้างชมรมใหม่เลย</p>
+                        </div>
+                        <SquarePlus className="text-gray-400" />
+                      </Link>
+                    </>
+                  )}
+
           
                 <button 
                   className="w-full mt-3 bg-[#FF7E69] text-white py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-red-600"
