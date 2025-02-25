@@ -24,8 +24,8 @@ const Navbar = () => {
   const clubCardRef = useRef(null);
   const navigate = useNavigate();
 
-  const [userClub, setUserClub] = useState(null);
-  const [userInfo, setUserInfo] = useState(null);
+  const [userClub, setUserClub] = useState([]);
+  const [userInfo, setUserInfo] = useState([]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -121,7 +121,7 @@ const Navbar = () => {
       <div className="bg-white shadow-md max-w-6xl mx-auto px-6 flex justify-between items-center h-14 my-2 rounded-full">
         {/* LOGO */}
         <h1 className="text-xl text-[#FF7E69] font-bold pt-2">North's Club </h1>
-        <button onClick={console.log(userClub)}>test</button>
+        <button onClick={console.log()}>test</button>
 
         {/* Mobile Menu Button */}
         <button
@@ -272,9 +272,7 @@ const Navbar = () => {
                         </p>
                       </div>
                     </div>
-                    <Link to="/userprofile">
-                    <SquarePen className="text-gray-400 hover:text-gray-500" />
-                  </Link>
+                    <SquarePen size={20} className="text-gray-400 hover:text-gray-500" onClick={() =>navigate("/userprofile", { state: { userInfo} }) }/>
                   </div>
 
                   {userInfo?.role !== "admin" && (
