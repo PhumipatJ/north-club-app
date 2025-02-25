@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import authService from "../../service/AuthService";
-
+import Loading from "../loading";
 function Wrapper({ children, allowedRoles }) {
   const [authenticated, setAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState(null);
@@ -18,7 +18,9 @@ function Wrapper({ children, allowedRoles }) {
         setUserRole(role);
       }
 
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     };
 
     getSessionAndRole();
@@ -27,7 +29,7 @@ function Wrapper({ children, allowedRoles }) {
   //console.log(userRole);
   
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading/>;
   }
 
   if (!authenticated) {

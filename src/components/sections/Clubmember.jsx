@@ -50,7 +50,7 @@ const clubInfo = [
   },
 ];
 
-const Clubpage = () => {
+const Clubmember = () => {
   const { clubId } = useParams();
   const navigate = useNavigate();
 
@@ -176,7 +176,7 @@ const Clubpage = () => {
         <div div className="p-6 mt-8">
           <h2 className="text-xl font-semibold">สมาชิก ({members.length} คน)</h2>
           <div className="grid grid-cols-5 gap-4 mt-4">
-            {members.slice(0, 4).map((member, index) => (
+            {members.map((member, index) => (
               <div key={index} className="bg-white p-4 rounded-lg flex flex-col items-center">
                 <img src={member.image || "/assets/Maskgroup.png"} alt="Member" className="w-20 h-20 rounded-full object-cover" />
                 <p className="mt-2 font-semibold text-center">{member.name}</p>
@@ -184,32 +184,14 @@ const Clubpage = () => {
               </div>
             ))}
             
-            {/* View All Members Block */}
-              <div className="bg-white p-4 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100"
-                   onClick={() => navigate(`/clubmember/${clubId}`)}>
-                <div className="bg-amber-100 rounded-full">
-                  <img src={"/assets/Maskgroup.png"} alt="Member" className="w-20 h-20 rounded-full object-cover" />
-                </div>
-                <p className="text-[#FF7E69]">สมาชิกทั้งหมด</p>
-              </div>
             </div>
           </div>
         </div>
-        
 
-        <div className="flex flex-row p-6 mt-8 items-center justify-between">
-          <div className="">
-            <h1 className="text-xl font-semibold mb-2"> Calendar</h1>
-            <Calendar/>
-          </div>
-          <div className="">
-            <h1 className="text-xl font-semibold mb-2"> Calendar</h1>
-          </div>
-        </div>
 
       </div>
     </div>
   );
 };
 
-export default Clubpage;
+export default Clubmember;

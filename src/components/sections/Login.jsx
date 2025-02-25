@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import { FcGoogle } from "react-icons/fc";
 import authService from "../../service/AuthService";
-
+// sho comment
 const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiInputLabel-root': {
     color: '#757575',
@@ -117,6 +117,16 @@ const Login = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': { borderColor: '#7CE9BF' }, // ขอบปกติ
+              '&:hover fieldset': { borderColor: '#7CE9BF', boxShadow:'#7CE9BF'}, // ขอบเมื่อ hover
+              '&.Mui-focused fieldset': { borderColor: '#7CE9BF'}, // ขอบเมื่อ focus
+            },
+            '& .MuiInputBase-input': { color: 'black' }, // เปลี่ยนสีตัวอักษร
+            '& .MuiInputLabel-root': { color: 'gray' }, // เปลี่ยนสี label
+            '& .MuiInputLabel-root.Mui-focused': { color: '#7CE9BF' }, // เปลี่ยนสี label เมื่อ focus
+          }}
         />
       </div>
       <div className="relative">
@@ -128,6 +138,16 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': { borderColor: '#7CE9BF' }, // ขอบปกติ
+              '&:hover fieldset': { borderColor: '#7CE9BF', boxShadow:'#7CE9BF'}, // ขอบเมื่อ hover
+              '&.Mui-focused fieldset': { borderColor: '#7CE9BF'}, // ขอบเมื่อ focus
+            },
+            '& .MuiInputBase-input': { color: 'black' }, // เปลี่ยนสีตัวอักษร
+            '& .MuiInputLabel-root': { color: 'gray' }, // เปลี่ยนสี label
+            '& .MuiInputLabel-root.Mui-focused': { color: '#7CE9BF' }, // เปลี่ยนสี label เมื่อ focus
+          }}
         />
       </div>
       <div className="flex flex-row text-right text-sm text-gray-600 items-center justify-between">
