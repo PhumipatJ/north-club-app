@@ -105,7 +105,8 @@ const ClubManage = () => {
             <img className="w-48 h-48 rounded-full -translate-y-1/2" src={`${supabase.storage.from("club-avatars").getPublicUrl(club?.club_avatar).data.publicUrl}`} alt={club?.club_name } />
             </div>
             <div className="flex flex-col h-fit">
-              <h1 className="text-5xl font-bold text-left">{club?.club_name}</h1>
+              <h1 className={`font-bold text-left ${club?.club_name.length > 20 ? "text-3xl" : "text-5xl"}`}>{club?.club_name}</h1>
+
               <div className="text-gray-500 text-left">
                 <p>สร้างเมื่อ: { new Date(club?.approve_date)
               .toLocaleDateString("th-TH", { day: "2-digit", month: "2-digit", year: "numeric" })}</p>
@@ -183,8 +184,8 @@ const ClubManage = () => {
                 </div>
 
                 {/* Create Event Modal*/}
-                <EventModal isOpen={isOpen} onClose={closeModal}/> 
-                
+                <EventModal isOpen={isOpen} onClose={closeModal} clubId={clubId}/> 
+            
             </div>
           </div>
         </div>
