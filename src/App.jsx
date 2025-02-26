@@ -34,7 +34,7 @@ function App() {
           <Route path="/clubmember/:clubId" element={<><Clubmember/><Footer /></>} />
           <Route path="/stats" element={<><Statpage /><Footer /></>} />
           <Route path="/clubApplication" element={<Wrapper allowedRoles={['student', 'club', 'admin']} ><ClubApplication /><Footer /></Wrapper>} />
-           <Route path="/clubmanage" element={<Wrapper allowedRoles={['club']} ><ClubManage /><Footer /></Wrapper>} />
+          <Route path="/clubmanage/:clubId" element={<Wrapper allowedRoles={['club']} ><ClubManage /><Footer /></Wrapper>} />
           <Route path="/docs" element={<><Clubfile /><Footer /></>} />
           <Route path="/database" element={<Wrapper allowedRoles={['admin']} ><AdminApprove /></Wrapper>} />
           <Route path="/database/adminRespond" element={<Wrapper allowedRoles={['admin']} ><AdminRespond /></Wrapper>} />

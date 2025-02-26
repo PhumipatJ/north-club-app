@@ -222,17 +222,20 @@ const Navbar = () => {
             </button>
             {showClubCard && (
               <div className="absolute right-0 mt-6 w-72 bg-white shadow-lg rounded-lg p-4 z-20">
+
                 <p className="text-gray-500 text-sm">ชมรมที่สังกัด</p>
-                <div className="flex items-center gap-2 mt-1 p-2 border border-gray-200 hover:bg-gray-100 rounded-md">
-                  <img src="/assets/esport.png" alt="KMUTNB Esport" className="w-8 h-8 rounded-full" />
-                  <p className="text-sm">KMUTNB Esport (Admin)</p>
-                  <SquareArrowOutUpRight className="text-gray-400" />
-                </div>
-                <div className="flex items-center gap-2 mt-1 p-2 border border-gray-200 hover:bg-gray-100 rounded-md">
-                  <img src="/assets/boxing.png" alt="KMUTNB Boxing" className="w-8 h-8 rounded-full" />
-                  <p className="text-sm">KMUTNB Boxing (Admin)</p>
-                  <SquareArrowOutUpRight className="text-gray-400" />
-                </div>
+
+                <div className="max-h-40 overflow-y-auto space-y-2"> {/* Scrollable container */}
+                  {userClub.filter(club => club?.position !== 'สมาชิก').map((club, index) => (
+                    <div key={index} className="flex items-center gap-2 p-2 border border-gray-200 hover:bg-gray-100 rounded-md" >
+                      <img src={`${supabase.storage.from("club-avatars").getPublicUrl(club?.clubs.club_avatar).data.publicUrl}`} alt={club.club_id} className="w-8 h-8 rounded-full" />
+                        <div className="flex justify-between items-center w-full" onClick={() => navigate(`/clubmanage/${club.club_id}`)}>
+                            <p className="text-sm">{club?.clubs.club_name} <br/> ({club.position})</p>
+                            <SquareArrowOutUpRight size={20} className="text-gray-400" />
+                        </div>
+                    </div>
+                  ))}
+                </div>  
               </div>
             )}
           </div>
@@ -295,9 +298,9 @@ const Navbar = () => {
                                   alt={club.club_id}
                                   className="w-8 h-8 rounded-full"
                                 />
-                                <div className="flex justify-between items-center w-full">
+                                <div className="flex justify-between items-center w-full" onClick={() => navigate(`/clubs/${club.club_id}`)}>
                                   <p className="text-sm">{club?.clubs.club_name} <br/> ({club.position})</p>
-                                  <SquareArrowOutUpRight size={20} className="text-gray-400" onClick={() => navigate(`/clubs/${club.club_id}`)}/>
+                                  <SquareArrowOutUpRight size={20} className="text-gray-400" />
                                 </div>
                               </div>
                             ))}
