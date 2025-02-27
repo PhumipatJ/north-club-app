@@ -121,7 +121,6 @@ const Navbar = () => {
       <div className="bg-white shadow-md max-w-6xl mx-auto px-6 flex justify-between items-center h-14 my-2 rounded-full">
         {/* LOGO */}
         <h1 className="text-xl text-[#FF7E69] font-bold pt-2">North's Club </h1>
-        <button onClick={console.log()}>test</button>
 
         {/* Mobile Menu Button */}
         <button
