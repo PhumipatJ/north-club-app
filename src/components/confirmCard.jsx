@@ -1,8 +1,14 @@
 import { useState } from "react";
 
-const ConfirmCard = ({ isOpen, onClose, type }) => {
+const ConfirmCard = ({ isOpen, onClose, type, onConfirm  }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
-
+  
+  const handleConfirm = () => {
+    setIsSubmitted(true);
+    if (onConfirm) {
+      onConfirm();
+    }
+  };
     const getTitle = () => {
     switch (type) {
         case "login":
@@ -115,7 +121,7 @@ const ConfirmCard = ({ isOpen, onClose, type }) => {
               </button>
               <button
                 className="px-6 py-2 bg-[#7CE9BF] hover:bg-emerald-400 rounded-md"
-                onClick={() => setIsSubmitted(true)}
+                onClick={handleConfirm}
               >
                 {getConfirm()}
               </button>

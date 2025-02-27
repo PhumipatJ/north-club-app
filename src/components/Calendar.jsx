@@ -22,9 +22,9 @@ const Calendar = () => {
   const selectedMonth = selectedFullDate.month() + 1; // Month (0-based, so add 1)
   const selectedYear = selectedFullDate.year(); // Year
 
-  console.log(selectedDay);
-  console.log(selectedMonth);
-  console.log(selectedYear);
+  //console.log(selectedDay);
+  //console.log(selectedMonth);
+  //console.log(selectedYear);
 
   return (
     <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-md p-4 scale-80">
