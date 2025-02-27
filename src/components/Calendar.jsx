@@ -27,7 +27,7 @@ const Calendar = () => {
   console.log(selectedYear);
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-md p-4">
+    <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-md p-4 scale-80">
       <div className="flex justify-between items-center mb-4">
         <ChevronLeft onClick={() => handleMonthChange(-1)} className="text-lg font-bold" />
         <h2 className="text-xl font-semibold text-center text-gray-900">
