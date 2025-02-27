@@ -54,7 +54,7 @@ const AdminApprove = () => {
 
     fetchPendingClubs();
   }, []);
-
+  
   const CustomTableCell = styled(TableCell)({
     borderBottom: '2px solid #FF7E69',
     color: '#FF7E69',
@@ -214,7 +214,8 @@ const AdminApprove = () => {
                   </TableRow>
                 ) : (
                   pendingClubs.map((club) => (
-                    <TableRow key={club.club_id} sx={{'&:hover':{backgroundColor:'#f9f9f9' , cursor:'pointer'}}}>
+                    <TableRow key={club.club_id} sx={{'&:hover':{backgroundColor:'#f9f9f9' , cursor:'pointer'}}} 
+                    onClick={()=>navigate(`/clubs/${club.club_id}`)}>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>
                         <Avatar
                           src={`${

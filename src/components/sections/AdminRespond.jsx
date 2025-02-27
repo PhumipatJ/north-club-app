@@ -12,19 +12,26 @@ import {
   Paper,
   Avatar,
   ThemeProvider,
+  Box,
 } from "@mui/material";
+import {SquareChartGantt} from "lucide-react";
 import { useNavigate ,useLocation} from "react-router-dom";
 import supabase from "../../../supabaseClient";
 import theme from "../Theme";
 import Loading from "../loading";
 import {styled} from "@mui/system";
+import ApprovalPopup from "./ApprovalPopup";
+
 const AdminRespond = () => {
   const [pendingClubs, setPendingClubs] = useState([]);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
-
-  useEffect(() => {
+  const [openDetail,setOpenDetail] = useState(false);
+  const [requestID,setRequestId] = useState(null);
+  const [membercount,setCount] = useState(0);
+  const [clubdata,setClubdata] = useState([]);
+    useEffect(() => {
     const fetchPendingClubs = async () => {
       const { data, error } = await supabase
         .from("clubs")
@@ -44,6 +51,7 @@ const AdminRespond = () => {
             ),
           }))
         );
+        console.log(data);
       }
       setTimeout(() => {
         setLoading(false);
@@ -52,7 +60,15 @@ const AdminRespond = () => {
 
     fetchPendingClubs();
   }, []);
-
+  const handleRequestDetail =(club,id,count)=>{
+    setClubdata(club);
+    setRequestId(id);
+    setOpenDetail(true);
+    setCount(count);
+  };
+  const handlePopup =()=>{
+    setOpenDetail(false);
+  };
   const CustomTableCell = styled(TableCell)({
     borderBottom: '2px solid #FF7E69',
     color: '#FF7E69',
@@ -63,6 +79,9 @@ const AdminRespond = () => {
   }
   return (
     <ThemeProvider theme={theme}>
+      {openDetail === true &&(
+        <ApprovalPopup clubdata={clubdata} requestID={requestID} count={membercount} onClose={handlePopup}/>
+      )}
       <Container className="p-6 mt-24 min-h-[77vh] flex flex-col justify-center">
       <div className="flex max-w-6xl w-full">
           <div className=" w-full h-fit flex">
@@ -129,7 +148,7 @@ const AdminRespond = () => {
                   "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
                   borderRadius:"0",
                 }}
-                onClick={() => navigate("/approvalHistory")}
+                onClick={() => setOpenDetail(true)}
               >
                 สิทธิ์ผู้ดูแล
               </Button>
@@ -185,13 +204,13 @@ const AdminRespond = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <CustomTableCell>รูปชมรม</CustomTableCell>
+                <CustomTableCell>รูป</CustomTableCell>
                 <CustomTableCell>ชื่อชมรม</CustomTableCell>
                 <CustomTableCell>ประเภท</CustomTableCell>
-                <CustomTableCell>จำนวนสมาชิก</CustomTableCell>
-                <CustomTableCell>วันที่ขอก่อตั้งชมรม</CustomTableCell>
-                <CustomTableCell>อาจารย์ที่ปรึกษา</CustomTableCell>
-                <CustomTableCell></CustomTableCell>
+                <CustomTableCell>สมาชิก</CustomTableCell>
+                <CustomTableCell>วันที่ขอก่อตั้ง</CustomTableCell>
+                <CustomTableCell>ที่ปรึกษา</CustomTableCell>
+                <CustomTableCell>รายละเอียด</CustomTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -209,8 +228,12 @@ const AdminRespond = () => {
                 </TableRow>
               ) : (
                 pendingClubs.map((club) => (
-                  <TableRow key={club.club_id}>
-                    <TableCell>
+                  <TableRow key={club.club_id} sx={{'&:hover':{cursor:'pointer',backgroundColor:'#f9f9f9'}}}
+                  // onClick={()=>navigate(`/database/approvalDetail/${club.club_id}`)}
+                  >
+                    
+                    <TableCell sx={{borderColor:'#fff'}}>
+                      <Box sx={{display:'flex', justifyContent:'center',}}>
                       <Avatar
                         src={`${
                           supabase.storage
@@ -219,25 +242,19 @@ const AdminRespond = () => {
                         }`}
                         alt={club.club_name}
                       />
+                      </Box>
                     </TableCell>
-                    <TableCell>{club.club_name}</TableCell>
-                    <TableCell>{club.club_type}</TableCell>
-                    <TableCell>{club.member_count || "N/A"}</TableCell>
-                    <TableCell>{club.founded_date || "N/A"}</TableCell>
-                    <TableCell>{club.club_adviser}</TableCell>
-                    <TableCell>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        sx={{ mr: 2 }}
-                        onClick={() =>
-                          navigate(`/database/approvalDetail/${club.club_id}`, {
-                            state: { member_count: club.member_count },
-                          })
-                        }
-                      >
-                        รายละเอียด
-                      </Button>
+                    <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.club_name}</TableCell>
+                    <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.club_type}</TableCell>
+                    <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.member_count || "N/A"}</TableCell>
+                    <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.founded_date || "N/A"}</TableCell>
+                    <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.club_adviser}</TableCell>
+                    <TableCell sx={{borderColor:'#fff',justifyContent:'center'}}>
+                        <Box sx={{'&:hover':{cursor:'pointer',filter:'drop-shadow(0px 0px 2px #7CE9BF7D)'},display:'flex',justifyContent:'center',color:'#7CE9BF'}}>
+                        <SquareChartGantt className="h-full"
+                        onClick={() => handleRequestDetail(club,club.club_id,club.member_count)
+                        }></SquareChartGantt>
+                        </Box>
                     </TableCell>
                   </TableRow>
                 ))
