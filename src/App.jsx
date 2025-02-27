@@ -19,6 +19,7 @@ import AdminApprove from './components/sections/AdminApprove';
 import AdminRespond from './components/sections/AdminRespond';
 import ApprovalHistory from './components/sections/ApprovalHistory';
 import ApprovalDetail from './components/sections/ApprovalDetail';
+import ActivityDetail from './components/sections/ActivityDetail';
 function App() {
 
   return (
@@ -41,6 +42,7 @@ function App() {
           <Route path="/database/approvalHistory" element={<Wrapper allowedRoles={['admin']} ><ApprovalHistory /></Wrapper>} />
           <Route path="/database/approvalDetail/:clubId" element={<Wrapper allowedRoles={['admin']} ><ApprovalDetail /><Footer /></Wrapper>} />
           <Route path="/userprofile" element={<Wrapper allowedRoles={['student','club','admin']}><UserProfile /><Footer /></Wrapper>} />
+          <Route path="/activityDetail" element={<><ActivityDetail /><Footer /></>} />
         </Routes>
       </Router>
     </>
