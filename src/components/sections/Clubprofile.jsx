@@ -1,15 +1,16 @@
-
+import { Upload } from "lucide-react";
 const Clubprofile = () => {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen w-full mt-12">
       {/* Profile Picture */}
-      <div className="relative flex flex-col items-center">
+      <div className="relative flex flex-row items-center justify-end">
         <img
           src="/assets/Maskgroup.png"
           alt="Profile"
-          className="w-32 h-32 rounded-full border-4 border-white shadow-md"
+          className="w-32 h-32 rounded-full border-4 border-white shadow-md "
         />
+        <Upload/>
       </div>
 
       {/* Form */}
