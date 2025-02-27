@@ -43,7 +43,7 @@ function App() {
           <Route path="/database/approvalHistory" element={<Wrapper allowedRoles={['admin']} ><ApprovalHistory /></Wrapper>} />
           <Route path="/database/approvalDetail/:clubId" element={<Wrapper allowedRoles={['admin']} ><ApprovalDetail /><Footer /></Wrapper>} />
           <Route path="/userprofile" element={<Wrapper allowedRoles={['student','club','admin']}><UserProfile /><Footer /></Wrapper>} />
-          <Route path="/Clubprofile" element={<Wrapper allowedRoles={['student','club','admin']}><Clubprofile /><Footer /></Wrapper>} />
+          <Route path="/Clubprofile/:clubId" element={<Wrapper allowedRoles={['club']}><Clubprofile /><Footer /></Wrapper>} />
           <Route path="/activityDetail" element={<><ActivityDetail /><Footer /></>} />
         </Routes>
       </Router>
