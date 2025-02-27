@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { FaFacebook } from "react-icons/fa";
 import { FaSquareInstagram } from "react-icons/fa6";
-import { Mail, ChevronDown, Upload, Settings} from "lucide-react";
-import { Avatar } from "@mui/material";
+import { Mail, Upload, Settings} from "lucide-react";
 import EventModal from "../EventModal"; 
 import Calendar from "../Calendar"
 import supabase from "../../../supabaseClient";
@@ -105,7 +104,8 @@ const ClubManage = () => {
             <img className="w-48 h-48 rounded-full -translate-y-1/2" src={`${supabase.storage.from("club-avatars").getPublicUrl(club?.club_avatar).data.publicUrl}`} alt={club?.club_name } />
             </div>
             <div className="flex flex-col h-fit">
-              <h1 className="text-5xl font-bold text-left">{club?.club_name}</h1>
+              <h1 className={`font-bold text-left ${club?.club_name.length > 20 ? "text-3xl" : "text-5xl"}`}>{club?.club_name}</h1>
+
               <div className="text-gray-500 text-left">
                 <p>สร้างเมื่อ: { new Date(club?.approve_date)
               .toLocaleDateString("th-TH", { day: "2-digit", month: "2-digit", year: "numeric" })}</p>
@@ -125,7 +125,7 @@ const ClubManage = () => {
               </div>
             </div>
             <div className="flex flex-col items-end flex-grow">
-              <button className="mt-4 bg-[#7CE9BF] shadow-lg px-4 py-2 rounded-lg">สมัครเข้าชมรม</button>
+              <Settings className="absolute w-6 h-6 text-gray-500 cursor-pointer" onClick={() => navigate(`/Clubprofile/${clubId}`)}/>
             </div>
           </div>
         </div>
@@ -183,8 +183,8 @@ const ClubManage = () => {
                 </div>
 
                 {/* Create Event Modal*/}
-                <EventModal isOpen={isOpen} onClose={closeModal}/> 
-                
+                <EventModal isOpen={isOpen} onClose={closeModal} clubId={clubId}/> 
+            
             </div>
           </div>
         </div>
