@@ -72,11 +72,14 @@ const ConfirmCard = ({ isOpen, onClose, type }) => {
                 return " ";
         }
     };
-
+  const handleclose = () =>{
+    console.log('ho')
+    onClose();
+  }
   if (!isOpen) return null; // Don't render if not open
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/25">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/25 z-99">
       <div className="max-w-lg w-full rounded-xl shadow-lg bg-white">
         {isSubmitted ? (
           <div className="flex flex-row text-center bg-white items-center rounded-lg overflow-hidden">

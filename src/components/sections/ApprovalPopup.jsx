@@ -7,31 +7,50 @@ import {
   CircularProgress,
   Button,
   ThemeProvider,
+  Box,
+  TextField,
 } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import supabase from "../../../supabaseClient";
 import theme from "../Theme";
 import Loading from "../loading";
-import { X } from "lucide-react";
+import { X, File } from "lucide-react";
 
 const ApprovalPopup = ({ clubdata, requestID, count, onClose }) => {
   const { clubId } = useParams();
   const [loading, setLoading] = useState(false);
-  const [documentUrl, setDocumentUrl] = useState("");
   const location = useLocation();
   const club = clubdata;
-  useEffect(() => {
-    console.log(club);
-  });
-  if (loading)
-    return (
-      <div className="top-0 fixed z-9999">
-        <Loading />;
-      </div>
+  const [Doc, setDoc] = useState("");
+  const [rejectReason,setReason] = useState("");
+  const { data: urlData } = supabase.storage
+    .from("club-documents")
+    .getPublicUrl(clubdata.application_document);
+  const combined = club.clubMembers.map((user) => {
+    const memberDATA = club.memberdata.find(
+      (member) => member.email === user.email
     );
+    return memberDATA
+      ? {
+          ...user,
+          name: memberDATA.name,
+          PositionNumber:
+            user.position === "ประธานชมรม"
+              ? 1
+              : user.position === "รองประธานชมรม"
+              ? 2
+              : user.position === "กรรมการ"
+              ? 3
+              : user.position === "เลขานุการ"
+              ? 4
+              : user.position === "ผู้ช่วยเลขานุการ"
+              ? 5
+              : 6,
+        }
+      : user;
+  });
   if (!club) return <></>;
   const today = new Date().toISOString().slice(0, 19).replace("T", " "); // YYYY-MM-DD HH:MM:SS
-
   const handleApprove = async (clubId) => {
     console.log(member_count);
     // Insert into approvalHistory
@@ -74,6 +93,8 @@ const ApprovalPopup = ({ clubdata, requestID, count, onClose }) => {
     if (membersError) {
       console.error("Failed to fetch club members:", membersError);
       return;
+    } else {
+      console.log(clubMembers);
     }
 
     // Update role of each member to "club"
@@ -135,6 +156,7 @@ const ApprovalPopup = ({ clubdata, requestID, count, onClose }) => {
   const handleclose = () => {
     onClose();
   };
+
   return (
     <div className="bg-[rgba(16,16,16,0.5)] w-screen h-screen flex justify-center items-center fixed z-1000 top-0">
       <ThemeProvider theme={theme}>
@@ -159,7 +181,10 @@ const ApprovalPopup = ({ clubdata, requestID, count, onClose }) => {
             </div>
           </div>
           <div className="h-[80%] flex">
-            <div className="flex-1 flex-col flex " style={{ flex: "0 0 50%" }}>
+            <div
+              className="flex-1 flex-col flex max-w-[50%] "
+              style={{ flex: "0 0 50%" }}
+            >
               <div className="flex py-7 justify-center flex-1">
                 <Avatar
                   src={`${
@@ -264,9 +289,9 @@ const ApprovalPopup = ({ clubdata, requestID, count, onClose }) => {
                     <h1>{club.club_type}</h1>
                   </div>
                 </div>
-                <div className="flex ml-20 h-fit w-fit">
+                <div className="flex ml-20 h-fit w-fit max-w-[80%] ">
                   <div
-                    className="h-fit min-w-[12dvh] flex justify-between"
+                    className="h-fit min-w-[12dvh] flex justify-between00"
                     style={{
                       fontFamily: "Prompt, san-serif",
                       fontWeight: 550,
@@ -276,52 +301,138 @@ const ApprovalPopup = ({ clubdata, requestID, count, onClose }) => {
                     <h1>Tag</h1>
                   </div>
                   <div
-                    className="h-fit min-w-[20dvh]"
+                    className="h-fit min-w-[20dvh] max-w-[100%] "
+                    style={{
+                      fontFamily: "Prompt, san-serif",
+                      fontWeight: 400,
+                      fontSize: "14px",
+                      overflowWrap: "break-word",
+                    }}
+                  >
+                    {club.club_description.map((tag, index) => (
+                      <>{tag},</>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex-1" style={{ flex: "0 0 50%" }}>
+              <div
+                className="h-fit min-w-[20dvh] pb-2"
+                style={{
+                  fontFamily: "Prompt, san-serif",
+                  fontWeight: 550,
+                  fontSize: "14px",
+                }}
+              >
+                <h1>คณะกรรมการ</h1>
+              </div>
+              {combined
+                .sort((a, b) => a.PositionNumber - b.PositionNumber)
+                .map((member, index) => (
+                  <div
+                    key={index}
+                    className="h-fit min-w-[20dvh] ml-5 pb-1 grid grid-cols-2"
                     style={{
                       fontFamily: "Prompt, san-serif",
                       fontWeight: 400,
                       fontSize: "14px",
                     }}
                   >
-                    <h1>{club.club_description}</h1>
+                    <div className="mb-1">
+                      <h1>{member.name}</h1>
+                    </div>
+                    <div>
+                      <h1>{member.position}</h1>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div className="bg-blue-500 flex-1" style={{ flex: "0 0 50%" }}>
+                ))}
               <div
-                className="h-fit min-w-[20dvh] bg-amber-500"
+                className="h-fit min-w-[20dvh] pb-2"
                 style={{
                   fontFamily: "Prompt, san-serif",
-                  fontWeight: 400,
+                  fontWeight: 550,
                   fontSize: "14px",
                 }}
               >
-                <h1>คณะกรรมการ</h1>
+                <h1>เอกสารแนบ</h1>
               </div>
+              {urlData && (
+                <Box
+                  onClick={() => window.open(urlData.publicUrl, "_blank")}
+                  sx={{
+                    display: "flex",
+                    borderRadius: "5px",
+                    width: "fit-content",
+                    marginLeft: "10px",
+                    paddingX: "15px",
+                    alignItems: "end",
+                    color: "#1A1A1A7D",
+                    "&:hover": {
+                      cursor: "pointer",
+                      bgcolor: "#f9f9f9",
+                      color: "#1A1A1A",
+                    },
+                  }}
+                >
+                  <File className="text-[#FF7E69] mr-3" />{" "}
+                  <h1 className="text-[15px]">
+                    {clubdata.application_document}
+                  </h1>
+                </Box>
+              )}
             </div>
           </div>
-          <div className=" h-[100%] justify-end flex px-4 ">
-            <div className="h-fit w-fit ">
+          <div className=" h-[100%] justify-end flex px-4">
+            <div className="h-fit w-fit flex ">
               <ThemeProvider theme={theme}>
-                <Button
-                  variant="contained"
+              <input
+                    type="text"
+                    placeholder="เหตุผลในการปฏิเสธ"
+                    className="border border-[#1A1A1A7D] rounded-md w-full p-1 mr-4 focus:outline-none focus:border-[#FF7E69] focus:border-2"
+                    onChange={(e) => setReason(e.target.value)}
+                    required
+                  />
+                {rejectReason===''?(<Button
+                  variant="outlined"
                   color="error"
                   sx={{
                     boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
                     mr: 2,
                     paddingX: "3vw",
                     bgcolor: "white",
-                    color: "#1A1A1A",
+                    color: "#1A1A1A7D",
+                    borderWidth:'2px',
+                    borderColor:'white',
                     "&:hover": {
-                      bgcolor: "#7CE9BF",
-                      boxShadow: "0px 0px 2px #7CE9BF60",
+                      boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                      cursor: "no-drop",
                     },
                   }}
-                  onClick={() => handleReject(clubId)}
                 >
                   ปฏิเสธ
-                </Button>
+                </Button>):(
+                    <Button
+                    variant="outlined"
+                    color="error"
+                    sx={{
+                      boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                      mr: 2,
+                      paddingX: "3vw",
+                      bgcolor:"#FF7E69",
+                        color:'white',
+                      borderColor:'#FF7E69',
+                      borderWidth:'2px',
+                      "&:hover": {
+                        boxShadow: "0px 0px 5px 1px #FF7E697D",
+                        
+                      },
+                    }}
+                    onClick={() => console.log(rejectReason)}
+                  >
+                    ปฏิเสธ
+                  </Button>
+                )}
                 <Button
                   variant="contained"
                   color="success"

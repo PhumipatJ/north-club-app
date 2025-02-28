@@ -21,7 +21,8 @@ import theme from "../Theme";
 import Loading from "../loading";
 import {styled} from "@mui/system";
 import ApprovalPopup from "./ApprovalPopup";
-
+import ConfirmCard from "../confirmCard";
+import AdmindatabaseBox from "./AdmindatabaseBox";
 const AdminRespond = () => {
   const [pendingClubs, setPendingClubs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,15 +32,23 @@ const AdminRespond = () => {
   const [requestID,setRequestId] = useState(null);
   const [membercount,setCount] = useState(0);
   const [clubdata,setClubdata] = useState([]);
+  const [open,setopen] = useState(false);
     useEffect(() => {
     const fetchPendingClubs = async () => {
       const { data, error } = await supabase
         .from("clubs")
-        .select("*, member_count:clubMembers(count)")
+        .select("*, member_count:clubMembers(count), clubMembers(email,position)")
         .eq("club_approval", false);
-
-      if (error) {
-        console.error("Error fetching clubs:", error);
+        if (error) {
+          console.error("Error fetching clubs:", error);
+        }
+      const emails = data.flatMap(club => club.clubMembers.map (member => member.email));
+      const {data:memberdata,error:merror} = await supabase
+      .from("user")
+      .select("name,email")
+      .in("email",emails);
+      if (merror) {
+        console.error("Error fetching users:", );
       } else {
         setPendingClubs(
           data.map((club) => ({
@@ -48,10 +57,9 @@ const AdminRespond = () => {
             founded_date: new Date(club.created_at).toLocaleDateString(
               "th-TH",
               { day: "2-digit", month: "2-digit", year: "numeric" }
-            ),
+            ),memberdata
           }))
         );
-        console.log(data);
       }
       setTimeout(() => {
         setLoading(false);
@@ -65,6 +73,7 @@ const AdminRespond = () => {
     setRequestId(id);
     setOpenDetail(true);
     setCount(count);
+    console.log(pendingClubs)
   };
   const handlePopup =()=>{
     setOpenDetail(false);
@@ -79,6 +88,9 @@ const AdminRespond = () => {
   }
   return (
     <ThemeProvider theme={theme}>
+      {open === true &&(
+        <ConfirmCard isOpen={open} onClose={()=>setopen(false)} type={"event"}></ConfirmCard>
+      )}
       {openDetail === true &&(
         <ApprovalPopup clubdata={clubdata} requestID={requestID} count={membercount} onClose={handlePopup}/>
       )}
@@ -121,68 +133,7 @@ const AdminRespond = () => {
           </div>
         </div>
         <div className="flex justify-between gap-10 h-[calc(100vh-184px)]">
-          <div className="bg-[#fff] mt-10 rounded-[5px] w-[13dvw] h-fit sticky" style={{boxShadow:'0px 0px 2px rgba(26,26,26,0.25'}}>
-          <Button
-                variant="contained"
-                color="primary"
-                sx={{
-                  boxShadow: "none",
-                  width:'100%',
-                  bgcolor: location.pathname ==='/database/adminRespond' ? '#FF7E69' : "white",
-                  color: location.pathname ==='/database/adminRespond' ? 'white' : "#1A1A1A",
-                  "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
-                  borderRadius:"5px 5px 0 0",
-                }}
-                onClick={() => navigate("/database")}
-              >
-                รายชื่อชมรม
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{
-                  boxShadow: "none",
-                  width:'100%',
-                  bgcolor: "white",
-                  color: "#1A1A1A",
-                  "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
-                  borderRadius:"0",
-                }}
-                onClick={() => setOpenDetail(true)}
-              >
-                สิทธิ์ผู้ดูแล
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{
-                  boxShadow: "none",
-                  width:'100%',
-                  bgcolor: "white",
-                  color: "#1A1A1A",
-                  "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
-                  borderRadius:"0",
-                }}
-                onClick={() => navigate("/approvalHistory")}
-              >
-                ผู้ใช้ทั้งหมด
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{
-                  boxShadow: "none",
-                  width:'100%',
-                  bgcolor: "white",
-                  color: "#1A1A1A",
-                  "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
-                  borderRadius:"0 0 5px 5px",
-                }}
-                onClick={() => navigate("/approvalHistory")}
-              >
-                กิจกรรม
-              </Button>
-          </div>
+        <AdmindatabaseBox/>
           <TableContainer component={Paper}
             sx={{
               overflowY:'auto',

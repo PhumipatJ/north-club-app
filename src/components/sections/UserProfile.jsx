@@ -14,8 +14,9 @@ const UserProfile = () => {
       try {
         const { data: clubData, error: clubError } = await supabase
           .from("clubMembers")
-          .select("club_id, position, clubs(club_name, club_avatar)")
-          .eq("email", userInfo?.email);
+          .select("club_id, position, clubs!inner(club_name, club_avatar)")
+          .eq("email", userInfo?.email)
+          .eq("clubs.club_approval",true);
 
         if (clubError) {
           console.error("Error fetching club data:", clubError);
