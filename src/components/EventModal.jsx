@@ -291,7 +291,7 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
               }}
             >
               <RefreshCw
-                className={`w-5 h-5 rotate-180 ${
+                className={`w-5 h-5 rotate-45 ${
                     isSpinning1 ? "animate-spin" : ""
                   }`}
               />
@@ -393,7 +393,7 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
                           onClick={handleRefreshStatusClick}
                         >
                           <RefreshCw
-                            className={`w-5 h-5 ${
+                            className={`w-5 h-5 duration-50 rotate-45 ${
                               isSpinning2 ? "animate-spin" : ""
                             }`}
                           />
