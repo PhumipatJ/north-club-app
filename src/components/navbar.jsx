@@ -45,6 +45,9 @@ const Navbar = () => {
         const role = await authService.getUserRole(sessionData.user.id);
         setUserRole(role);
       }
+      else{
+        window.location.reload();
+      }
     };
 
     const { data: authListener } = authService.supabase.auth.onAuthStateChange(
