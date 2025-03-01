@@ -274,7 +274,7 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
       >
         {/* Event and Announce Button */}
         <div className="flex flex-row items-center w-full gap-3 mb-4 justify-between ">
-          <div className="flex flex-row gap-3 items-center w-[50%]">
+          <div className="flex flex-row gap-3 items-center w-[30%]">
             <h2 className="text-2xl font-bold ">สร้าง</h2>
 
             <h2
@@ -297,7 +297,9 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
               />
             </button>
           </div>
-
+                  <div className="text-gray-400">
+                  *กรุณาประกาศก่อนล่วงหน้า 1 เดือน
+                  </div>
           <div
             className="h-[100%] w-fit  flex items-center px-2 cursor-pointer"
             onClick={() => handelonclose()}
@@ -381,12 +383,13 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
                           แบบ:
                         </h2>
                         <h2
-                          className={`${statusColor} rounded-lg ${statusTextColor} py-2 px-4 shadow-md`}
+                          className={`${statusColor} rounded-lg ${statusTextColor} py-2 px-4 shadow-md cursor-pointer`}
+                          onClick={handleRefreshStatusClick}
                         >
                           {statusText}
                         </h2>
                         <button
-                          className="rounded-2xl py-2 px-4 flex items-center gap-2"
+                          className="rounded-2xl py-2 px-4 flex items-center gap-2 cursor-pointer"
                           onClick={handleRefreshStatusClick}
                         >
                           <RefreshCw
