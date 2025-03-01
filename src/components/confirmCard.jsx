@@ -21,6 +21,8 @@ const ConfirmCard = ({ isOpen, onClose, type, onConfirm  }) => {
             return "ยืนยันการสร้าง";
         case "profile":
             return "ยืนยันการเปลี่ยน?";
+        case "errorinput":
+            return "กรุณาใช้ไฟล์รูปภาพเท่านั้น!"
         default:
             return "ตรวจสอบอีกครั้ง";
         }
@@ -43,6 +45,8 @@ const ConfirmCard = ({ isOpen, onClose, type, onConfirm  }) => {
         switch (type) {
             case "createClub":
                 return "ตรวจเช็คอีกครั้ง";
+            case "errorinput":
+                return "ตกลง"
             default:
                 return "ยกเลิก";
         }
@@ -106,7 +110,27 @@ const ConfirmCard = ({ isOpen, onClose, type, onConfirm  }) => {
             </div>
         </div>        
         ) : (
-          <div className="flex flex-row text-center bg-white items-center rounded-lg overflow-hidden">
+          type==='errorinput'?(
+            <div className="flex flex-row text-center bg-white items-center rounded-lg overflow-hidden">
+            <img
+              src="/assets/Confirmcard.svg"
+              alt="Illustration"
+              className="flex w-2/5 object-cover"
+            />
+            <div>
+            <h2 className="text-2xl font-bold text-[#FF5135] mb-3">{getTitle()}</h2>
+            <div className="flex justify-center gap-4">
+              <button
+                className="px-6 py-2 border-white rounded-md bg-[#7CE9BF] hover:shadow-[0px_0px_3px_rgba(124,233,191,1)] cursor-pointer "
+                onClick={onClose}
+              >
+                {getCancel()}
+              </button>
+            </div>
+            </div>
+          </div>
+          ):(
+            <div className="flex flex-row text-center bg-white items-center rounded-lg overflow-hidden">
             <img
               src="/assets/Confirmcard.svg"
               alt="Illustration"
@@ -131,6 +155,7 @@ const ConfirmCard = ({ isOpen, onClose, type, onConfirm  }) => {
             </div>
             </div>
           </div>
+          )
         )}
       </div>
     </div>
