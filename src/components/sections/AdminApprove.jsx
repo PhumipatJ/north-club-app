@@ -20,6 +20,7 @@ import theme from "../Theme";
 import { styled } from "@mui/system";
 import { useLocation } from "react-router-dom";
 import Loading from "../loading";
+import AdmindatabaseBox from "./AdmindatabaseBox";
 const AdminApprove = () => {
   const [pendingClubs, setPendingClubs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -54,7 +55,7 @@ const AdminApprove = () => {
 
     fetchPendingClubs();
   }, []);
-
+  
   const CustomTableCell = styled(TableCell)({
     borderBottom: '2px solid #FF7E69',
     color: '#FF7E69',
@@ -105,68 +106,7 @@ const AdminApprove = () => {
         </div>
         
         <div className="flex justify-between gap-10 h-[calc(100vh-184px)]">
-          <div className="bg-[#fff] mt-10 rounded-[5px] w-[13dvw] h-fit sticky" style={{boxShadow:'0px 0px 2px rgba(26,26,26,0.25'}}>
-          <Button
-                variant="contained"
-                color="primary"
-                sx={{
-                  boxShadow: "none",
-                  width:'100%',
-                  bgcolor: location.pathname ==='/database' ? '#FF7E69' : "white",
-                  color: location.pathname ==='/database' ? 'white' : "#1A1A1A",
-                  "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
-                  borderRadius:"5px 5px 0 0",
-                }}
-                onClick={() => navigate("/database")}
-              >
-                รายชื่อชมรม
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{
-                  boxShadow: "none",
-                  width:'100%',
-                  bgcolor: "white",
-                  color: "#1A1A1A",
-                  "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
-                  borderRadius:"0",
-                }}
-                onClick={() => navigate("/approvalHistory")}
-              >
-                สิทธิ์ผู้ดูแล
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{
-                  boxShadow: "none",
-                  width:'100%',
-                  bgcolor: "white",
-                  color: "#1A1A1A",
-                  "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
-                  borderRadius:"0",
-                }}
-                onClick={() => navigate("/approvalHistory")}
-              >
-                ผู้ใช้ทั้งหมด
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{
-                  boxShadow: "none",
-                  width:'100%',
-                  bgcolor: "white",
-                  color: "#1A1A1A",
-                  "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
-                  borderRadius:"0 0 5px 5px",
-                }}
-                onClick={() => navigate("/approvalHistory")}
-              >
-                กิจกรรม
-              </Button>
-          </div>
+          <AdmindatabaseBox/>
           <TableContainer
             component={Paper}
             sx={{
@@ -214,7 +154,8 @@ const AdminApprove = () => {
                   </TableRow>
                 ) : (
                   pendingClubs.map((club) => (
-                    <TableRow key={club.club_id} sx={{'&:hover':{backgroundColor:'#f9f9f9' , cursor:'pointer'}}}>
+                    <TableRow key={club.club_id} sx={{'&:hover':{backgroundColor:'#f9f9f9' , cursor:'pointer'}}} 
+                    onClick={()=>navigate(`/clubs/${club.club_id}`)}>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>
                         <Avatar
                           src={`${

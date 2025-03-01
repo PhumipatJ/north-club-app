@@ -96,8 +96,9 @@ const Navbar = () => {
 
       const { data: clubData, error: clubError } = await supabase
       .from("clubMembers")
-      .select("club_id, position, clubs(club_name, club_avatar)")
+      .select("club_id, position, clubs!inner(club_name, club_avatar)")
       .eq("email", data?.email)
+      .eq("clubs.club_approval",true)
 
       if (clubError) {
         console.error("Error fetching club data:", clubError);
