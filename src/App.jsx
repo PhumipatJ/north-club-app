@@ -18,7 +18,6 @@ import ClubApplication from './components/sections/ClubApplication';
 import AdminApprove from './components/sections/AdminApprove';
 import AdminRespond from './components/sections/AdminRespond';
 import ApprovalHistory from './components/sections/ApprovalHistory';
-import ApprovalDetail from './components/sections/ApprovalDetail';
 import Clubprofile from './components/sections/Clubprofile';
 import ActivityDetail from './components/sections/ActivityDetail';
 function App() {
@@ -41,9 +40,8 @@ function App() {
           <Route path="/database" element={<Wrapper allowedRoles={['admin']} ><AdminApprove /></Wrapper>} />
           <Route path="/database/adminRespond" element={<Wrapper allowedRoles={['admin']} ><AdminRespond /></Wrapper>} />
           <Route path="/database/approvalHistory" element={<Wrapper allowedRoles={['admin']} ><ApprovalHistory /></Wrapper>} />
-          <Route path="/database/approvalDetail/:clubId" element={<Wrapper allowedRoles={['admin']} ><ApprovalDetail /><Footer /></Wrapper>} />
           <Route path="/userprofile" element={<Wrapper allowedRoles={['student','club','admin']}><UserProfile /><Footer /></Wrapper>} />
-          <Route path="/Clubprofile/:clubId" element={<Wrapper allowedRoles={['club']}><Clubprofile /><Footer /></Wrapper>} />
+          <Route path="/Clubprofile/:clubId" element={<Wrapper allowedRoles={['student','club','admin']}><Clubprofile /><Footer /></Wrapper>} />
           <Route path="/activityDetail" element={<><ActivityDetail /><Footer /></>} />
         </Routes>
       </Router>
