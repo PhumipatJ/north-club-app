@@ -4,7 +4,7 @@ import { Container, Typography, Avatar, CircularProgress, Button,ThemeProvider} 
 import { useLocation } from "react-router-dom";
 import supabase from "../../../supabaseClient";
 import theme from "../Theme";
-
+import ApprovalPopup from "./ApprovalPopup";
 const ApprovalDetail = () => {
   const { clubId } = useParams();
   const [club, setClub] = useState(null);
