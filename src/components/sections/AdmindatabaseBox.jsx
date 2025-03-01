@@ -1,27 +1,7 @@
-import { useState, useEffect } from "react";
 import {
-  Container,
   Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  Paper,
-  Avatar,
-  ThemeProvider,
-  Box,
 } from "@mui/material";
-import {SquareChartGantt} from "lucide-react";
-import { useNavigate ,useLocation} from "react-router-dom";
-import supabase from "../../../supabaseClient";
-import theme from "../Theme";
-import Loading from "../loading";
-import {styled} from "@mui/system";
-import ApprovalPopup from "./ApprovalPopup";
-import ConfirmCard from "../confirmCard";
+import { useNavigate} from "react-router-dom";
 const AdmindatabaseBox =()=>{
   const navigate = useNavigate();
   return(
@@ -32,8 +12,8 @@ const AdmindatabaseBox =()=>{
         sx={{
           boxShadow: "none",
           width:'100%',
-          bgcolor: location.pathname ==='/database/adminRespond'|| location.pathname ==='/database'? '#FF7E69' : "white",
-          color: location.pathname ==='/database/adminRespond' || location.pathname ==='/database'? 'white' : "#1A1A1A",
+          bgcolor: location.pathname ==='/database/adminRespond'|| location.pathname ==='/database'|| location.pathname==='/database/approvalHistory'? '#FF7E69' : "white",
+          color: location.pathname ==='/database/adminRespond' || location.pathname ==='/database' || location.pathname==='/database/approvalHistory'? 'white' : "#1A1A1A",
           "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
           borderRadius:"5px 5px 0 0",
         }}
@@ -41,21 +21,7 @@ const AdmindatabaseBox =()=>{
       >
         รายชื่อชมรม
       </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        sx={{
-          boxShadow: "none",
-          width:'100%',
-          bgcolor: "white",
-          color: "#1A1A1A",
-          "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
-          borderRadius:"0",
-        }}
-        onClick={() => setopen(true)}
-      >
-        สิทธิ์ผู้ดูแล
-      </Button>
+      
       <Button
         variant="contained"
         color="primary"
@@ -68,6 +34,21 @@ const AdmindatabaseBox =()=>{
           borderRadius:"0",
         }}
         onClick={() => navigate("/approvalHistory")}
+      >
+        กิจกรรม
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{
+          boxShadow: "none",
+          width:'100%',
+          bgcolor: location.pathname ==='/database/adminUserPreview'? '#FF7E69' : "white",
+          color: location.pathname ==='/database/adminUserPreview'? 'white' : "#1A1A1A",
+          "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
+          borderRadius:"0",
+        }}
+        onClick={() => navigate("/database/adminUserPreview")}
       >
         ผู้ใช้ทั้งหมด
       </Button>
@@ -77,14 +58,14 @@ const AdmindatabaseBox =()=>{
         sx={{
           boxShadow: "none",
           width:'100%',
-          bgcolor: "white",
-          color: "#1A1A1A",
+          bgcolor: location.pathname ==='/database/adminLog'? '#FF7E69' : "white",
+          color: location.pathname ==='/database/adminLog'? 'white' : "#1A1A1A",
           "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
           borderRadius:"0 0 5px 5px",
         }}
-        onClick={() => navigate("/approvalHistory")}
+        onClick={() => navigate("/database/adminLog")}
       >
-        กิจกรรม
+        Log การใช้งาน
       </Button>
   </div>
   )

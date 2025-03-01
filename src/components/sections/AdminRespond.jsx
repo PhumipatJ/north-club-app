@@ -8,7 +8,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
   Paper,
   Avatar,
   ThemeProvider,
@@ -92,7 +91,7 @@ const AdminRespond = () => {
         <ConfirmCard isOpen={open} onClose={()=>setopen(false)} type={"event"}></ConfirmCard>
       )}
       {openDetail === true &&(
-        <ApprovalPopup clubdata={clubdata} requestID={requestID} count={membercount} onClose={handlePopup}/>
+        <ApprovalPopup clubdata={clubdata} count={membercount} onClose={handlePopup}/>
       )}
       <Container className="p-6 mt-24 min-h-[77vh] flex flex-col justify-center">
       <div className="flex max-w-6xl w-full">

@@ -8,10 +8,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
   Paper,
   Avatar,
-  Chip,
   ThemeProvider,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
