@@ -63,7 +63,7 @@ const AdmindatabaseBox =()=>{
           "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
           borderRadius:"0 0 5px 5px",
         }}
-        onClick={() => setopen(true)}
+        onClick={() => navigate("/database/adminLog")}
       >
         Log การใช้งาน
       </Button>

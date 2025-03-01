@@ -19,7 +19,7 @@ import { useLocation } from "react-router-dom";
 import Loading from "../loading";
 import AdmindatabaseBox from "./AdmindatabaseBox";
 import {User,UserCog} from "lucide-react";
-const AdminUserPreview = () => {
+const AdminLog = () => {
   const [pendingClubs, setPendingClubs] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -142,4 +142,4 @@ const AdminUserPreview = () => {
   );
 };
 
-export default AdminUserPreview;
+export default AdminLog;
