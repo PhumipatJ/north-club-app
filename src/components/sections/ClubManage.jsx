@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { FaFacebook } from "react-icons/fa";
 import { FaSquareInstagram } from "react-icons/fa6";
-import { Mail, ChevronDown, Upload, Settings} from "lucide-react";
-import { Avatar } from "@mui/material";
+import { Mail, Upload, Settings} from "lucide-react";
 import EventModal from "../EventModal"; 
 import Calendar from "../Calendar"
 import supabase from "../../../supabaseClient";
@@ -126,7 +125,7 @@ const ClubManage = () => {
               </div>
             </div>
             <div className="flex flex-col items-end flex-grow">
-              <button className="mt-4 bg-[#7CE9BF] shadow-lg px-4 py-2 rounded-lg">สมัครเข้าชมรม</button>
+              <Settings className="absolute w-6 h-6 text-gray-500 cursor-pointer" onClick={() => navigate(`/Clubprofile/${clubId}`)}/>
             </div>
           </div>
         </div>
