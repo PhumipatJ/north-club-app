@@ -20,6 +20,7 @@ import AdminRespond from './components/sections/AdminRespond';
 import ApprovalHistory from './components/sections/ApprovalHistory';
 import Clubprofile from './components/sections/Clubprofile';
 import ActivityDetail from './components/sections/ActivityDetail';
+import AdminUserPreview from './components/sections/AdminUserPreview';
 function App() {
 
   return (
@@ -43,6 +44,7 @@ function App() {
           <Route path="/userprofile" element={<Wrapper allowedRoles={['student','club','admin']}><UserProfile /><Footer /></Wrapper>} />
           <Route path="/Clubprofile/:clubId" element={<Wrapper allowedRoles={['student','club','admin']}><Clubprofile /><Footer /></Wrapper>} />
           <Route path="/activityDetail" element={<><ActivityDetail /><Footer /></>} />
+          <Route path="/database/adminUserPreview" element={<Wrapper allowedRoles={['admin']} ><AdminUserPreview /></Wrapper>} />
         </Routes>
       </Router>
     </>
