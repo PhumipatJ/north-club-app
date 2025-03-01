@@ -58,8 +58,8 @@ const AdmindatabaseBox =()=>{
         sx={{
           boxShadow: "none",
           width:'100%',
-          bgcolor: "white",
-          color: "#1A1A1A",
+          bgcolor: location.pathname ==='/database/adminLog'? '#FF7E69' : "white",
+          color: location.pathname ==='/database/adminLog'? 'white' : "#1A1A1A",
           "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
           borderRadius:"0 0 5px 5px",
         }}
