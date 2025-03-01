@@ -25,7 +25,7 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
     const [clubPosterPreview, setClubPosterPreview] = useState(null);
     
     const [applicationDocument, setApplicationDocument] = useState("");
-    const [fileName, setFileName] = useState("using (png, jpg)");
+    const [fileName, setFileName] = useState("using (.pdf)");
 
     const [eventTitle, setEventTitle] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
