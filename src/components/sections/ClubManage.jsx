@@ -90,6 +90,7 @@ const ClubManage = () => {
 
   return (
     <div className="bg-gray-50">
+      <EventModal isOpen={isOpen} onClose={closeModal} clubId={clubId}/> 
       <div className="max-w-5xl mx-auto rounded-lg overflow-hidden">
       <div className="bg-white drop-shadow-lg mt-24">
         {/* Club Banner */}
@@ -183,7 +184,7 @@ const ClubManage = () => {
                 </div>
 
                 {/* Create Event Modal*/}
-                <EventModal isOpen={isOpen} onClose={closeModal} clubId={clubId}/> 
+                
             
             </div>
           </div>
