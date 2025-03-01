@@ -22,11 +22,13 @@ import Clubprofile from './components/sections/Clubprofile';
 import ActivityDetail from './components/sections/ActivityDetail';
 import AdminUserPreview from './components/sections/AdminUserPreview';
 import AdminLog from './components/sections/AdminLog';
+import ScrollTop from './components/ScrollTop';
 function App() {
 
   return (
     <>
       <Router>
+      <ScrollTop/>
         <Navbar />
         <Routes>
           <Route path="/" element={<><Home /><Footer /></>} />
