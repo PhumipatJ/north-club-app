@@ -9,6 +9,7 @@ import Calendar from "../Calendar"
 import supabase from "../../../supabaseClient";
 import { Button,ThemeProvider } from "@mui/material";
 import theme from "../Theme";
+import ClubFormManage from "./ClubFormManage";
 
 const ClubManage = () => {
   const { clubId } = useParams();
@@ -21,8 +22,9 @@ const ClubManage = () => {
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
-
+  const [prevForm,setPrevform] = useState(null); 
   const [isOpenForm,setOpenform] = useState(false);
+  const [isformpopupOpen,setPopupopen] = useState(false);
   useEffect(() => {
     const fetchClubData = async () => {
       const { data, error } = await supabase
@@ -88,12 +90,33 @@ const ClubManage = () => {
   
   //console.log(clubTest);
   //console.log(members);
-
+  useEffect(()=>{
+    const fetchClubForm = async() =>{
+      const {data:Formdata,error:formError} = await supabase
+      .from("ClubRegisterForm")
+      .select("*")
+      .eq("club_id",clubId)
+      .single();
+      if(formError){
+        console.log(formError);
+        return;
+      }
+      if(Formdata.length !== 0){
+        setPrevform(Formdata);
+        console.log(Formdata);
+      }
+      else{
+        console.log("test");
+      }
+    };
+    fetchClubForm();
+  },[isformpopupOpen]);
 
 
   return (
     <div className="bg-gray-50">
-      <EventModal isOpen={isOpen} onClose={closeModal} clubId={clubId}/> 
+      <EventModal isOpen={isOpen} onClose={closeModal} clubId={clubId}/>
+      <ClubFormManage isOpen={isformpopupOpen} onClose={()=>setPopupopen(false)} clubId={clubId} prevform={prevForm}/>
       <div className="max-w-5xl mx-auto rounded-lg overflow-hidden">
       <div className="bg-white drop-shadow-lg mt-24">
         {/* Club Banner */}
@@ -144,7 +167,7 @@ const ClubManage = () => {
                   color: "#1A1A1A",
                   "&:hover": { bgcolor: "#7CE9BF",boxShadow:"0px 0px 2px #7CE9BF60"},
                 }}
-                onClick={() => navigate("")}
+                onClick={()=>setPopupopen(true)}
               >
                 เปิดรับสมัตรสมาชิก
               </Button>
@@ -205,7 +228,6 @@ const ClubManage = () => {
                     </div>
                 </div>
 
-                {/* Create Event Modal*/}
                 
             
             </div>

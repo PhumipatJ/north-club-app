@@ -6,10 +6,8 @@ import {
   ThemeProvider,
   Box,
 } from "@mui/material";
-import { useLocation } from "react-router-dom";
 import supabase from "../../../supabaseClient";
 import theme from "../Theme";
-import Loading from "../loading";
 import { X, File } from "lucide-react";
 
 const ApprovalPopup = ({ clubdata, count, onClose }) => {
