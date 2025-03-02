@@ -3,18 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { FaFacebook } from "react-icons/fa";
 import { FaSquareInstagram } from "react-icons/fa6";
-import { Mail, Upload, Settings} from "lucide-react";
+import { Mail, Upload, Settings, BellRing} from "lucide-react";
 import EventModal from "../EventModal"; 
 import Calendar from "../Calendar"
 import supabase from "../../../supabaseClient";
 import { Button,ThemeProvider } from "@mui/material";
 import theme from "../Theme";
 import ClubFormManage from "./ClubFormManage";
+import { useLocation } from "react-router-dom";
 
 const ClubManage = () => {
   const { clubId } = useParams();
   const navigate = useNavigate();
-
+  const location = useLocation();
   const [club, setClub] = useState(null);
   const [members, setMembers] = useState([]);
 
@@ -96,9 +97,10 @@ const ClubManage = () => {
       .from("ClubRegisterForm")
       .select("*")
       .eq("club_id",clubId)
-      .single();
+      .single()
       if(formError){
         console.log(formError);
+        setPrevform(Formdata);
         return;
       }
       if(Formdata.length !== 0){
@@ -110,13 +112,13 @@ const ClubManage = () => {
       }
     };
     fetchClubForm();
-  },[isformpopupOpen]);
+  },[clubId,isformpopupOpen]);
 
 
   return (
     <div className="bg-gray-50">
       <EventModal isOpen={isOpen} onClose={closeModal} clubId={clubId}/>
-      <ClubFormManage isOpen={isformpopupOpen} onClose={()=>setPopupopen(false)} clubId={clubId} prevform={prevForm}/>
+      <ClubFormManage isOpen={isformpopupOpen} onClose={()=>{setPopupopen(false);}} clubId={clubId} prevform={prevForm}/>
       <div className="max-w-5xl mx-auto rounded-lg overflow-hidden">
       <div className="bg-white drop-shadow-lg mt-24">
         {/* Club Banner */}
@@ -126,37 +128,57 @@ const ClubManage = () => {
   
         {/* Club Details */}
         <div className="flex flex-col ">
-          <div className="flex flex-row p-6 h-fit ">
-            <div className="relative rounded-full flex items-center justify-center mx-12 ">
+          <div className="flex flex-row p-6 h-fit  justify-between ">
+            <div className="relative rounded-full flex justify-center mx-12 gap-8">
             <img className="w-48 h-48 rounded-full -translate-y-1/2" src={`${supabase.storage.from("club-avatars").getPublicUrl(club?.club_avatar).data.publicUrl}`} alt={club?.club_name } />
-            </div>
             <div className="flex flex-col h-fit ">
-              <h1 className={`font-bold text-left ${club?.club_name.length > 20 ? "text-3xl" : "text-5xl"}`}>{club?.club_name}</h1>
-
-              <div className="text-gray-500 text-left">
+              <h1 className={`font-bold text-left overflow-visible ${club?.club_name.length > 20 ? "text-3xl" : "text-[32px]"}`}>{club?.club_name}</h1>
+              <div className="text-gray-500 text-left ">
                 <p>สร้างเมื่อ: { new Date(club?.approve_date)
               .toLocaleDateString("th-TH", { day: "2-digit", month: "2-digit", year: "numeric" })}</p>
                 <p>ที่ตั้งชมรม: {club?.location}</p>
-                <div className="flex items-center"> {/* Container for email */}
+                <div className="flexbox">
+                  <div className="flex items-center mb-1"> {/* Container for email */}
                   <Mail className="w-5 h-5 text-[#7CE9BF]"/>
                   <p className="px-4">{club?.mail}</p>
                 </div>
-                <div className="flex items-center"> {/* Container for Facebook */}
+                <div className="flex items-center  mb-1"> {/* Container for Facebook */}
                   <FaFacebook className="w-5 h-5 text-[#7CE9BF]"/>
                   <p className="px-4">{club?.facebook}</p>
                 </div>
-                <div className="flex items-center"> {/* Container for Instagram */}
+                <div className="flex items-center  mb-1"> {/* Container for Instagram */}
                   <FaSquareInstagram className="w-5 h-5 text-[#7CE9BF]" />
                   <a href="https://www.instagram.com/l_uod_l_/" target="_blank" className="px-4">{club?.instagram}</a>
                 </div>
+                </div>
               </div>
             </div>
-            <div className=" flex-col justify-between flex mb-6">
-              <div className=" justify-end flex">
+            </div>
+            
+            <div className=" flex-col justify-between flex mb-6 ">
+              <div className=" justify-end flex ">
               <Settings className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => navigate(`/Clubprofile/${clubId}`)}/>
               </div>
+            <div className="justify-center mt-16 flex">
+              {prevForm?.form_status?(<p className="text-[#7CE9BF] flex gap-2"><BellRing/>กำลังเปิดรับสมัคร</p>):(<></>)}
+            </div>
               <ThemeProvider theme={theme}>
-              <Button
+                <div className="bg-red-200">
+                {prevForm?.form_status?(<Button
+                variant="contained"
+                color="primary"
+                sx={{
+                  boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                  width:'100%',
+                  mr: 0,
+                  paddingX: "4vw",
+                  bgcolor: "white",
+                  color: "#1A1A1A",
+                  "&:hover": { bgcolor: "#FF7E69",boxShadow:"0px 0px 2px #FF7E6960"},
+                }}
+              >
+                ปิดรับสมัคร
+              </Button>):(<Button
                 variant="contained"
                 color="primary"
                 sx={{
@@ -167,10 +189,11 @@ const ClubManage = () => {
                   color: "#1A1A1A",
                   "&:hover": { bgcolor: "#7CE9BF",boxShadow:"0px 0px 2px #7CE9BF60"},
                 }}
-                onClick={()=>setPopupopen(true)}
+                onClick={()=>{setPopupopen(true);console.log(prevForm)}}
               >
                 เปิดรับสมัตรสมาชิก
-              </Button>
+              </Button>)}
+                </div>
               </ThemeProvider>
             </div>
           </div>
