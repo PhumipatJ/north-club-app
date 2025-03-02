@@ -11,7 +11,7 @@ import { Button,ThemeProvider } from "@mui/material";
 import theme from "../Theme";
 import ClubFormManage from "./ClubFormManage";
 import { useLocation } from "react-router-dom";
-
+import Loading from "../loading";
 const ClubManage = () => {
   const { clubId } = useParams();
   const navigate = useNavigate();
@@ -20,12 +20,19 @@ const ClubManage = () => {
   const [members, setMembers] = useState([]);
 
   const [isOpen, setIsOpen] = useState(false);
-
+  const [onLoading,setonLoad] = useState(false);
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
   const [prevForm,setPrevform] = useState(null); 
   const [isOpenForm,setOpenform] = useState(false);
   const [isformpopupOpen,setPopupopen] = useState(false);
+  useEffect(()=>{
+    setonLoad(true);
+    setTimeout(() => {
+      setonLoad(false);
+    }, 200);
+  
+  },[location])
   useEffect(() => {
     const fetchClubData = async () => {
       const { data, error } = await supabase
@@ -117,6 +124,9 @@ const ClubManage = () => {
 
   return (
     <div className="bg-gray-50">
+      {onLoading?(
+        <Loading/>
+      ):(<></>)}
       <EventModal isOpen={isOpen} onClose={closeModal} clubId={clubId}/>
       <ClubFormManage isOpen={isformpopupOpen} onClose={()=>{setPopupopen(false);}} clubId={clubId} prevform={prevForm}/>
       <div className="max-w-5xl mx-auto rounded-lg overflow-hidden">
@@ -160,7 +170,7 @@ const ClubManage = () => {
               <Settings className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => navigate(`/Clubprofile/${clubId}`)}/>
               </div>
             <div className="justify-center mt-16 flex">
-              {prevForm?.form_status?(<p className="text-[#7CE9BF] flex gap-2"><BellRing/>กำลังเปิดรับสมัคร</p>):(<></>)}
+              {prevForm?.form_status?(<p className="text-[#7CE9BF] flex gap-2"><BellRing style={{}}/>กำลังเปิดรับสมัคร</p>):(<></>)}
             </div>
               <ThemeProvider theme={theme}>
                 <div className="bg-red-200">

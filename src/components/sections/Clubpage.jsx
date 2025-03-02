@@ -6,14 +6,22 @@ import { FaSquareInstagram } from "react-icons/fa6";
 import { Mail } from "lucide-react";
 import Calendar from "../Calendar"
 import supabase from "../../../supabaseClient";
-
+import { useLocation } from "react-router-dom";
+import Loading from "../loading";
 const Clubpage = () => {
   const { clubId } = useParams();
   const navigate = useNavigate();
-
+  const location = useLocation();
   const [club, setClub] = useState(null);
   const [members, setMembers] = useState([]);
-
+  const [onLoad,setonLoad] = useState(false);
+   useEffect(()=>{
+      setonLoad(true);
+      setTimeout(() => {
+        setonLoad(false);
+      }, 200);
+    
+    },[location])
   useEffect(() => {
     const fetchClubData = async () => {
       const { data, error } = await supabase
@@ -84,6 +92,7 @@ const Clubpage = () => {
 
   return (
     <div className="bg-gray-50">
+      {onLoad?(<Loading/>):(<></>)}
       <div className="max-w-5xl mx-auto rounded-lg overflow-hidden">
       <div className="bg-white drop-shadow-lg mt-24">
         {/* Club Banner */}
@@ -113,7 +122,7 @@ const Clubpage = () => {
                 </div>
                 <div className="flex items-center  mb-1"> {/* Container for Instagram */}
                   <FaSquareInstagram className="w-5 h-5 text-[#7CE9BF]" />
-                  <a href="https://www.instagram.com/l_uod_l_/" target="_blank" className="px-4">{club?.instagram}</a>
+                  <a href="https://www.instagram.com/l_uod_l_/" target="_blank" className="px-4">{club?.instagram} </a>
                 </div>
                 </div>
               </div>
