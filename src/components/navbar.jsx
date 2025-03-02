@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useLocation ,useNavigate} from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Menu,
   X,
@@ -8,9 +8,11 @@ import {
   SquarePlus,
   SquarePen,
   User,
+  ChevronDown,
 } from "lucide-react";
 import authService from "../service/AuthService";
 import supabase from "../../supabaseClient";
+import { Box,Avatar } from "@mui/material";
 
 const Navbar = () => {
   const location = useLocation();
@@ -80,7 +82,6 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-
   useEffect(() => {
     const getPersonalInfo = async () => {
       const { data, error } = await supabase
@@ -88,31 +89,31 @@ const Navbar = () => {
         .select("*")
         .eq("id", session?.user?.id)
         .single();
-  
+
       if (error) {
         console.error("Error fetching user data:", error);
       }
-      setUserInfo(data)
+      setUserInfo(data);
 
       const { data: clubData, error: clubError } = await supabase
-      .from("clubMembers")
-      .select("club_id, position, clubs!inner(club_name, club_avatar)")
-      .eq("email", data?.email)
-      .eq("clubs.club_approval",true)
+        .from("clubMembers")
+        .select("club_id, position, clubs!inner(club_name, club_avatar)")
+        .eq("email", data?.email)
+        .eq("clubs.club_approval", true);
 
       if (clubError) {
         console.error("Error fetching club data:", clubError);
       }
       setUserClub(clubData);
-      
-    
     };
-  
+
     if (session?.user?.id) {
       getPersonalInfo();
     }
-  }, [session]); 
-  
+  }, [session]);
+  const handleLogout =()=>{
+    
+  }
   return (
     <nav
       className={`fixed top-0 left-0 w-full transition-all duration-300 z-10 font-prompt ${
@@ -121,7 +122,19 @@ const Navbar = () => {
     >
       <div className="bg-white shadow-md max-w-6xl mx-auto px-6 flex justify-between items-center h-14 my-2 rounded-full">
         {/* LOGO */}
-        <h1 className="text-xl text-[#FF7E69] font-bold pt-2">North's Club </h1>
+        <h1
+          className="text-xl text-[#FF7E69] font-bold pt-2 cursor-pointer hover:text-[#7CE9BF] "
+          onClick={() =>
+            location.pathname === "/"
+              ? document.documentElement.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                })
+              : navigate("/")
+          }
+        >
+          North's Club{" "}
+        </h1>
 
         {/* Mobile Menu Button */}
         <button
@@ -197,7 +210,9 @@ const Navbar = () => {
           {/* Conditional Rendering Based on Role */}
 
           {userRole === "admin" &&
-            (location.pathname === "/database" || location.pathname==='/database/adminRespond' ||location.pathname==='/database/approvalHistory'? (
+            (location.pathname === "/database" ||
+            location.pathname === "/database/adminRespond" ||
+            location.pathname === "/database/approvalHistory" ? (
               <Link
                 to="/database"
                 className="hover:underline hover:text-[#7CE9BF] pt-1.5 text-[#7CE9BF]"
@@ -214,31 +229,76 @@ const Navbar = () => {
             ))}
           {userRole === "club" && (
             <div className="relative" ref={clubCardRef}>
-            <button
-              onClick={() => setShowClubCard(!showClubCard)}
-              className="hover:underline hover:text-[#7CE9BF] pt-1.5"
-            >
-              จัดการชมรม
-            </button>
-            {showClubCard && (
-              <div className="absolute right-0 mt-6 w-72 bg-white shadow-lg rounded-lg p-4 z-20">
+              <button
+                onClick={() => setShowClubCard(!showClubCard)}
+                className="hover:underline hover:text-[#7CE9BF] pt-1.5 "
+                style={{
+                  cursor: "pointer",
+                }}
+              >
+                จัดการชมรม
+              </button>
+              {showClubCard && (
+                <div className="absolute right-0 mt-6 w-72 bg-white shadow-lg rounded-lg p-4 z-20 cursor-pointer">
+                  <p className="text-gray-500 text-sm">ชมรมที่สังกัด</p>
 
-                <p className="text-gray-500 text-sm">ชมรมที่สังกัด</p>
-
-                <div className="max-h-40 overflow-y-auto space-y-2"> {/* Scrollable container */}
-                  {userClub.filter(club => club?.position !== 'สมาชิก').map((club, index) => (
-                    <div key={index} className="flex items-center gap-2 p-2 border border-gray-200 hover:bg-gray-100 rounded-md" >
-                      <img src={`${supabase.storage.from("club-avatars").getPublicUrl(club?.clubs.club_avatar).data.publicUrl}`} alt={club.club_id} className="w-8 h-8 rounded-full" />
-                        <div className="flex justify-between items-center w-full" onClick={() => navigate(`/clubmanage/${club.club_id}`)}>
-                            <p className="text-sm">{club?.clubs.club_name} <br/> ({club.position})</p>
-                            <SquareArrowOutUpRight size={20} className="text-gray-400" />
+                  <Box
+                    sx={{
+                      maxHeight: "10rem",
+                      overflowY: "auto",
+                      "&::-webkit-scrollbar": {
+                        width: "5px",
+                        height: "2px",
+                      },
+                      "&::-webkit-scrollbar-thumb": {
+                        backgroundColor: "#FF7E69",
+                        borderRadius: "10px",
+                        transition: "background-color 1s ease",
+                      },
+                    }}
+                  >
+                    {" "}
+                    {/* Scrollable container */}
+                    {userClub
+                      .filter((club) => club?.position !== "สมาชิก")
+                      .map((club, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center gap-2 p-2 border border-gray-200 hover:bg-gray-100 rounded-md mb-1"
+                        >
+                          <img
+                            src={`${
+                              supabase.storage
+                                .from("club-avatars")
+                                .getPublicUrl(club?.clubs.club_avatar).data
+                                .publicUrl
+                            }`}
+                            alt={club.club_id}
+                            className="w-8 h-8 rounded-full"
+                          />
+                          <div
+                            className="flex justify-between items-center w-full"
+                            onClick={() =>{
+                              setShowClubCard(false);
+                              navigate(`/clubmanage/${club.club_id}`);
+                            }
+                              
+                            }
+                          >
+                            <p className="text-sm">
+                              {club?.clubs.club_name} <br /> ({club.position})
+                            </p>
+                            <SquareArrowOutUpRight
+                              size={20}
+                              className="text-gray-400"
+                            />
+                          </div>
                         </div>
-                    </div>
-                  ))}
-                </div>  
-              </div>
-            )}
-          </div>
+                      ))}
+                  </Box>
+                </div>
+              )}
+            </div>
           )}
 
           {session ? (
@@ -246,9 +306,16 @@ const Navbar = () => {
               {/* Profile Icon - Click to Show Dropdown */}
               <button
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
-                className="focus:outline-none"
+                className="focus:outline-none cursor-pointer"
               >
-                <UserCircle size={32} className="text-[#7CE9BF]" />
+                <div className="flex items-center gap-1">
+                <ChevronDown className="text-[#7CE9BF] "/>
+                <Avatar src="/assets/Maskgroup.png" alt="profile" sx={{cursor:'pointer',
+                transition:'ease-in',
+                transitionDuration:'0.05s',
+                  '&:hover':{boxShadow:'0px 0px 3px 1px #1A1A1A30'}
+                }}/>
+                </div>
               </button>
 
               {/* Profile Dropdown */}
@@ -262,20 +329,28 @@ const Navbar = () => {
                     />
                     <div>
                       <p className=" text-lg font-semibold">
-                        {userInfo?.gender === "M" ? "นาย" : "นาง"} {userInfo?.name}
+                        {userInfo?.gender === "M" ? "นาย" : "นาง"}{" "}
+                        {userInfo?.name}
                       </p>
                       <div className="flex flex-row">
                         <User className="text-[#7CE9BF] fill-[#7CE9BF]" />
                         <p className="text-gray-500 text-sm">
-                        {userInfo?.role === "student"
-                          ? "นักศึกษา"
-                          : userInfo?.role === "club"
-                          ? "กรรมการชมรม"
-                          : "กองกิจการนักศึกษา"}
+                          {userInfo?.role === "student"
+                            ? "นักศึกษา"
+                            : userInfo?.role === "club"
+                            ? "กรรมการชมรม"
+                            : "กองกิจการนักศึกษา"}
                         </p>
                       </div>
                     </div>
-                    <SquarePen size={20} className="text-gray-400 hover:text-gray-500" onClick={() =>navigate("/userprofile", { state: { userInfo} }) }/>
+                    <SquarePen
+                      size={20}
+                      className="text-gray-400 hover:text-gray-500 cursor-pointer"
+                      onClick={() =>{
+                        setShowProfileMenu(false);
+                        navigate("/userprofile", { state: { userInfo } })}
+                      }
+                    />
                   </div>
 
                   {userInfo?.role !== "admin" && (
@@ -283,55 +358,94 @@ const Navbar = () => {
                       {userClub?.length > 0 && (
                         <div className="mt-3 border-b pb-2">
                           <p className="text-gray-500 text-sm">ชมรมที่สังกัด</p>
-                          <div className="max-h-40 overflow-y-auto space-y-2"> {/* Scrollable container */}
+                          <Box
+                            sx={{
+                              maxHeight: "10rem",
+                              overflowY: "auto",
+                              "&::-webkit-scrollbar": {
+                                width: "5px",
+                                height: "2px",
+                              },
+                              "&::-webkit-scrollbar-thumb": {
+                                backgroundColor: "#FF7E69",
+                                borderRadius: "10px",
+                                transition: "background-color 1s ease",
+                              },
+                            }}
+                          >
+                            {" "}
+                            {/* Scrollable container */}
                             {userClub.map((club, index) => (
                               <div
                                 key={index}
-                                className="flex items-center gap-2 p-2 border border-gray-200 hover:bg-gray-100 rounded-md"
+                                className="flex items-center gap-2 p-2 border border-gray-200 hover:bg-gray-100 rounded-md cursor-pointer"
                               >
                                 <img
                                   src={`${
                                     supabase.storage
                                       .from("club-avatars")
-                                      .getPublicUrl(club?.clubs.club_avatar).data.publicUrl
+                                      .getPublicUrl(club?.clubs.club_avatar)
+                                      .data.publicUrl
                                   }`}
                                   alt={club.club_id}
                                   className="w-8 h-8 rounded-full"
                                 />
-                                <div className="flex justify-between items-center w-full" onClick={() => navigate(`/clubs/${club.club_id}`)}>
-                                  <p className="text-sm">{club?.clubs.club_name} <br/> ({club.position})</p>
-                                  <SquareArrowOutUpRight size={20} className="text-gray-400" />
+                                <div
+                                  className="flex justify-between items-center w-full"
+                                  onClick={() =>{
+                                    setShowProfileMenu(false);
+                                    navigate(`/clubs/${club.club_id}`)
+                                  }
+                                  }
+                                >
+                                  <div>
+                                    <p className="text-sm">
+                                      {club?.clubs.club_name} <br />{" "}
+                                    </p>
+                                    <p className="text-[12px] text-[#1A1a1a]">
+                                      ({club.position})
+                                    </p>
+                                  </div>
+
+                                  <SquareArrowOutUpRight
+                                    size={20}
+                                    className="text-gray-400"
+                                  />
                                 </div>
                               </div>
                             ))}
-                          </div>
+                          </Box>
                         </div>
                       )}
 
-
                       <Link
                         to="/clubApplication"
+                        onClick={()=>setShowProfileMenu(false)}
                         className="flex flex-row items-center justify-between mt-3 p-2 border border-gray-200 hover:bg-gray-100 rounded-md"
                       >
                         <div>
-                          <p className="text-[#7CE9BF] text-sm font-semibold">ไอเดียใหม่ ชมรมใหม่!</p>
-                          <p className="text-xs text-gray-500">ยื่นคำขอสร้างชมรมใหม่เลย</p>
+                          <p className="text-[#7CE9BF] text-sm font-semibold">
+                            ไอเดียใหม่ ชมรมใหม่!
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            ยื่นคำขอสร้างชมรมใหม่เลย
+                          </p>
                         </div>
                         <SquarePlus className="text-gray-400" />
                       </Link>
                     </>
                   )}
 
-          
-                <button 
-                  className="w-full mt-3 bg-[#FF7E69] text-white py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-red-600"
-                  onClick={async () => {
-                    await authService.logout();
-                  }}
-                >
-                  <span>ออกจากระบบ</span>
-                </button>
-              </div>
+                  <button
+                    className="w-full mt-3 bg-[#FF7E69] text-white py-2 rounded-lg flex items-center justify-center gap-2 cursor-pointer hover:shadow-[0px_0px_5px_2px_#FF7E697D] transition-shadow ease-in-out duration-200"
+                    onClick={async () => {
+                      setShowProfileMenu(false);
+                      await authService.logout();
+                    }}
+                  >
+                    <span>ออกจากระบบ</span>
+                  </button>
+                </div>
               )}
             </div>
           ) : (
@@ -379,7 +493,7 @@ const Navbar = () => {
 
           {userRole === "admin" && (
             <Link
-            to={"/database"} 
+              to={"/database"}
               className="hover:underline hover:text-[#7CE9BF]"
               onClick={() => setIsOpen(false)}
             >
@@ -388,18 +502,19 @@ const Navbar = () => {
           )}
           {userRole === "club" && (
             <div className="flex flex-col items-center space-y-2">
-            <UserCircle size={40} className="text-[#7CE9BF]" />
-            <Link to="/profile" className="hover:underline text-gray-700">Profile</Link>
-            <button
-              onClick={async () => {
-                await authService.logout();
-              }}
-              className="bg-red-500 text-white font-bold px-4 py-1 rounded-full hover:bg-red-400"
-            >
-              Logout
-            </button>
-          </div>
-            
+              <UserCircle size={40} className="text-[#7CE9BF]" />
+              <Link to="/profile" className="hover:underline text-gray-700">
+                Profile
+              </Link>
+              <button
+                onClick={async () => {
+                  await authService.logout();
+                }}
+                className="bg-red-500 text-white font-bold px-4 py-1 rounded-full hover:bg-red-400"
+              >
+                Logout
+              </button>
+            </div>
           )}
 
           {session ? (

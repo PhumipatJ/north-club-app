@@ -2,9 +2,10 @@ import React from 'react';
 import Slider from 'react-slick'; 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useNavigate} from "react-router-dom";
 
 const Home = () => {
-
+    const navigate = useNavigate();
     const carouselImages = [
         "/assets/image 30.webp",
         "/assets/image 31.webp",
@@ -36,7 +37,7 @@ const Home = () => {
                 <div className="text-center md:text-left max-w-xs mb-0 md:mb-32 pl-8">
                     <h3 className="text-xl font-bold text-gray-800">สำรวจกิจกรรม!</h3>
                     <p className="text-xl text-gray-600">ติดตามทุกกิจกรรม รอบรั้วมหาลัย</p>
-                    <a href="#" className="mt-4 inline-block bg-[#FF7E69] text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-500">ตารางกิจกรรม</a>
+                    <a href="#calender" className="mt-4 inline-block bg-[#FF7E69] text-white py-2 px-4 rounded-lg shadow-md hover:shadow-[0px_0px_5px_2px_#FF7E697D] transition-shadow ease-in-out duration-200">ตารางกิจกรรม</a>
                 </div>
                 
                 {/* Illustration */}
@@ -49,7 +50,7 @@ const Home = () => {
                 <div className="text-center md:text-right max-w-xs mt-0 md:mt-32 pr-8">
                     <h3 className="text-xl font-bold text-gray-800">ชมรมไหนเจ๋ง!</h3>
                     <p className="text-xl text-gray-600">จะแนววิชาการ กีฬาหรือ <br/>ความคิดสร้างสรรค์ก็มีหมด</p>
-                    <a href="#" className="mt-4 inline-block bg-[#FF7E69] text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-500">รายชื่อชมรม</a>
+                    <a onClick={() => navigate("/clubs")} className="mt-4 inline-block bg-[#FF7E69] text-white py-2 px-4 rounded-lg cursor-pointer shadow-md hover:shadow-[0px_0px_5px_2px_#FF7E697D] transition-shadow ease-in-out duration-200">รายชื่อชมรม</a>
                 </div>
             </div>
 
@@ -91,7 +92,7 @@ const Home = () => {
                 </div>
 
                 {/* Right: "Today's Activity" Section */}
-                <div className="w-full md:w-1/2 mt-10 md:mt-0">
+                <div id="calender" className="w-full md:w-1/2 mt-10 md:mt-0">
                     <h2 className="text-2xl font-bold text-[#FF7E69] mb-4">Today's Activity</h2>
                     <div className="rounded-lg p-4">
                         <table className="w-full text-left border-collapse shadow-lg rounded-xl">

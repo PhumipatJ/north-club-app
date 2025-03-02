@@ -127,11 +127,11 @@ const Clubpage = () => {
       
       <div className="">
         {/* Members List */}
-        <div div className="p-6 mt-8">
+        <div div className="mt-8 h-fit">
           <h2 className="text-xl font-semibold">สมาชิก ({members.length} คน)</h2>
-          <div className="grid grid-cols-5 gap-4 mt-4">
-            {members.slice(0, 4).map((member, index) => (
-              <div key={index} className="bg-white p-4 rounded-lg flex flex-col items-center">
+          <div className="flex flex-cols-6 gap-4 mt-4 ">
+            {members.slice(0, 5).map((member, index) => (
+              <div key={index} className="bg-white rounded-lg flex flex-col w-[20%] h-[25vh] items-center pt-7">
                 <img src={member.image || "/assets/Maskgroup.png"} alt="Member" className="w-20 h-20 rounded-full object-cover" />
                 <p className="mt-2 font-semibold text-center">{member.name}</p>
                 <p className="text-gray-500 text-sm text-center">{member.position}</p>
@@ -139,12 +139,12 @@ const Clubpage = () => {
             ))}
             
             {/* View All Members Block */}
-              <div className="bg-white p-4 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100"
+              <div className="bg-white p-4 rounded-lg flex flex-col items-center justify-center cursor-pointer gap-2 text-[#FF7E69] hover:bg-[#FF7E69] duration-200 hover:text-white"
                    onClick={() => navigate(`/clubmember/${clubId}`)}>
-                <div className="bg-amber-100 rounded-full">
-                  <img src={"/assets/Maskgroup.png"} alt="Member" className="w-20 h-20 rounded-full object-cover" />
+                <div className="">
+                  <img src={"/assets/Gamestation.svg"} alt="Member" className="w-full h-full rounded-full object-cover" />
                 </div>
-                <p className="text-[#FF7E69]">สมาชิกทั้งหมด</p>
+                <p className="text-center font-semibold">สมาชิกทั้งหมด</p>
               </div>
             </div>
           </div>
