@@ -28,12 +28,12 @@ const AdmindatabaseBox =()=>{
         sx={{
           boxShadow: "none",
           width:'100%',
-          bgcolor: "white",
-          color: "#1A1A1A",
+          bgcolor: location.pathname ==='/database/adminActivities'||location.pathname ==='/database/adminActivitiesReq'? '#FF7E69' : "white",
+          color: location.pathname ==='/database/adminActivities'||location.pathname ==='/database/adminActivitiesReq' ? 'white' : "#1A1A1A",
           "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
           borderRadius:"0",
         }}
-        onClick={() => navigate("/approvalHistory")}
+        onClick={() => navigate("/database/adminActivities")}
       >
         กิจกรรม
       </Button>

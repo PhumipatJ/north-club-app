@@ -23,6 +23,8 @@ import ActivityDetail from './components/sections/ActivityDetail';
 import AdminUserPreview from './components/sections/AdminUserPreview';
 import AdminLog from './components/sections/AdminLog';
 import ScrollTop from './components/ScrollTop';
+import AdminActivities from './components/sections/AdminActivities';
+import AdminActivitiesRequest from './components/sections/AdminActivitiesRequest';
 function App() {
 
   return (
@@ -49,6 +51,8 @@ function App() {
           <Route path="/activityDetail" element={<><ActivityDetail /><Footer /></>} />
           <Route path="/database/adminUserPreview" element={<Wrapper allowedRoles={['admin']} ><AdminUserPreview /></Wrapper>} />
           <Route path="/database/adminLog" element={<Wrapper allowedRoles={['admin']} ><AdminLog /></Wrapper>} />
+          <Route path="/database/adminActivities" element={<Wrapper allowedRoles={['admin']} ><AdminActivities /></Wrapper>} />
+          <Route path="/database/adminActivitiesReq" element={<Wrapper allowedRoles={['admin']} ><AdminActivitiesRequest /></Wrapper>} />
         </Routes>
       </Router>
     </>
