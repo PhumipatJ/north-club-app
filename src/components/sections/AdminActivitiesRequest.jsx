@@ -30,15 +30,18 @@ const AdminActivitiesRequest = () => {
     const fetchPendingClubs = async () => {
       const { data, error } = await supabase
         .from("event")
-        .select("*, clubs!inner(club_name,club_avatar,mail,instagram,facebook)")
+        .select("created_at,title,status,start_date,id, clubs!inner(club_name,club_avatar)")
         .eq("approval_status", false);
 
       if (error) {
         console.error("Error fetching clubs:", error);
       } else {
         setPendingClubs(
-          data.map((club) => ({
+          data.sort((a,b)=>a.created_at.localeCompare(b.created_at)).map((club) => ({
             ...club,
+            req_date: new Date(club.created_at).toLocaleDateString(
+              "th-TH",
+              { day: "2-digit", month: "2-digit", year: "numeric" })
           }))
         );
       }
@@ -110,6 +113,7 @@ const AdminActivitiesRequest = () => {
               <TableHead>
                 <TableRow>
                   <CustomTableCell>ผู้จัด</CustomTableCell>
+                  <CustomTableCell>วันที่ส่งคำขอ</CustomTableCell>
                   <CustomTableCell>ชื่อกิจกรรม</CustomTableCell>
                   <CustomTableCell>รูปแบบ</CustomTableCell>
                   <CustomTableCell>วันจัดงาน</CustomTableCell>
@@ -132,7 +136,7 @@ const AdminActivitiesRequest = () => {
                 ) : (
                   pendingClubs.map((event) => (
                     <TableRow key={event.id} sx={{'&:hover':{backgroundColor:'#f9f9f9' , cursor:'pointer'}}} 
-                    onClick={()=>console.log(event.id)}
+                    onClick={()=>navigate(`/database/ReqDetail/${event.id}`)}
                     >
                       <TableCell sx={{textAlign:'center', borderColor:'#fff',display:'flex',justifyContent:'center'}}>
                          <Avatar
@@ -143,7 +147,8 @@ const AdminActivitiesRequest = () => {
                           }`}
                           alt={event?.clubs.club_name}
                         /> 
-                      </TableCell>
+                      </TableCell> 
+                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{event.req_date}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{event.title}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{event.status}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{event.start_date || "N/A"}</TableCell>

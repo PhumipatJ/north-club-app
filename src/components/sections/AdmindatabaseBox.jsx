@@ -1,9 +1,10 @@
 import {
   Button,
 } from "@mui/material";
-import { useNavigate} from "react-router-dom";
+import { useNavigate,useMatch} from "react-router-dom";
 const AdmindatabaseBox =()=>{
   const navigate = useNavigate();
+  const match = useMatch("/database/ReqDetail/*")
   return(
   <div className="bg-[#fff] mt-10 rounded-[5px] w-[13dvw] h-fit sticky" style={{boxShadow:'0px 0px 2px rgba(26,26,26,0.25'}}>
   <Button
@@ -28,8 +29,8 @@ const AdmindatabaseBox =()=>{
         sx={{
           boxShadow: "none",
           width:'100%',
-          bgcolor: location.pathname ==='/database/adminActivities'||location.pathname ==='/database/adminActivitiesReq'? '#FF7E69' : "white",
-          color: location.pathname ==='/database/adminActivities'||location.pathname ==='/database/adminActivitiesReq' ? 'white' : "#1A1A1A",
+          bgcolor: location.pathname ==='/database/adminActivities'||location.pathname ==='/database/adminActivitiesReq'||match? '#FF7E69' : "white",
+          color: location.pathname ==='/database/adminActivities'||location.pathname ==='/database/adminActivitiesReq' ||match? 'white' : "#1A1A1A",
           "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
           borderRadius:"0",
         }}

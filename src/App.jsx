@@ -25,6 +25,7 @@ import AdminLog from './components/sections/AdminLog';
 import ScrollTop from './components/ScrollTop';
 import AdminActivities from './components/sections/AdminActivities';
 import AdminActivitiesRequest from './components/sections/AdminActivitiesRequest';
+import AdminActivityReqDetail from './components/sections/adminActivityReqDetail';
 function App() {
 
   return (
@@ -53,6 +54,7 @@ function App() {
           <Route path="/database/adminLog" element={<Wrapper allowedRoles={['admin']} ><AdminLog /></Wrapper>} />
           <Route path="/database/adminActivities" element={<Wrapper allowedRoles={['admin']} ><AdminActivities /></Wrapper>} />
           <Route path="/database/adminActivitiesReq" element={<Wrapper allowedRoles={['admin']} ><AdminActivitiesRequest /></Wrapper>} />
+          <Route path="/database/ReqDetail/:eventId" element={<Wrapper allowedRoles={['admin']} ><AdminActivityReqDetail /></Wrapper>} />
         </Routes>
       </Router>
     </>

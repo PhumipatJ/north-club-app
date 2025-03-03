@@ -39,6 +39,9 @@ const AdminActivities = () => {
         setPendingClubs(
           data.map((club) => ({
             ...club,
+            founded_date: new Date(club.created_at).toLocaleDateString(
+              "th-TH",
+              { day: "2-digit", month: "2-digit", year: "numeric" })
           }))
         );
       }

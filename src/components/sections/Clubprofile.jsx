@@ -175,12 +175,12 @@ const Clubprofile = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 w-full max-w-3xl">
         {/* Instagram URL */}
         <div className="w-full">
-          <label className="block text-gray-700">Instagram</label>
+          <label className="block text-gray-700">Instagram (URL)</label>
           <input
             name="instagram"
             type="text"
             className="w-full p-3 border border-red-400 rounded-md focus:outline-none focus:border-red-500"
-            placeholder="Enter Instagram Name"
+            placeholder="Enter Instagram url"
             defaultValue={clubData?.instagram || ""}
             onChange={handleChange}
           />
@@ -188,12 +188,12 @@ const Clubprofile = () => {
 
         {/* Facebook URL */}
         <div className="w-full">
-          <label className="block text-gray-700">Facebook</label>
+          <label className="block text-gray-700">Facebook (URL)</label>
           <input
             name="facebook"
             type="text"
             className="w-full p-3 border border-red-400 rounded-md focus:outline-none focus:border-red-500"
-            placeholder="Enter Facebook Name"
+            placeholder="Enter Facebook url"
             defaultValue={clubData?.facebook || ""}
             onChange={handleChange}
           />
