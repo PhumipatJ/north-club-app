@@ -27,6 +27,8 @@ const ConfirmCard = ({ isOpen, onClose, type, onConfirm,text,onsecondConfirm}) =
             return "Error!"
         case "apply":
           return "ยืนยันการเปิดรับสมัคร?"
+        case "eventApprove":
+          return "ยืนยันการส่งคำขอ?"
         default:
             return "ตรวจสอบอีกครั้ง";
         }

@@ -1,15 +1,9 @@
 import { useState, useEffect ,} from "react";
 import {
   Container,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   ThemeProvider,
-  Button
+  Button,
+  Box
 } from "@mui/material";
 import { useNavigate ,useParams,useMatch} from "react-router-dom";
 import supabase from "../../../supabaseClient";
@@ -21,13 +15,16 @@ import AdmindatabaseBox from "./AdmindatabaseBox";
 import { FaFacebook } from "react-icons/fa";
 import { FaSquareInstagram } from "react-icons/fa6";
 import { CiMail } from "react-icons/ci";
-import {MapPin,Calendar,} from "lucide-react";
+import {MapPin,Calendar,File} from "lucide-react";
+import ConfirmCard from "../confirmCard";
 const AdminActivityReqDetail = () => {
     const match = useMatch('/database/ReqDetail/*')
     const { eventId } = useParams();
   const [eventDetail, setEventDetail] = useState([]);
   const [loading, setLoading] = useState(true);
   const [rejectReason,setReason] = useState('');
+  const [doc,setdoc] = useState('');
+  const [isConfirmOpen,setopen] = useState(false);
 const navigate = useNavigate(0);
   useEffect(() => {
     const fetchingEvent = async()=>{
@@ -42,6 +39,11 @@ const navigate = useNavigate(0);
         }
         else{
             setEventDetail(data)
+            setdoc(
+              supabase.storage
+              .from('club-documents')
+              .getPublicUrl("/"+data?.document).data.publicUrl
+            )
             setTimeout(() => {
                 setLoading(false);
               }, 500);
@@ -51,15 +53,32 @@ const navigate = useNavigate(0);
       
     fetchingEvent();
   }, []);
-
   const handlelink =(link)=>{
     window.open(link,"_blank");
+  }
+  const handleApprove = async () =>{
+    const { error: updateError } = await supabase
+    .from("event")
+    .update({ approval_status: true })
+    .eq("id", eventDetail.id);
+
+  if (updateError) {
+    console.error(`Failed to update role for ${email}:`, updateError);
+  }
   }
   if(loading){
     return <Loading/>
   }
   return (
     <ThemeProvider theme={theme}>
+      <ConfirmCard
+          isOpen={isConfirmOpen}
+          onClose={() => setopen(false)}
+          type=""
+          text=""
+          onConfirm={handleApprove}
+          onsecondConfirm={()=>navigate('/database/adminActivitiesReq')}
+        />
       <Container className="p-6 mt-24 min-h-[77vh] flex flex-col justify-center">
         <div className="flex max-w-6xl w-full">
           <div className=" w-full h-fit flex">
@@ -91,7 +110,11 @@ const navigate = useNavigate(0);
                 <div className="flex flex-wrap md:flex-nowrap gap-4">
                     <div className="flex items-center justify-center relative overflow-hidden rounded-lg w-full md:w-1/2 aspect-[4/5]">
                         <img
-                            src="/assets/image 31.webp"
+                            src={`${
+                              supabase.storage
+                                .from("club-avatars")
+                                .getPublicUrl(eventDetail?.poster).data.publicUrl
+                            }`}
                             alt="KMUTNB Alumni Talk Season 2"
                             className="w-fit h-full object-cover rounded-lg" />
                     </div>
@@ -118,11 +141,34 @@ const navigate = useNavigate(0);
                                     <span>{eventDetail.start_time} - {eventDetail.end_time} น.</span>
                                 </div>
                             </div>
+                            <Box
+                  onClick={() => window.open(doc, "_blank")}
+                  sx={{
+                    display: "flex",
+                    borderRadius: "5px",
+                    width: "fit-content",
+                    marginLeft: "10px",
+                    paddingX: "15px",
+                    alignItems: "end",
+                    color: "#1A1A1A7D",
+                    marginTop:'10%',
+                    "&:hover": {
+                      cursor: "pointer",
+                      bgcolor: "#f9f9f9",
+                      color: "#1A1A1A",
+                    },
+                  }}
+                >
+                  <File className="text-[#7CE9BF] mr-3" />{" "}
+                  <h1 className="text-[15px]">
+                    {eventDetail.document}
+                  </h1>
+                </Box>
                         </div>
                     </div>
                 </div>
                 <div className="mt-4">
-                    <h3 className="text-3xl font-semibold">รายละเอียดกิจกรรม</h3>
+                    <h3 className="text-3xl font-semibold" onClick={()=>console.log(doc)}>รายละเอียดกิจกรรม</h3>
                     <p className="text-sm text-gray-700 mt-1">
                         {eventDetail.description}
                     </p>
@@ -146,9 +192,11 @@ const navigate = useNavigate(0);
                         </div>
                     </div>
                 </div>
-                <div className="h-fit w-full flex justify-end pl-20 mt-10">
+                <div className="h-fit w-full flexbox justify-end mt-10  gap-1">
               <ThemeProvider theme={theme}>
-              <input
+              <h1 className="text-[20px] font-semibold">ตอบกลับ</h1>
+            <div className="flex justify-end pl-10 mt-1">
+            <input
                     type="text"
                     placeholder="เหตุผลในการปฏิเสธ"
                     className="border border-[#1A1A1A7D] rounded-md w-full p-1 mr-4 focus:outline-none focus:border-[#FF7E69] focus:border-2"
@@ -209,10 +257,11 @@ const navigate = useNavigate(0);
                       boxShadow: "0px 0px 5px 0.1px #7CE9BF",
                     },
                   }}
-                  onClick={() => handleApprove(clubId)}
+                  onClick={() => setopen(true)}
                 >
                   อนุมัติ
                 </Button>
+            </div>
               </ThemeProvider>
             </div>
             </div>

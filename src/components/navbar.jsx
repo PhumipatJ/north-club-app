@@ -59,8 +59,6 @@ const Navbar = () => {
     );
 
     getSessionAndRole();
-
-    console.log(userRole);
     return () => authListener.subscription.unsubscribe();
   }, []);
 

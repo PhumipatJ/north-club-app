@@ -151,7 +151,9 @@ const AdminActivities = () => {
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{event.title}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{event.status}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{event.start_date || "N/A"}</TableCell>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff', color:'#FF7E69',display:'flex',justifyContent:'center'}}><List /></TableCell>
+                      <TableCell sx={{textAlign:'center', borderColor:'#fff', color:'#FF7E69'}}><div className="h-[100%] w-[100%] justify-center flex" >
+                        <List className="text-[#FF7E69] "/>
+                        </div></TableCell>
                       
                     </TableRow>
                   ))
