@@ -105,10 +105,11 @@ const navigate = useNavigate(0);
         
         <div className="flex justify-between gap-10 h-fit ">
           <AdmindatabaseBox/>
-          <div className="mx-auto p-12 shadow-lg rounded-xl border border-gray-200 bg-white mb-10 mt-10 h-fit">
+          <div className="mx-auto p-12 shadow-lg rounded-xl border border-gray-200 bg-white mb-10 mt-10 h-fit max-w-[75%]">
             <div className="flex flex-col w-full">
                 <div className="flex flex-wrap md:flex-nowrap gap-4">
-                    <div className="flex items-center justify-center relative overflow-hidden rounded-lg w-full md:w-1/2 aspect-[4/5]">
+                    <div className="flex items-center justify-center relative overflow-hidden rounded-lg w-full md:w-1/2 aspect-[4/5]
+                    ">
                         <img
                             src={`${
                               supabase.storage

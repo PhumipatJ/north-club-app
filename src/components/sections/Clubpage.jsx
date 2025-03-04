@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { FaFacebook } from "react-icons/fa";
 import { FaSquareInstagram } from "react-icons/fa6";
-import { Mail } from "lucide-react";
+import { Mail ,BellRing} from "lucide-react";
 import Calendar from "../Calendar"
 import supabase from "../../../supabaseClient";
 import { useLocation } from "react-router-dom";
@@ -114,13 +114,11 @@ const Clubpage = () => {
   //console.log(clubTest);
   //console.log(members);
 
-
-
   return (
     <div className="bg-gray-50">
       {onLoad?(<Loading/>):(<></>)}
       {isFormopen&&(
-        <Clubform formdata={[applyForm,club?.club_name]} onClose={()=>setFormopen(false)}/>
+        <Clubform formdata={{...applyForm, clubname:club?.club_name}} onClose={()=>setFormopen(false)}/>
       )}
       <div className="max-w-5xl mx-auto rounded-lg overflow-hidden">
       <div className="bg-white drop-shadow-lg mt-24">
@@ -177,6 +175,9 @@ const Clubpage = () => {
               >
                 สมัครเข้าชมรม
               </Button>
+              <div className="text-[13px] mt-2 text-[#5ccca1] flex gap-3 justify-center">
+              <BellRing/>ขณะนี้ชมรมกำลังเปิดรับ
+            </div>
               </div>
             ):(<div className="w-[25vh] text-center">
               <Box

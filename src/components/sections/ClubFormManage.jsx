@@ -162,7 +162,6 @@ const ClubFormManage = ({ isOpen, onClose, clubId, prevform }) => {
   return (
     <div
       className="fixed flex inset-0 items-center justify-center bg-black/25 z-50 h-[100dvh]"
-      onClick={handelonclose}
     >
         <div onClick={(e) => e.stopPropagation()} className="z-51 absolute">
         <ConfirmCard
@@ -254,6 +253,24 @@ const ClubFormManage = ({ isOpen, onClose, clubId, prevform }) => {
                 <div>
                   <label
                     className="block font-semibold mb-1"
+                    htmlFor="role"
+                  >
+                    <div className="flex items-end gap-3">
+                      รายละเอียดเพิ่มเติม
+                    </div>
+                  </label>
+                  <textarea
+                    id="role"
+                    placeholder={
+                      prevform ? prevform?.form_discrip : "Enter Description"
+                    }
+                    className="w-full border border-[#FF7E69] rounded px-3 pt-2 h-32 max-h-[30vh]"
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label
+                    className="block font-semibold mb-1"
                     htmlFor="description"
                   >
                     <div className="flex items-end gap-3">
@@ -268,7 +285,7 @@ const ClubFormManage = ({ isOpen, onClose, clubId, prevform }) => {
                     placeholder={
                       prevform ? prevform?.role_available : "Enter Role"
                     }
-                    className="w-full border border-[#FF7E69] rounded px-3 pt-2 h-32 max-h-[50vh]"
+                    className="w-full border border-[#FF7E69] rounded px-3 pt-2 h-32 max-h-[20vh]"
                     onChange={(e) => setRole(e.target.value)}
                   />
                 </div>
