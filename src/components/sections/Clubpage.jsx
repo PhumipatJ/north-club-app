@@ -120,7 +120,7 @@ const Clubpage = () => {
     <div className="bg-gray-50">
       {onLoad?(<Loading/>):(<></>)}
       {isFormopen&&(
-        <Clubform formdata={applyForm} onClose={()=>setFormopen(false)}/>
+        <Clubform formdata={[applyForm,club?.club_name]} onClose={()=>setFormopen(false)}/>
       )}
       <div className="max-w-5xl mx-auto rounded-lg overflow-hidden">
       <div className="bg-white drop-shadow-lg mt-24">
