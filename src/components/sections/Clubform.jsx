@@ -18,7 +18,7 @@ const Clubform = ({ formdata, count, onClose }) => {
   return (
     <div className="bg-[rgba(16,16,16,0.5)] w-screen h-screen flex justify-center items-center fixed z-1000 top-0">
       <ThemeProvider theme={theme}>
-        <div className="bg-white w-[60dvw] h-[70dvh] rounded-[8px] overflow-clip">
+        <div className="bg-white w-[60dvw] pt-5 rounded-[8px] overflow-clip max-h-[80%]">
           <div className=" w-[100%] h-[10%] flex justify-between">
             <div className="h-[100%] w-fit  flex items-center px-5">
               <h1
@@ -38,7 +38,8 @@ const Clubform = ({ formdata, count, onClose }) => {
               <X />
             </div>
           </div>
-          <div className="h-[80%]">
+          <div className="h-[90%] overflow-auto flexbox">
+            <div className="max-w-[100%] p-10">
             <img
                 onLoad={()=>Setonload(false)}
               src={`${
@@ -47,6 +48,8 @@ const Clubform = ({ formdata, count, onClose }) => {
               }`}
               alt=""
             />
+            </div>
+            
           </div>
         </div>
       </ThemeProvider>
