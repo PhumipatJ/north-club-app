@@ -8,20 +8,26 @@ import Calendar from "../Calendar"
 import supabase from "../../../supabaseClient";
 import { useLocation } from "react-router-dom";
 import Loading from "../loading";
+import { Button ,ThemeProvider,Box} from "@mui/material";
+import theme from "../Theme";
+import Clubform from "./Clubform";
 const Clubpage = () => {
   const { clubId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const [club, setClub] = useState(null);
   const [members, setMembers] = useState([]);
-  const [onLoad,setonLoad] = useState(false);
-   useEffect(()=>{
-      setonLoad(true);
+  const [onLoad,setonLoad] = useState(true);
+  const [applyForm,setForm] = useState();
+  const [isFormopen,setFormopen] = useState(false);
+  const [loaded,setloaded] = useState([false,false,false])
+  useEffect(()=>{
+    if(loaded[0] && loaded[1] && loaded[2]){
       setTimeout(() => {
         setonLoad(false);
       }, 200);
-    
-    },[location])
+    }
+  },[loaded]);
   useEffect(() => {
     const fetchClubData = async () => {
       const { data, error } = await supabase
@@ -35,11 +41,30 @@ const Clubpage = () => {
       } else {
         setClub(data);
       }
+      setloaded([true,false,false])
     };
   
     fetchClubData();
   }, [clubId]);
-  
+  useEffect(()=>{
+    const fetchingForm = async () =>{
+      const {data:form , error:Ferror} = await supabase
+      .from("ClubRegisterForm")
+      .select("*")
+      .eq("club_id",clubId)
+      .single()
+      if(Ferror){
+        setForm('');
+        return;
+      }
+      else{
+        console.log(form);
+        setForm(form);
+      }
+    }
+    setloaded([true,true,false])
+    fetchingForm();
+  },[clubId])
   useEffect(() => {
     const fetchMembers = async () => {
       // Fetch clubMembers data (position & email)
@@ -79,6 +104,7 @@ const Clubpage = () => {
       }));
   
       setMembers(mergedData);
+      setloaded([true,true,true])
     };
   
     fetchMembers();
@@ -93,6 +119,9 @@ const Clubpage = () => {
   return (
     <div className="bg-gray-50">
       {onLoad?(<Loading/>):(<></>)}
+      {isFormopen&&(
+        <Clubform formdata={applyForm} onClose={()=>setFormopen(false)}/>
+      )}
       <div className="max-w-5xl mx-auto rounded-lg overflow-hidden">
       <div className="bg-white drop-shadow-lg mt-24">
         {/* Club Banner */}
@@ -103,7 +132,7 @@ const Clubpage = () => {
         {/* Club Details */}
         <div className="flex flex-col ">
           <div className="flex flex-row p-6 h-fit  justify-between ">
-            <div className="relative rounded-full flex justify-center mx-12 gap-10">
+            <div className="relative rounded-full flex justify-center mx-12 gap-10 ">
             <img className="w-48 h-48 rounded-full -translate-y-1/2" src={`${supabase.storage.from("club-avatars").getPublicUrl(club?.club_avatar).data.publicUrl}`} alt={club?.club_name } />
             <div className="flex flex-col h-fit ">
               <h1 className={`font-bold text-left overflow-visible ${club?.club_name.length > 20 ? "text-3xl" : "text-[32px]"}`}>{club?.club_name}</h1>
@@ -127,6 +156,51 @@ const Clubpage = () => {
                 </div>
               </div>
             </div>
+            </div>
+            <div>
+              <ThemeProvider theme={theme}>
+            {applyForm?.form_status===true?(
+              <div className="w-[25vh] text-center">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={()=>setFormopen(true)}
+                sx={{
+                  boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                  mr: 0,
+                  width:'100%',
+                  paddingX: "2vw",
+                  bgcolor: "white",
+                  color: "#1A1A1A",
+                  "&:hover": { bgcolor: "#7CE9BF",boxShadow:"0px 0px 2px #7CE9BF60"},
+                }}
+              >
+                สมัครเข้าชมรม
+              </Button>
+              </div>
+            ):(<div className="w-[25vh] text-center">
+              <Box
+              sx={{
+                boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                mr: 0,
+                userSelect:'none',
+                borderRadius:'5px',
+                paddingY:'0.5vw',
+                paddingX: "2vw",
+                bgcolor: "white",
+                color: "#1A1A1A7D",
+                cursor:'default',
+                width:'100%',
+                "&:hover": {boxShadow:"0px 0px 2px rgba(26,26,26,0.25)"},
+              }}
+            >
+              สมัครเข้าชมรม
+            </Box>
+            <div className="text-[13px] mt-2 text-[#1a1a1a7D]">
+              ชมรมยังไม่เปิดรับสมาชิก
+            </div>
+            </div>)}
+              </ThemeProvider>
             </div>
           </div>
         </div>

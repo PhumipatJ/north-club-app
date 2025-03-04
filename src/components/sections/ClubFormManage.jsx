@@ -24,7 +24,22 @@ const ClubFormManage = ({ isOpen, onClose, clubId, prevform }) => {
   const [Description, setDescription] = useState("");
   const [Role, setRole] = useState("");
   if (!isOpen) return null;
-
+  const uploadFile = async (file, bucket) => {
+    console.log(file)
+    if (!file) return "";
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${Date.now()}.${fileExt}`;
+    
+    const { data, error } = await supabase.storage.from(bucket).upload(fileName, file, {
+      contentType: file.type,
+    });
+    
+    if (error) {
+      console.error(`Upload error (${bucket}):`, error);
+      return "";
+    }
+    return data.path;
+  };
   const handlePosterFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -87,6 +102,8 @@ const ClubFormManage = ({ isOpen, onClose, clubId, prevform }) => {
           month: "2-digit",
           year: "numeric",
         }) +" "+ endTime;
+        
+        const PosterUrl = await uploadFile(clubPoster, "club-avatars");
       const { data: data, error: error } = await supabase
         .from("ClubRegisterForm")
         .insert([
@@ -96,7 +113,7 @@ const ClubFormManage = ({ isOpen, onClose, clubId, prevform }) => {
             form_discrip: Description,
             form_status: true,
             role_available: Role,
-            Pic: clubPosterName,
+            Pic: PosterUrl,
             date_close: formattedDate,
           },
         ]);
@@ -111,6 +128,7 @@ const ClubFormManage = ({ isOpen, onClose, clubId, prevform }) => {
           month: "2-digit",
           year: "numeric",
         }) + " "+ endTime;
+        const PosterUrl = await uploadFile(clubPoster, "club-avatars");
       const { data: data, error: error } = await supabase
         .from("ClubRegisterForm")
         .update({
@@ -118,7 +136,7 @@ const ClubFormManage = ({ isOpen, onClose, clubId, prevform }) => {
           form_discrip: Description,
           form_status: true,
           role_available: Role,
-          Pic: clubPosterName,
+          Pic: PosterUrl,
           date_close: formattedDate,
         })
         .eq("club_id", clubId);

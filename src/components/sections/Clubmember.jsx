@@ -4,10 +4,10 @@ import { useParams } from "react-router-dom";
 import { FaFacebook } from "react-icons/fa";
 import { FaSquareInstagram } from "react-icons/fa6";
 import { Mail, ChevronDown } from "lucide-react";
-import { Avatar } from "@mui/material";
+import { Avatar ,ThemeProvider} from "@mui/material";
 import Calendar from "../Calendar"
 import supabase from "../../../supabaseClient";
-
+import theme from "../Theme";
 const clubInfo = [
   {
     name: "KMUTNB Esport",
@@ -138,33 +138,32 @@ const Clubmember = () => {
         </div>
   
         {/* Club Details */}
-        <div className="flex flex-col">
-          <div className="flex flex-row p-6 h-fit">
-            <div className="relative rounded-full flex items-center justify-center mx-12">
-            <img className="w-48 h-48 rounded-full -translate-y-1/2" src={`${supabase.storage.from("club-avatars").getPublicUrl(clubTest?.club_avatar).data.publicUrl}`} alt={clubTest?.club_name } />
-            </div>
-            <div className="flex flex-col h-fit">
-              <h1 className="text-5xl font-bold text-left">{clubTest?.club_name}</h1>
-              <div className="text-gray-500 text-left">
+        <div className="flex flex-col ">
+          <div className="flex flex-row p-6 h-fit  justify-between ">
+            <div className="relative rounded-full flex justify-center mx-12 gap-10 ">
+            <img className="w-48 h-48 rounded-full -translate-y-1/2" src={`${supabase.storage.from("club-avatars").getPublicUrl(clubTest?.club_avatar).data.publicUrl}`} alt={club?.club_name } />
+            <div className="flex flex-col h-fit ">
+              <h1 className={`font-bold text-left overflow-visible ${clubTest?.club_name.length > 20 ? "text-3xl" : "text-[32px]"}`}>{club?.club_name}</h1>
+              <div className="text-gray-500 text-left ">
                 <p>สร้างเมื่อ: { new Date(clubTest?.approve_date)
               .toLocaleDateString("th-TH", { day: "2-digit", month: "2-digit", year: "numeric" })}</p>
                 <p>ที่ตั้งชมรม: {clubTest?.location}</p>
-                <div className="flex items-center"> {/* Container for email */}
+                <div className="flexbox">
+                  <div className="flex items-center mb-1"> {/* Container for email */}
                   <Mail className="w-5 h-5 text-[#7CE9BF]"/>
                   <p className="px-4">{clubTest?.mail}</p>
                 </div>
-                <div className="flex items-center"> {/* Container for Facebook */}
+                <div className="flex items-center  mb-1"> {/* Container for Facebook */}
                   <FaFacebook className="w-5 h-5 text-[#7CE9BF]"/>
                   <p className="px-4">{clubTest?.facebook}</p>
                 </div>
-                <div className="flex items-center"> {/* Container for Instagram */}
+                <div className="flex items-center  mb-1"> {/* Container for Instagram */}
                   <FaSquareInstagram className="w-5 h-5 text-[#7CE9BF]" />
-                  <a href="https://www.instagram.com/l_uod_l_/" target="_blank" className="px-4">{clubTest?.instagram}</a>
+                  <a href="https://www.instagram.com/l_uod_l_/" target="_blank" className="px-4">{clubTest?.instagram} </a>
+                </div>
                 </div>
               </div>
             </div>
-            <div className="flex flex-col items-end flex-grow">
-              <button className="mt-4 bg-[#7CE9BF] shadow-lg px-4 py-2 rounded-lg">สมัครเข้าชมรม</button>
             </div>
           </div>
         </div>
