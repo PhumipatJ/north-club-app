@@ -12,7 +12,7 @@ import theme from "../Theme";
 import ClubFormManage from "./ClubFormManage";
 import { useLocation } from "react-router-dom";
 import Loading from "../loading";
-const ClubManage = () => {
+const ClubManage = ({userinfo}) => {
   const { clubId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,6 +28,7 @@ const ClubManage = () => {
   const [isformpopupOpen,setPopupopen] = useState(false);
   useEffect(()=>{
     setonLoad(true);
+    console.log(userinfo)
     setTimeout(() => {
       setonLoad(false);
     }, 200);

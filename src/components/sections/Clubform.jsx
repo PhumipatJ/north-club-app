@@ -5,43 +5,73 @@ import supabase from "../../../supabaseClient";
 import theme from "../Theme";
 import { X, File, ChevronUp, ChevronDown } from "lucide-react";
 import Loading from "../loading";
-const Clubform = ({ formdata, onClose }) => {
+import ConfirmCard from "../confirmCard";
+const Clubform = ({ formdata, onClose ,userInfo}) => {
   const [piconload, Setonload] = useState(true);
-  const [userdata, setUserData] = useState(null);
   const [isDropdownOpen, setShowDropdown] = useState(false);
-  const [test,settest] = useState("hello");
-  const [role, setrole] = useState([
-    "กีฬา",
-    "วิชาการ",
-    "อาสาและบำเพ็ญประโยชน์",
-    "ศิลปะและวัฒนธรรม",
-  ]);
+  const role = [...formdata?.role_available.split(',')]
+  const [roleSelected,setRoleSelected] = useState('');
+  const [Description,setDescript] = useState('');
+  const [folioURL,setfolioURL] = useState('');
+  //comfirmcard
+  const [isConfirmOpen,setConfirmopen] = useState(false);
+  const [typeopen,setTypeopen] = useState('');
+  const [texterror,setTexterror] = useState('');
+  //confirmcard
   const handleclose = () => {
+    setRoleSelected('');
+    setDescript('');
+    setfolioURL('');
     onClose();
   };
-  const isFormValid = () => {};
-  const handleConfirm = async () => {
+  const isFormValid = () => {
+    if(roleSelected === '') {
+      return false;
+    }
+    else{
+      return true;
+    }
+  };
+  const Confirm = async () => {
     const { error } = await supabase.from("userform").insert([
       {
-        user_id: userdata.id,
-        club_id: userdata.club_id,
-        role_apply: userdata.role,
-        Description: userdata.Descrip,
-        filename: userdata.file,
+        user_id: userInfo?.id,
+        club_id: formdata?.club_id,
+        role_apply: roleSelected,
+        Description: Description,
+        filename: folioURL,
+        status: false
       },
     ]);
     if (error) {
       console.log(error);
     }
+  }
+  const handleConfirm = () => {
+    if(isFormValid()){
+      setConfirmopen(true);
+      setTypeopen('');
+    }
+    else{
+       setConfirmopen(true);
+       setTypeopen('error');
+       setTexterror("No role Selected");
+       
+    }
   };
+  const handleSelectRole = (role) =>{
+    setRoleSelected(role);
+    setShowDropdown(false);
+  }
   return (
     <div className="bg-[rgba(16,16,16,0.5)] w-screen h-screen flex justify-center items-center fixed z-1000 top-0">
       {piconload && <Loading />}
+      <ConfirmCard isOpen={isConfirmOpen} onConfirm={Confirm} onClose={()=>setConfirmopen(false)} onsecondConfirm={handleclose} type={typeopen} text={texterror||" "}/>
       <ThemeProvider theme={theme}>
         <div className="bg-white w-[60vw] rounded-[8px] h-[90vh]">
           <div className=" w-[100%] h-[10%] flex justify-between px-5 shadow-[0px_0px_2px_rgba(26,26,26,0.25)]">
             <div className="h-[100%] w-fit  flex items-center">
-              <h1 className="font-semibold text-[20px]">รายละเอียด</h1>
+              <h1 className="font-semibold text-[20px] " onClick={()=>console.log(roleSelected)}>รายละเอียด</h1>
             </div>
             <div
               className="h-[100%] w-fit  flex items-center cursor-pointer"
@@ -109,12 +139,12 @@ const Clubform = ({ formdata, onClose }) => {
                           type="text"
                           id="eventName"
                           placeholder="Enter Title"
-                          value={test}
+                          value={userInfo.name}
                           disabled
-                          className="w-full border border-[#FF7E69] rounded px-3 py-2"
+                          className="w-full border border-[#FF7E69] rounded px-3 py-2 text-[#1a1a1a7d]"
                         />
                       </div>
-                      <div>
+                      <div className="w-[45%]">
                         <label
                           className="block font-semibold mb-1"
                           htmlFor="eventName"
@@ -125,7 +155,9 @@ const Clubform = ({ formdata, onClose }) => {
                           type="text"
                           id="eventName"
                           placeholder="Enter Title"
-                          className="w-full border border-[#FF7E69] rounded px-3 py-2"
+                          className="w-full border border-[#FF7E69] rounded px-3 py-2 text-[#1a1a1a7d]"
+                          value={userInfo.email}
+                          disabled
                         />
                       </div>
                       <div>
@@ -139,7 +171,9 @@ const Clubform = ({ formdata, onClose }) => {
                           type="text"
                           id="eventName"
                           placeholder="year"
-                          className="w-[60px] border border-[#FF7E69] rounded px-3 py-2"
+                          className="w-[60px] border border-[#FF7E69] rounded px-3 py-2 text-[#1a1a1a7d]"
+                          value={new Date().getFullYear() + 543 - userInfo?.admission_year}
+                          disabled
                         />
                       </div>
                     </div>
@@ -155,7 +189,9 @@ const Clubform = ({ formdata, onClose }) => {
                           type="text"
                           id="eventName"
                           placeholder="Enter Title"
-                          className="w-full border border-[#FF7E69] rounded px-3 py-2"
+                          className="w-full border border-[#FF7E69] rounded px-3 py-2 text-[#1a1a1a7d]"
+                          value={userInfo?.faculty}
+                          disabled
                         />
                       </div>
                       <div className="w-[41%]">
@@ -169,7 +205,9 @@ const Clubform = ({ formdata, onClose }) => {
                           type="text"
                           id="eventName"
                           placeholder="Enter Title"
-                          className="w-full border border-[#FF7E69] rounded px-3 py-2 "
+                          className="w-full border border-[#FF7E69] rounded px-3 py-2 text-[#1a1a1a7d]"
+                          value={userInfo.department}
+                          disabled
                           
                         />
                       </div>
@@ -181,7 +219,7 @@ const Clubform = ({ formdata, onClose }) => {
                         className="cursor-pointer border border-[#FF7E69] rounded-md w-full p-2 text-left bg-white"
                       >
                         <div className="flex flex-row items-center justify-between">
-                          <div>{"เลือกประเภทชมรม"}</div>
+                          <div>{roleSelected||"เลือกตำแหน่ง"}</div>
                           <div className="text-[#FF7E69]">
                             {isDropdownOpen ? (
                               <ChevronUp size={20} />
@@ -197,7 +235,7 @@ const Clubform = ({ formdata, onClose }) => {
                             <li
                               key={index}
                               onClick={() => {
-                                isDropdownOpen(false);
+                                handleSelectRole(type);
                               }}
                               className="p-2 cursor-pointer hover:bg-[#FF7E69] hover:rounded-md"
                             >
@@ -223,7 +261,7 @@ const Clubform = ({ formdata, onClose }) => {
                     id="description"
                     placeholder=""
                     className="w-full border border-[#FF7E69] rounded px-3 pt-2 h-32 max-h-[20vh] min-h-[10vh]"
-                    
+                    onChange={(e)=>setDescript(e.target.value)}
                   />
                 </div>
                     <div>
@@ -233,8 +271,8 @@ const Clubform = ({ formdata, onClose }) => {
                           className=" font-semibold mb-1"
                           htmlFor="eventName"
                         >
-                          <div className="flex items-end gap-3">
-                          Portfolio<p className="text-[13px] text-[#99a1af] font-medium">(upload .pdf to Google Drive)</p>
+                          <div className="items-end gap-3 mb-1">
+                          Portfolio (ตามที่ชมรมกำหนด)<p className="text-[13px] text-[#99a1af] font-medium">(upload .pdf to Google Drive)</p>
 
                           </div>
                         </label>
@@ -243,6 +281,7 @@ const Clubform = ({ formdata, onClose }) => {
                           id="eventName"
                           placeholder="Enter Google Drive URL"
                           className="w-full border border-[#FF7E69] rounded px-3 py-2"
+                          onChange={(e)=>setfolioURL(e.target.value)}
                         />
                         </div>
                       <Button
@@ -260,6 +299,7 @@ const Clubform = ({ formdata, onClose }) => {
                             boxShadow: "0px 0px 2px #7CE9BF60",
                           },
                         }}
+                        onClick={handleConfirm}
                       >
                         สมัครเข้าชมรม
                       </Button>

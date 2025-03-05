@@ -11,7 +11,8 @@ import Loading from "../loading";
 import { Button ,ThemeProvider,Box} from "@mui/material";
 import theme from "../Theme";
 import Clubform from "./Clubform";
-const Clubpage = () => {
+import ConfirmCard from "../confirmCard";
+const Clubpage = ({info}) => {
   const { clubId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,6 +22,9 @@ const Clubpage = () => {
   const [applyForm,setForm] = useState();
   const [isFormopen,setFormopen] = useState(false);
   const [loaded,setloaded] = useState([false,false,false])
+  const [confirmOpen,setConfirm] = useState(false);
+  const [openType,setOpentype] = useState('');
+  const [openText,setOpentext] = useState('');
   useEffect(()=>{
     if(loaded[0] && loaded[1] && loaded[2]){
       setTimeout(() => {
@@ -52,15 +56,11 @@ const Clubpage = () => {
       .from("ClubRegisterForm")
       .select("*")
       .eq("club_id",clubId)
-      .single()
+      .maybeSingle();
       if(Ferror){
-        setForm('');
-        return;
+        console.log(Ferror)
       }
-      else{
-        console.log(form);
-        setForm(form);
-      }
+      setForm(form);
     }
     setloaded([true,true,false])
     fetchingForm();
@@ -109,16 +109,66 @@ const Clubpage = () => {
   
     fetchMembers();
   }, [clubId]);
-  
-  
+
+  const isAppiled = async () =>{
+    const {data,error} = await supabase
+    .from('userform')
+    .select('status')
+    .eq("club_id",clubId)
+    .eq("user_id",info?.id)
+    .maybeSingle();
+    if(error){
+      console.log(error)
+    }
+    return data;
+  }
+  const isJoined = async ()=>{
+    const {data,error} = await supabase
+    .from('clubMembers')
+    .select('email')
+    .eq('email',info?.email)
+    .eq('club_id',clubId)
+    .maybeSingle();
+    if(error){
+      console.log(error);
+    }
+    console.log(data);
+    return data;
+  }
+  const handleOpenform = async() =>{
+    if(info?.role === undefined){
+      setOpentype('login');
+      setConfirm(true);
+    }else{
+      if(info?.role === 'admin'){
+        console.log('you are admin bro')
+      }
+      else{
+        if(await isAppiled() === null){
+          setFormopen(true);
+        }
+        else if(await isJoined() !== null){
+          setOpentype('error');
+          setOpentext('คุณอยู่ชมรมนี้แล้ว');
+          setConfirm(true);
+        }
+        else{
+          setOpentype('error');
+          setOpentext('คุณได้สมัครเรียบร้อยแล้ว');
+          setConfirm(true);
+
+        }
+      }
+    }
+  }
   //console.log(clubTest);
   //console.log(members);
-
   return (
     <div className="bg-gray-50">
+      <ConfirmCard isOpen={confirmOpen} type={openType} onClose={()=>setConfirm(false)} text={openText}></ConfirmCard>
       {onLoad?(<Loading/>):(<></>)}
       {isFormopen&&(
-        <Clubform formdata={{...applyForm, clubname:club?.club_name}} onClose={()=>setFormopen(false)}/>
+        <Clubform formdata={{...applyForm, clubname:club?.club_name}} onClose={()=>setFormopen(false)} userInfo={info}/>
       )}
       <div className="max-w-5xl mx-auto rounded-lg overflow-hidden">
       <div className="bg-white drop-shadow-lg mt-24">
@@ -133,7 +183,7 @@ const Clubpage = () => {
             <div className="relative rounded-full flex justify-center mx-12 gap-10 ">
             <img className="w-48 h-48 rounded-full -translate-y-1/2" src={`${supabase.storage.from("club-avatars").getPublicUrl(club?.club_avatar).data.publicUrl}`} alt={club?.club_name } />
             <div className="flex flex-col h-fit ">
-              <h1 className={`font-bold text-left overflow-visible ${club?.club_name.length > 20 ? "text-3xl" : "text-[32px]"}`}>{club?.club_name}</h1>
+              <h1 onClick={isAppiled} className={`font-bold text-left overflow-visible ${club?.club_name.length > 20 ? "text-3xl" : "text-[32px]"}`}>{club?.club_name}</h1>
               <div className="text-gray-500 text-left ">
                 <p>สร้างเมื่อ: { new Date(club?.approve_date)
               .toLocaleDateString("th-TH", { day: "2-digit", month: "2-digit", year: "numeric" })}</p>
@@ -162,7 +212,7 @@ const Clubpage = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={()=>setFormopen(true)}
+                onClick={handleOpenform}
                 sx={{
                   boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
                   mr: 0,

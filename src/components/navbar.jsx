@@ -14,7 +14,7 @@ import authService from "../service/AuthService";
 import supabase from "../../supabaseClient";
 import { Box,Avatar } from "@mui/material";
 
-const Navbar = () => {
+const Navbar = ({sendUserinfo}) => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -28,6 +28,11 @@ const Navbar = () => {
 
   const [userClub, setUserClub] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
+  useEffect(() => {
+    if (session && userInfo) {
+      sendUserinfo(userInfo);  // เรียกใช้ฟังก์ชันจาก parent
+    }
+  }, [session, userInfo]);
 
   useEffect(() => {
     const handleScroll = () => {

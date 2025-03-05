@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import './App.css'
 import Navbar from './components/navbar';
@@ -27,22 +27,25 @@ import AdminActivities from './components/sections/AdminActivities';
 import AdminActivitiesRequest from './components/sections/AdminActivitiesRequest';
 import AdminActivityReqDetail from './components/sections/adminActivityReqDetail';
 function App() {
-
+  const [userinfo,setinfo] = useState();
+  const sendUserinfo = useCallback((info)=>{
+    setinfo(info);
+  })
   return (
     <>
       <Router>
       <ScrollTop/>
-        <Navbar />
+        <Navbar sendUserinfo={sendUserinfo} />
         <Routes>
           <Route path="/" element={<><Home /><Footer /></>} />
           <Route path="/login" element={<><Login /><Footer /></>} />
           <Route path="/register" element={<><Register /><Footer /></>} />
           <Route path="/clubs" element={<><Clublist /><Footer /></>} />
-          <Route path="/clubs/:clubId" element={<><Clubpage /><Footer /></>} />
+          <Route path="/clubs/:clubId" element={<><Clubpage info={userinfo}/><Footer /></>} />
           <Route path="/clubmember/:clubId" element={<><Clubmember/><Footer /></>} />
           <Route path="/stats" element={<><Statpage /><Footer /></>} />
           <Route path="/clubApplication" element={<Wrapper allowedRoles={['student', 'club', 'admin']} ><ClubApplication /><Footer /></Wrapper>} />
-          <Route path="/clubmanage/:clubId" element={<Wrapper allowedRoles={['club']} ><ClubManage /><Footer /></Wrapper>} />
+          <Route path="/clubmanage/:clubId" element={<Wrapper allowedRoles={['club']} ><ClubManage/><Footer /></Wrapper>} />
           <Route path="/docs" element={<><Clubfile /><Footer /></>} />
           <Route path="/database" element={<Wrapper allowedRoles={['admin']} ><AdminApprove /></Wrapper>} />
           <Route path="/database/adminRespond" element={<Wrapper allowedRoles={['admin']} ><AdminRespond /></Wrapper>} />

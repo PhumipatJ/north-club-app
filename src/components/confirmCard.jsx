@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 const ConfirmCard = ({ isOpen, onClose, type, onConfirm,text,onsecondConfirm}) => {
+  const navigate = useNavigate();
   const [isSubmitted, setIsSubmitted] = useState(false);
   useEffect(()=>{
     setIsSubmitted(false);
   },[type])
   const handleConfirm = () => {
-    setIsSubmitted(true);
-    onConfirm();
+    if(type === 'login'){
+      navigate('/login')
+      
+    }
+    else{
+      setIsSubmitted(true);
+      onConfirm();
+    }
   };
     const getTitle = () => {
     switch (type) {
@@ -94,13 +101,13 @@ const ConfirmCard = ({ isOpen, onClose, type, onConfirm,text,onsecondConfirm}) =
   if (type==='error'){
     return(
       <div className="fixed inset-0 flex items-center justify-center bg-black/25 z-99">
-      <div className="flex flex-row text-center bg-white items-center rounded-lg overflow-hidden">
+      <div className="flex flex-row text-center bg-white items-center rounded-lg overflow-hidden ">
             <img
               src="/assets/Confirmcard.svg"
               alt="Illustration"
               className="flex w-2/5 object-cover"
             />
-            <div>
+            <div className="mx-6">
             <h2 className="text-2xl font-bold text-[#FF5135] mb-3">{getTitle()}</h2>
             <p className="text-gray-600 mb-4">{getDescription()||""}</p>
             <div className="flex justify-center gap-4">
@@ -126,7 +133,7 @@ const ConfirmCard = ({ isOpen, onClose, type, onConfirm,text,onsecondConfirm}) =
               alt="Illustration"
               className="flex w-2/5 translate-y-5 object-cover"
             />
-            <div>
+            <div className="flexbox pl-15"> 
                 <h2 className="text-3xl font-bold text-[#7CE9BF] mb-3">{getConfirmedTitle()}</h2>
                 <p className="text-gray-600">{getConfirmedDeescription()}</p>
                 <button
