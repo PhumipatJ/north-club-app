@@ -6,6 +6,7 @@ import { useNavigate} from "react-router-dom";
 
 const Home = () => {
     const navigate = useNavigate();
+    const supabaseKey = import.meta.env.VITE_SUPABASE_API_KEY;
     const carouselImages = [
         "/assets/image 30.webp",
         "/assets/image 31.webp",
@@ -23,7 +24,26 @@ const Home = () => {
         autoplay: true,
         autoplaySpeed: 3000,
     };
-
+    async function sendEmail() {
+        const SUPABASE_URL = 'https://jemnlthnuwwxtumrdili.supabase.co/functions/v1/hello-world';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImplbW5sdGhudXd3eHR1bXJkaWxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkzNzkzMTUsImV4cCI6MjA1NDk1NTMxNX0.LXIxRSc59MnKtZ-II9XLbW0DshX1EXBN9Ex9Fc1xT8E';
+        
+        const response = await fetch(`${SUPABASE_URL}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+          },
+          body: JSON.stringify({
+            to: 'recipient@example.com',
+            subject: 'ทดสอบส่งอีเมลผ่าน Gmail API',
+            body: '<h1>ทดสอบ</h1><p>นี่คือการทดสอบส่งอีเมลผ่าน Gmail API จาก Supabase Edge Function</p>'
+          })
+        });
+        
+        const data = await response.json();
+        console.log(data);
+      }
     return (
         <div className="flex flex-col items-center justify-center px-6 py-16 bg-white font-prompt">
             {/* Header Text */}
@@ -48,7 +68,7 @@ const Home = () => {
                 
                 {/* Right Section */}
                 <div className="text-center md:text-right max-w-xs mt-0 md:mt-32 pr-8">
-                    <h3 className="text-xl font-bold text-gray-800">ชมรมไหนเจ๋ง!</h3>
+                    <h3 className="text-xl font-bold text-gray-800" onClick={sendEmail}>ชมรมไหนเจ๋ง!</h3>
                     <p className="text-xl text-gray-600">จะแนววิชาการ กีฬาหรือ <br/>ความคิดสร้างสรรค์ก็มีหมด</p>
                     <a onClick={() => navigate("/clubs")} className="mt-4 inline-block bg-[#FF7E69] text-white py-2 px-4 rounded-lg cursor-pointer shadow-md hover:shadow-[0px_0px_5px_2px_#FF7E697D] transition-shadow ease-in-out duration-200">รายชื่อชมรม</a>
                 </div>
