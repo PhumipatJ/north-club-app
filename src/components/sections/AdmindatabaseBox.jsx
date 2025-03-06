@@ -47,26 +47,11 @@ const AdmindatabaseBox =()=>{
           bgcolor: location.pathname ==='/database/adminUserPreview'? '#FF7E69' : "white",
           color: location.pathname ==='/database/adminUserPreview'? 'white' : "#1A1A1A",
           "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
-          borderRadius:"0",
+          borderRadius:"0 0 5px 5px"
         }}
         onClick={() => navigate("/database/adminUserPreview")}
       >
         ผู้ใช้ทั้งหมด
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        sx={{
-          boxShadow: "none",
-          width:'100%',
-          bgcolor: location.pathname ==='/database/adminLog'? '#FF7E69' : "white",
-          color: location.pathname ==='/database/adminLog'? 'white' : "#1A1A1A",
-          "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
-          borderRadius:"0 0 5px 5px",
-        }}
-        onClick={() => navigate("/database/adminLog")}
-      >
-        Log การใช้งาน
       </Button>
   </div>
   )

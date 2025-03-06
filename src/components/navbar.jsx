@@ -28,6 +28,7 @@ const Navbar = ({sendUserinfo}) => {
 
   const [userClub, setUserClub] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
+
   useEffect(() => {
     if (session && userInfo) {
       sendUserinfo(userInfo);  // เรียกใช้ฟังก์ชันจาก parent
@@ -46,8 +47,14 @@ const Navbar = ({sendUserinfo}) => {
   useEffect(() => {
     const getSessionAndRole = async () => {
       const sessionData = await authService.getSession();
+      console.log(sessionData);
       setSession(sessionData);
-
+      if(session === null){
+        console.log("now log out")
+      }
+      else{
+        console.log("am in")
+      }
       if (sessionData) {
         const role = await authService.getUserRole(sessionData.user.id);
         setUserRole(role);
