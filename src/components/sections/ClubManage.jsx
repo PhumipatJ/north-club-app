@@ -320,7 +320,7 @@ const ClubManage = ({userinfo}) => {
                     </div>
                 </div>
             </div>
-
+              
             {/* Announcement */}
             <h1 className="text-2xl pt-6">ประกาศ</h1>
             {clubAnnouncement.map((announcement) => (
