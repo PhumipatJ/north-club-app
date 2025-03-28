@@ -21,7 +21,6 @@ import ApprovalHistory from './components/sections/ApprovalHistory';
 import Clubprofile from './components/sections/Clubprofile';
 import ActivityDetail from './components/sections/ActivityDetail';
 import AdminUserPreview from './components/sections/AdminUserPreview';
-import AdminLog from './components/sections/AdminLog';
 import ScrollTop from './components/ScrollTop';
 import AdminActivities from './components/sections/AdminActivities';
 import AdminActivitiesRequest from './components/sections/AdminActivitiesRequest';
@@ -54,7 +53,6 @@ function App() {
           <Route path="/Clubprofile/:clubId" element={<Wrapper allowedRoles={['student','club','admin']}><Clubprofile /><Footer /></Wrapper>} />
           <Route path="/activityDetail" element={<><ActivityDetail /><Footer /></>} />
           <Route path="/database/adminUserPreview" element={<Wrapper allowedRoles={['admin']} ><AdminUserPreview /></Wrapper>} />
-          <Route path="/database/adminLog" element={<Wrapper allowedRoles={['admin']} ><AdminLog /></Wrapper>} />
           <Route path="/database/adminActivities" element={<Wrapper allowedRoles={['admin']} ><AdminActivities /></Wrapper>} />
           <Route path="/database/adminActivitiesReq" element={<Wrapper allowedRoles={['admin']} ><AdminActivitiesRequest /></Wrapper>} />
           <Route path="/database/ReqDetail/:eventId" element={<Wrapper allowedRoles={['admin']} ><AdminActivityReqDetail /></Wrapper>} />
