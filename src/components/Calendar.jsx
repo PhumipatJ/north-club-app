@@ -50,7 +50,7 @@ const Calendar = () => {
             key={day}
             onClick={() => setSelectedDate(day)}
             className={`w-10 h-10 flex items-center justify-center rounded-md transition ${
-              selectedDate === day ? "bg-[#FF7E69] text-white" : "hover:bg-gray-200"
+              selectedDate === day  ? "bg-[#FF7E69] text-white" : "hover:bg-gray-200"
             } ${today.isSame(currentDate, "month") && today.date() === day ? "border-2 border-[#7CE9BF]" : ""}`}
           >
             {day}

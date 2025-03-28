@@ -19,7 +19,8 @@ import { styled } from "@mui/system";
 import { useLocation } from "react-router-dom";
 import Loading from "../loading";
 import AdmindatabaseBox from "./AdmindatabaseBox";
-const AdminApprove = () => {
+import { List } from "lucide-react";
+const AdminActivitiesRequest = () => {
   const [pendingClubs, setPendingClubs] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -28,24 +29,23 @@ const AdminApprove = () => {
   useEffect(() => {
     const fetchPendingClubs = async () => {
       const { data, error } = await supabase
-        .from("clubs")
-        .select("*, member_count:clubMembers(count)")
-        .eq("club_approval", true);
+        .from("event")
+        .select("created_at,title,status,start_date,id, clubs!inner(club_name,club_avatar)")
+        .eq("approval_status", false);
 
       if (error) {
         console.error("Error fetching clubs:", error);
       } else {
         setPendingClubs(
-          data.map((club) => ({
+          data.sort((a,b)=>a.created_at.localeCompare(b.created_at)).map((club) => ({
             ...club,
-            member_count: club.member_count[0]?.count || 0,
-            founded_date: new Date(club.approve_date).toLocaleDateString(
+            req_date: new Date(club.created_at).toLocaleDateString(
               "th-TH",
-              { day: "2-digit", month: "2-digit", year: "numeric" }
-            ),
+              { day: "2-digit", month: "2-digit", year: "numeric" })
           }))
         );
       }
+      console.log(data)
       setTimeout(() => {
         setLoading(false);
       }, 500);
@@ -67,7 +67,7 @@ const AdminApprove = () => {
       <Container className="p-6 mt-24 min-h-[77vh] flex flex-col justify-center">
         <div className="flex max-w-6xl w-full">
           <div className=" w-full h-fit flex">
-            <h1 className="text-4xl font-bold my-auto ">รายชื่อชมรม</h1>
+            <h1 className="text-4xl font-bold my-auto ">รายชื่อกิจกรรม</h1>
             <div className="my-auto flex ml-auto w-fit">
               <Button
                 variant="contained"
@@ -76,28 +76,12 @@ const AdminApprove = () => {
                   boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
                   mr: 2,
                   paddingX: "3vw",
-                  bgcolor: "white",
+                  bgcolor: location.pathname ==='/database/adminActivitiesReq'? '#7CE9BF' : 'white',
                   color: "#1A1A1A",
                   "&:hover": { bgcolor: "#7CE9BF",boxShadow:"0px 0px 2px #7CE9BF60"},
                 }}
-                onClick={() => navigate("/database/adminRespond")}
               >
-                คำขอสร้างชมรม
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{
-                  boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
-                  mr: 0,
-                  paddingX: "3vw",
-                  bgcolor: "white",
-                  color: "#1A1A1A",
-                  "&:hover": { bgcolor: "#7CE9BF",boxShadow:"0px 0px 2px #7CE9BF60"},
-                }}
-                onClick={() => navigate("/database/approvalHistory")}
-              >
-                คำขอที่ตอบแล้ว
+                คำขอกิจกรรม
               </Button>
             </div>
           </div>
@@ -128,13 +112,12 @@ const AdminApprove = () => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  <CustomTableCell>รูป</CustomTableCell>
-                  <CustomTableCell>ชื่อชมรม</CustomTableCell>
-                  <CustomTableCell>ประเภท</CustomTableCell>
-                  <CustomTableCell>สมาชิก</CustomTableCell>
-                  <CustomTableCell>วันก่อตั้ง</CustomTableCell>
-                  <CustomTableCell>ที่ปรึกษา</CustomTableCell>
-                  <CustomTableCell>สถานะ</CustomTableCell>
+                  <CustomTableCell>ผู้จัด</CustomTableCell>
+                  <CustomTableCell>วันที่ส่งคำขอ</CustomTableCell>
+                  <CustomTableCell>ชื่อกิจกรรม</CustomTableCell>
+                  <CustomTableCell>รูปแบบ</CustomTableCell>
+                  <CustomTableCell>วันจัดงาน</CustomTableCell>
+                  <CustomTableCell>รายละเอียด</CustomTableCell>
                 </TableRow>
               </TableHead>
               <TableBody sx={{overflowY:"auto"}}>
@@ -151,33 +134,30 @@ const AdminApprove = () => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  pendingClubs.map((club) => (
-                    <TableRow key={club.club_id} sx={{'&:hover':{backgroundColor:'#f9f9f9' , cursor:'pointer'}}} 
-                    onClick={()=>navigate(`/clubs/${club.club_id}`)}>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>
-                        <Avatar
+                  pendingClubs.map((event) => (
+                    <TableRow key={event.id} sx={{'&:hover':{backgroundColor:'#f9f9f9' , cursor:'pointer'}}} 
+                    onClick={()=>navigate(`/database/ReqDetail/${event.id}`)}
+                    >
+                      <TableCell sx={{textAlign:'center', borderColor:'#fff',display:'flex',justifyContent:'center'}}>
+                         <Avatar
                           src={`${
                             supabase.storage
                               .from("club-avatars")
-                              .getPublicUrl(club.club_avatar).data.publicUrl
+                              .getPublicUrl(event?.clubs.club_avatar).data.publicUrl
                           }`}
-                          alt={club.club_name}
-                        />
-                      </TableCell>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.club_name}</TableCell>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.club_type}</TableCell>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.member_count || "N/A"}</TableCell>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.founded_date || "N/A"}</TableCell>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.club_adviser}</TableCell>
-                      {club.club_approval===true?(
-                        <TableCell sx={{textAlign:'center', borderColor:'#fff',color:'#7CE9BF'}}>
-                        Active
-                      </TableCell>
-                      ):(
-                        <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>
-                        Inactive
-                      </TableCell>
-                      )}
+                          alt={event?.clubs.club_name}
+                        /> 
+                      </TableCell> 
+                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{event.req_date}</TableCell>
+                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{event.title}</TableCell>
+                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{event.status}</TableCell>
+                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{event.start_date || "N/A"}</TableCell>
+                      <TableCell sx={{borderColor:'#fff'}}>
+                        <div className="h-[100%] w-[100%] justify-center flex" >
+                        <List className="text-[#FF7E69] "/>
+                        </div>
+                        </TableCell>
+                      
                     </TableRow>
                   ))
                 )}
@@ -190,4 +170,4 @@ const AdminApprove = () => {
   );
 };
 
-export default AdminApprove;
+export default AdminActivitiesRequest;

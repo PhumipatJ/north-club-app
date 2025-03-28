@@ -7,6 +7,7 @@ const theme = createTheme({
       textTransform: "none", // เอา Uppercase ออก
       fontWeight: "regular",
     },
+
   },
  
 });

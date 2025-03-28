@@ -1,11 +1,18 @@
-import { useState } from "react";
-
-const ConfirmCard = ({ isOpen, onClose, type, onConfirm  }) => {
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+const ConfirmCard = ({ isOpen, onClose, type, onConfirm,text,onsecondConfirm}) => {
+  const navigate = useNavigate();
   const [isSubmitted, setIsSubmitted] = useState(false);
-  
+  useEffect(()=>{
+    setIsSubmitted(false);
+  },[type])
   const handleConfirm = () => {
-    setIsSubmitted(true);
-    if (onConfirm) {
+    if(type === 'login'){
+      navigate('/login')
+      
+    }
+    else{
+      setIsSubmitted(true);
       onConfirm();
     }
   };
@@ -21,6 +28,14 @@ const ConfirmCard = ({ isOpen, onClose, type, onConfirm  }) => {
             return "ยืนยันการสร้าง";
         case "profile":
             return "ยืนยันการเปลี่ยน?";
+        case "errorinput":
+            return "กรุณาใช้ไฟล์รูปภาพเท่านั้น!"
+        case "error":
+            return "Error!"
+        case "apply":
+          return "ยืนยันการเปิดรับสมัคร?"
+        case "eventApprove":
+          return "ยืนยันการส่งคำขอ?"
         default:
             return "ตรวจสอบอีกครั้ง";
         }
@@ -43,6 +58,8 @@ const ConfirmCard = ({ isOpen, onClose, type, onConfirm  }) => {
         switch (type) {
             case "createClub":
                 return "ตรวจเช็คอีกครั้ง";
+            case "errorinput":
+                return "ตกลง"
             default:
                 return "ยกเลิก";
         }
@@ -54,6 +71,8 @@ const ConfirmCard = ({ isOpen, onClose, type, onConfirm  }) => {
                 return "กรุณาเข้าสู่ระบบเพื่อดำเนินการต่อ";
             case "logout":
                 return " ";
+            case "error":
+              return text;
             default:
                 return "กรุณาตรวจเช็คข้อมูลให้ครบถ้วนก่อนยืนยัน";
         }
@@ -78,12 +97,32 @@ const ConfirmCard = ({ isOpen, onClose, type, onConfirm  }) => {
                 return " ";
         }
     };
-  const handleclose = () =>{
-    console.log('ho')
-    onClose();
-  }
   if (!isOpen) return null; // Don't render if not open
-
+  if (type==='error'){
+    return(
+      <div className="fixed inset-0 flex items-center justify-center bg-black/25 z-99">
+      <div className="flex flex-row text-center bg-white items-center rounded-lg overflow-hidden ">
+            <img
+              src="/assets/Confirmcard.svg"
+              alt="Illustration"
+              className="flex w-2/5 object-cover"
+            />
+            <div className="mx-6">
+            <h2 className="text-2xl font-bold text-[#FF5135] mb-3">{getTitle()}</h2>
+            <p className="text-gray-600 mb-4">{getDescription()||""}</p>
+            <div className="flex justify-center gap-4">
+              <button
+                className="px-6 py-2 border-white rounded-md bg-[#7CE9BF] hover:shadow-[0px_0px_3px_rgba(124,233,191,1)] cursor-pointer "
+                onClick={onClose}
+              >
+                {getCancel()}
+              </button>
+            </div>
+            </div>
+          </div>
+          </div>
+    )
+  }
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/25 z-99">
       <div className="max-w-lg w-full rounded-xl shadow-lg bg-white">
@@ -94,19 +133,39 @@ const ConfirmCard = ({ isOpen, onClose, type, onConfirm  }) => {
               alt="Illustration"
               className="flex w-2/5 translate-y-5 object-cover"
             />
-            <div>
+            <div className="flexbox pl-15"> 
                 <h2 className="text-3xl font-bold text-[#7CE9BF] mb-3">{getConfirmedTitle()}</h2>
                 <p className="text-gray-600">{getConfirmedDeescription()}</p>
                 <button
                     className="mt-4 bg-[#FF7E69] hover:bg-[#FF5135] text-white px-6 py-2 rounded-md"
-                    onClick={onClose}
+                    onClick={onsecondConfirm}
                 >
                     ตกลง
                 </button>
             </div>
         </div>        
         ) : (
-          <div className="flex flex-row text-center bg-white items-center rounded-lg overflow-hidden">
+          type==='errorinput'?(
+            <div className="flex flex-row text-center bg-white items-center rounded-lg overflow-hidden">
+            <img
+              src="/assets/Confirmcard.svg"
+              alt="Illustration"
+              className="flex w-2/5 object-cover"
+            />
+            <div>
+            <h2 className="text-2xl font-bold text-[#FF5135] mb-3">{getTitle()}</h2>
+            <div className="flex justify-center gap-4">
+              <button
+                className="px-6 py-2 border-white rounded-md bg-[#7CE9BF] hover:shadow-[0px_0px_3px_rgba(124,233,191,1)] cursor-pointer "
+                onClick={onClose}
+              >
+                {getCancel()}
+              </button>
+            </div>
+            </div>
+          </div>
+          ):(
+            <div className="flex flex-row text-center bg-white items-center rounded-lg overflow-hidden">
             <img
               src="/assets/Confirmcard.svg"
               alt="Illustration"
@@ -131,6 +190,7 @@ const ConfirmCard = ({ isOpen, onClose, type, onConfirm  }) => {
             </div>
             </div>
           </div>
+          )
         )}
       </div>
     </div>

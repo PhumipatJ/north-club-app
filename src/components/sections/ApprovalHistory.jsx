@@ -8,10 +8,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
   Paper,
   Avatar,
-  Chip,
   ThemeProvider,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +23,6 @@ const ApprovalHistory = () => {
   const [pendingClubs, setPendingClubs] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const [showreason,setreason] = useState([]);
 
   useEffect(() => {
     const fetchPendingClubs = async () => {
@@ -129,7 +126,7 @@ const ApprovalHistory = () => {
                 <CustomTableCell>ชื่อชมรม</CustomTableCell>
                 <CustomTableCell>ประเภท</CustomTableCell>
                 <CustomTableCell>สมาชิก</CustomTableCell>
-                <CustomTableCell>วันก่อตั้ง</CustomTableCell>
+                <CustomTableCell>วันที่ขอก่อตั้ง</CustomTableCell>
                 <CustomTableCell>ที่ปรึกษา</CustomTableCell>
                 <CustomTableCell>สถานะ</CustomTableCell>
               </TableRow>

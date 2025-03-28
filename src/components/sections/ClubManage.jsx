@@ -3,23 +3,37 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { FaFacebook } from "react-icons/fa";
 import { FaSquareInstagram } from "react-icons/fa6";
-import { Mail, Upload, Settings} from "lucide-react";
+import { Mail, Upload, Settings, BellRing} from "lucide-react";
 import EventModal from "../EventModal"; 
 import Calendar from "../Calendar"
 import supabase from "../../../supabaseClient";
-
-const ClubManage = () => {
+import { Button,ThemeProvider } from "@mui/material";
+import theme from "../Theme";
+import ClubFormManage from "./ClubFormManage";
+import { useLocation } from "react-router-dom";
+import Loading from "../loading";
+const ClubManage = ({userinfo}) => {
   const { clubId } = useParams();
   const navigate = useNavigate();
-
+  const location = useLocation();
   const [club, setClub] = useState(null);
   const [members, setMembers] = useState([]);
 
   const [isOpen, setIsOpen] = useState(false);
-
+  const [onLoading,setonLoad] = useState(false);
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
-
+  const [prevForm,setPrevform] = useState(null); 
+  const [isOpenForm,setOpenform] = useState(false);
+  const [isformpopupOpen,setPopupopen] = useState(false);
+  useEffect(()=>{
+    setonLoad(true);
+    console.log(userinfo)
+    setTimeout(() => {
+      setonLoad(false);
+    }, 200);
+  
+  },[location])
   useEffect(() => {
     const fetchClubData = async () => {
       const { data, error } = await supabase
@@ -85,11 +99,37 @@ const ClubManage = () => {
   
   //console.log(clubTest);
   //console.log(members);
-
+  useEffect(()=>{
+    const fetchClubForm = async() =>{
+      const {data:Formdata,error:formError} = await supabase
+      .from("ClubRegisterForm")
+      .select("*")
+      .eq("club_id",clubId)
+      .single()
+      if(formError){
+        console.log(formError);
+        setPrevform(Formdata);
+        return;
+      }
+      if(Formdata.length !== 0){
+        setPrevform(Formdata);
+        console.log(Formdata);
+      }
+      else{
+        console.log("test");
+      }
+    };
+    fetchClubForm();
+  },[clubId,isformpopupOpen]);
 
 
   return (
     <div className="bg-gray-50">
+      {onLoading?(
+        <Loading/>
+      ):(<></>)}
+      <EventModal isOpen={isOpen} onClose={closeModal} clubId={clubId}/>
+      <ClubFormManage isOpen={isformpopupOpen} onClose={()=>{setPopupopen(false);}} clubId={clubId} prevform={prevForm}/>
       <div className="max-w-5xl mx-auto rounded-lg overflow-hidden">
       <div className="bg-white drop-shadow-lg mt-24">
         {/* Club Banner */}
@@ -98,34 +138,74 @@ const ClubManage = () => {
         </div>
   
         {/* Club Details */}
-        <div className="flex flex-col">
-          <div className="flex flex-row p-6 h-fit">
-            <div className="relative rounded-full flex items-center justify-center mx-12">
+        <div className="flex flex-col ">
+          <div className="flex flex-row p-6 h-fit  justify-between ">
+            <div className="relative rounded-full flex justify-center mx-12 gap-8">
             <img className="w-48 h-48 rounded-full -translate-y-1/2" src={`${supabase.storage.from("club-avatars").getPublicUrl(club?.club_avatar).data.publicUrl}`} alt={club?.club_name } />
-            </div>
-            <div className="flex flex-col h-fit">
-              <h1 className={`font-bold text-left ${club?.club_name.length > 20 ? "text-3xl" : "text-5xl"}`}>{club?.club_name}</h1>
-
-              <div className="text-gray-500 text-left">
+            <div className="flex flex-col h-fit ">
+              <h1 className={`font-bold text-left overflow-visible ${club?.club_name.length > 20 ? "text-3xl" : "text-[32px]"}`}>{club?.club_name}</h1>
+              <div className="text-gray-500 text-left ">
                 <p>สร้างเมื่อ: { new Date(club?.approve_date)
               .toLocaleDateString("th-TH", { day: "2-digit", month: "2-digit", year: "numeric" })}</p>
                 <p>ที่ตั้งชมรม: {club?.location}</p>
-                <div className="flex items-center"> {/* Container for email */}
+                <div className="flexbox">
+                  <div className="flex items-center mb-1"> {/* Container for email */}
                   <Mail className="w-5 h-5 text-[#7CE9BF]"/>
                   <p className="px-4">{club?.mail}</p>
                 </div>
-                <div className="flex items-center"> {/* Container for Facebook */}
+                <div className="flex items-center  mb-1"> {/* Container for Facebook */}
                   <FaFacebook className="w-5 h-5 text-[#7CE9BF]"/>
                   <p className="px-4">{club?.facebook}</p>
                 </div>
-                <div className="flex items-center"> {/* Container for Instagram */}
+                <div className="flex items-center  mb-1"> {/* Container for Instagram */}
                   <FaSquareInstagram className="w-5 h-5 text-[#7CE9BF]" />
                   <a href="https://www.instagram.com/l_uod_l_/" target="_blank" className="px-4">{club?.instagram}</a>
                 </div>
+                </div>
               </div>
             </div>
-            <div className="flex flex-col items-end flex-grow">
-              <Settings className="absolute w-6 h-6 text-gray-500 cursor-pointer" onClick={() => navigate(`/Clubprofile/${clubId}`)}/>
+            </div>
+            
+            <div className=" flex-col justify-between flex mb-6 ">
+              <div className=" justify-end flex ">
+              <Settings className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => navigate(`/Clubprofile/${clubId}`)}/>
+              </div>
+            <div className="justify-center mt-16 flex">
+              {prevForm?.form_status?(<p className="text-[#7CE9BF] flex gap-2"><BellRing style={{}}/>กำลังเปิดรับสมัคร</p>):(<></>)}
+            </div>
+              <ThemeProvider theme={theme}>
+                <div className="bg-red-200">
+                {prevForm?.form_status?(<Button
+                variant="contained"
+                color="primary"
+                sx={{
+                  boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                  width:'100%',
+                  mr: 0,
+                  paddingX: "4vw",
+                  bgcolor: "white",
+                  color: "#1A1A1A",
+                  "&:hover": { bgcolor: "#FF7E69",boxShadow:"0px 0px 2px #FF7E6960"},
+                }}
+              >
+                ปิดรับสมัคร
+              </Button>):(<Button
+                variant="contained"
+                color="primary"
+                sx={{
+                  boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                  mr: 0,
+                  paddingX: "2vw",
+                  bgcolor: "white",
+                  color: "#1A1A1A",
+                  "&:hover": { bgcolor: "#7CE9BF",boxShadow:"0px 0px 2px #7CE9BF60"},
+                }}
+                onClick={()=>{setPopupopen(true);console.log(prevForm)}}
+              >
+                เปิดรับสมัตรสมาชิก
+              </Button>)}
+                </div>
+              </ThemeProvider>
             </div>
           </div>
         </div>
@@ -134,11 +214,11 @@ const ClubManage = () => {
       
       <div className="">
         {/* Members List */}
-        <div div className="p-6 mt-8">
+        <div div className="mt-8 h-fit">
           <h2 className="text-xl font-semibold">สมาชิก ({members.length} คน)</h2>
-          <div className="grid grid-cols-5 gap-4 mt-4">
-            {members.slice(0, 4).map((member, index) => (
-              <div key={index} className="bg-white p-4 rounded-lg flex flex-col items-center">
+          <div className="flex flex-cols-6 gap-4 mt-4 ">
+            {members.slice(0, 5).map((member, index) => (
+              <div key={index} className="bg-white rounded-lg flex flex-col w-[20%] h-[25vh] items-center pt-7">
                 <img src={member.image || "/assets/Maskgroup.png"} alt="Member" className="w-20 h-20 rounded-full object-cover" />
                 <p className="mt-2 font-semibold text-center">{member.name}</p>
                 <p className="text-gray-500 text-sm text-center">{member.position}</p>
@@ -146,12 +226,12 @@ const ClubManage = () => {
             ))}
             
             {/* View All Members Block */}
-              <div className="bg-white p-4 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100"
+              <div className="bg-white p-4 rounded-lg flex flex-col items-center justify-center cursor-pointer gap-2 text-[#FF7E69] hover:bg-[#FF7E69] duration-200 hover:text-white"
                    onClick={() => navigate(`/clubmember/${clubId}`)}>
-                <div className="bg-amber-100 rounded-full">
-                  <img src={"/assets/Maskgroup.png"} alt="Member" className="w-20 h-20 rounded-full object-cover" />
+                <div className="">
+                  <img src={"/assets/Gamestation.svg"} alt="Member" className="w-full h-full rounded-full object-cover" />
                 </div>
-                <p className="text-[#FF7E69]">สมาชิกทั้งหมด</p>
+                <p className="text-center font-semibold">สมาชิกทั้งหมด</p>
               </div>
             </div>
           </div>
@@ -164,13 +244,13 @@ const ClubManage = () => {
             <Calendar className=""/>
           </div>
           <div className="w-2/3 justify-start ">
-            <div className="bg-white shadow-lg rounded-lg pt-4 flex flex-col min-h-[25vh] items-center justify-center overflow-hidden
+            <div className="bg-white shadow-lg rounded-lg pt-4 flex flex-col min-h-[25vh] items-center justify-center overflow-hidden cursor-pointer
                 hover:bg-gray-100 group"
                 onClick={openModal}>
                 
                 {/* Create Event */}
                 <div className="flex items-center flex-row">
-                    <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center ">
                         <Upload className="w-10 h-10 text-[#FF7E69]" />
                         <p className="text-gray-300 mt-2 text-center duration-300 group-hover:text-[#FF7E69]">
                         สร้างกิจกรรม <br /> หรือประกาศใหม่
@@ -182,8 +262,7 @@ const ClubManage = () => {
                     </div>
                 </div>
 
-                {/* Create Event Modal*/}
-                <EventModal isOpen={isOpen} onClose={closeModal} clubId={clubId}/> 
+                
             
             </div>
           </div>
