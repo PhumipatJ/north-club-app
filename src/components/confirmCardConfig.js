@@ -1,0 +1,78 @@
+const confirmCardConfig = {
+    login: {
+      title: "กรุณาเข้าสู่ระบบ?",
+      confirmText: "เข้าสู่ระบบ",
+      cancelText: "ยกเลิก",
+      description: "กรุณาเข้าสู่ระบบเพื่อดำเนินการต่อ",
+      confirmedTitle: "เรียบร้อย",
+      confirmedDescription: "",
+    },
+    logout: {
+      title: "ออกจากระบบ?",
+      confirmText: "ออกจากระบบ",
+      cancelText: "ยกเลิก",
+      description: "",
+      confirmedTitle: "เรียบร้อย",
+      confirmedDescription: "",
+    },
+    createClub: {
+      title: "ยืนยันการส่งคำขอ?",
+      confirmText: "ส่งคำขอ",
+      cancelText: "ตรวจเช็คอีกครั้ง",
+      description: "กรุณาตรวจเช็คข้อมูลให้ครบถ้วนก่อนยืนยัน",
+      confirmedTitle: "ส่งคำขอเรียบร้อย",
+      confirmedDescription: "รอการตอบกลับทางอีเมลได้เลย!",
+    },
+    event: {
+      title: "ยืนยันการสร้าง",
+      confirmText: "ยืนยัน",
+      cancelText: "ยกเลิก",
+      description: "กรุณาตรวจเช็คข้อมูลให้ครบถ้วนก่อนยืนยัน",
+      confirmedTitle: "เรียบร้อย",
+      confirmedDescription: "",
+    },
+    profile: {
+      title: "ยืนยันการเปลี่ยน?",
+      confirmText: "ยืนยัน",
+      cancelText: "ยกเลิก",
+      description: "กรุณาตรวจเช็คข้อมูลให้ครบถ้วนก่อนยืนยัน",
+      confirmedTitle: "ตั้งค่าเรียบร้อย",
+      confirmedDescription: "",
+    },
+    errorUpload: {
+      title: "กรุณาใช้ไฟล์รูปภาพเท่านั้น!",
+      confirmText: "",
+      cancelText: "ตกลง",
+      description: "",
+      confirmedTitle: "",
+      confirmedDescription: "",
+    },
+    error: {
+        title: "Error!",
+        confirmText: "",
+        cancelText: "ตกลง",
+        description: "",
+        confirmedTitle: "",
+        confirmedDescription: "",  
+    },
+    apply: {
+        title: "ยืนยันการเปิดรับสมัคร!",
+        confirmText: "",
+        cancelText: "ตกลง",
+        description: "",
+        confirmedTitle: "",
+        confirmedDescription: "",  
+    },
+    eventApprove: {
+        title: "ยืนยันการส่งคำขอ?",
+        confirmText: "ส่งคำขอ",
+        cancelText: "ตรวจเช็คอีกครั้ง",
+        description: "กรุณาตรวจเช็คข้อมูลให้ครบถ้วนก่อนยืนยัน",
+        confirmedTitle: "ส่งคำขอเรียบร้อย",
+        confirmedDescription: "รอการตอบกลับทางอีเมลได้เลย!",
+      },
+  };
+  
+  export const getConfirmCardConfig = (type) =>
+    confirmCardConfig[type] || confirmCardConfig.default;
+  

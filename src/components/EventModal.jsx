@@ -27,7 +27,7 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
   const [clubPosterPreview, setClubPosterPreview] = useState(null);
   const [applicationDocument, setApplicationDocument] = useState("");
   const [fileName, setFileName] = useState("using (.pdf)");
-  const [opentype,setOpentype] = useState('');
+  const [opentype,setOpentype] = useState("");
 
   const [eventTitle, setEventTitle] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
@@ -83,7 +83,7 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
           setClubPoster(file);
         } else {
             setIsConfirmOpen(true);
-            setOpentype('errorinput');
+            setOpentype('errorUpload');
         }
       }
   };
@@ -175,7 +175,7 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
 
   const handleConfirmEvent = async () => {
     if (!isFormValid()) {
-      alert("Error input");
+      setOpentype("error")
       return;
     }
     const posterUrl = await uploadFile(clubPoster, "club-avatars");
