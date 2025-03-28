@@ -6,13 +6,16 @@ import { FaSquareInstagram } from "react-icons/fa6";
 import { Mail, Upload, Settings, BellRing} from "lucide-react";
 import EventModal from "../EventModal"; 
 import Calendar from "../Calendar"
-import supabase from "../../../supabaseClient";
+
 import { Button,ThemeProvider } from "@mui/material";
 import theme from "../Theme";
 import ClubFormManage from "./ClubFormManage";
 import { useLocation } from "react-router-dom";
 import Loading from "../loading";
+import supabaseService from "../../service/supabaseService";
+
 const ClubManage = ({userinfo}) => {
+  const supabase = supabaseService.getClient();
   const { clubId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -34,6 +37,7 @@ const ClubManage = ({userinfo}) => {
     }, 200);
   
   },[location])
+
   useEffect(() => {
     const fetchClubData = async () => {
       const { data, error } = await supabase
@@ -239,9 +243,9 @@ const ClubManage = ({userinfo}) => {
         
 
         <div className="flex flex-row p-6 mt-8 justify-between">
-          <div className="w-fit">
-            <h1 className="text-2xl ">ปฎิทินกิจกรรม</h1>
-            <Calendar className=""/>
+          <div className="w-fit ">
+            <h1 className="text-2xl text-center self-stretch">ปฎิทินกิจกรรม</h1>
+            <Calendar className="mt-2"/>
           </div>
           <div className="w-2/3 justify-start ">
             <div className="bg-white shadow-lg rounded-lg pt-4 flex flex-col min-h-[25vh] items-center justify-center overflow-hidden cursor-pointer
