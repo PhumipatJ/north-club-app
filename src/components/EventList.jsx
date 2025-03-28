@@ -66,7 +66,7 @@ const EventList = ({ id, clubName }) => {
           <p className="text-gray-500">{clubName}</p>
           <div className="flex items-center gap-2 mt-4">
             <MapPin size={24} color="black" />
-            <span>สถานที่จัดกิจกรรม : หอประชุมเบญจรัตน์</span>
+            <span>สถานที่จัดกิจกรรม : {eventData.location}</span>
           </div>
           <div className="flex items-center gap-2 mt-4">
             <Clock3 size={24} color="black" />
