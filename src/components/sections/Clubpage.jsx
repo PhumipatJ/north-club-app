@@ -196,11 +196,15 @@ const Clubpage = ({info}) => {
                 </div>
                 <div className="flex items-center  mb-1"> {/* Container for Facebook */}
                   <FaFacebook className="w-5 h-5 text-[#7CE9BF]"/>
-                  <p className="px-4">{club?.facebook}</p>
+                  <a href={club?.facebook} target="_blank" className="px-4">
+                    {club?.facebook ? new URL(club.facebook).pathname.replace(/\//g, '') : ''}
+                  </a>
                 </div>
                 <div className="flex items-center  mb-1"> {/* Container for Instagram */}
                   <FaSquareInstagram className="w-5 h-5 text-[#7CE9BF]" />
-                  <a href="https://www.instagram.com/l_uod_l_/" target="_blank" className="px-4">{club?.instagram} </a>
+                  <a href={club?.instagram} target="_blank" className="px-4">
+                    {club?.instagram ? new URL(club.instagram).pathname.replace(/\//g, '') : ''}
+                  </a>
                 </div>
                 </div>
               </div>

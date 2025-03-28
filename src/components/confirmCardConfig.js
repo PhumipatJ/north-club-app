@@ -71,6 +71,14 @@ const confirmCardConfig = {
       confirmedTitle: "",
       confirmedDescription: "",  
     },
+    errorURL: {
+      title: "URL ไม่ถูกต้อง",
+      confirmText: "",
+      cancelText: "ตกลง",
+      description: "โปรดระบุลิงค์หรือ URL ให้ถูกต้อง",
+      confirmedTitle: "",
+      confirmedDescription: "",  
+    },
     error: {
         title: "Error!",
         confirmText: "",

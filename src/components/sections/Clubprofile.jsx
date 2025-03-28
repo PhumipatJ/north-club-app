@@ -104,6 +104,14 @@ const Clubprofile = () => {
       setIsConfirmOpen(true);
       return false;
     }
+
+    const urlRegex = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}.*$/;
+    if ((clubData.instagram && !urlRegex.test(clubData.instagram.trim()))||
+        (clubData.facebook && !urlRegex.test(clubData.facebook.trim()))) {
+      setOpentype("errorURL");
+      setIsConfirmOpen(true);
+      return false;
+    }
   
     setOpentype("profile");
     setIsConfirmOpen(true);
@@ -139,7 +147,7 @@ const Clubprofile = () => {
     if (error) {
       console.error("Error updating club:", error);
     } else {
-      alert("Club updated successfully!");
+      //alert("Club updated successfully!");
     }
   };
 
