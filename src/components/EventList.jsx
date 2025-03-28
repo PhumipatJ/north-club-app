@@ -24,9 +24,9 @@ const EventList = ({ id, clubName }) => {
     const [hours, minutes] = endTime.split(":").map(Number);
     
     const eventEndDateTime = new Date(year, month - 1, day, hours, minutes); // Convert to Date object
-    const now = new Date(); // Current date and time
+    const now = new Date(); 
     
-    return now > eventEndDateTime; // Check if event is over
+    return now > eventEndDateTime; 
   };
   
 
