@@ -2,11 +2,14 @@ import { Upload } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import supabaseService from "../../service/supabaseService";
+import ConfirmCard from "../confirmCard";
 
 const Clubprofile = () => {
   const supabase = supabaseService.getClient();
   const { clubId } = useParams();
   const [ isChange, setIsChange ] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [opentype, setOpentype] = useState("");
   const [clubData, setClubData] = useState({
     club_quote: "",
     club_description: [],
@@ -78,8 +81,47 @@ const Clubprofile = () => {
       [name]: updatedValue,
     }));
   };
+
+  const isFormValid = () => {
+    if (!clubData.club_description ||
+      (Array.isArray(clubData.club_description) && clubData.club_description.length === 0) ||
+      (typeof clubData.club_description === "string" && !clubData.club_description.trim())
+    ) {
+      setOpentype("errorEmpty");
+      setIsConfirmOpen(true);
+      return false;
+    }
+
+    if (!clubData.club_quote.trim() || !clubData.mail.trim()) {
+      setOpentype("errorEmpty"); 
+      setIsConfirmOpen(true); 
+      return false;
+    } 
+  
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(clubData.mail)) {
+      setOpentype("errorEmail");
+      setIsConfirmOpen(true);
+      return false;
+    }
+
+    const urlRegex = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}.*$/;
+    if ((clubData.instagram && !urlRegex.test(clubData.instagram.trim()))||
+        (clubData.facebook && !urlRegex.test(clubData.facebook.trim()))) {
+      setOpentype("errorURL");
+      setIsConfirmOpen(true);
+      return false;
+    }
+  
+    setOpentype("profile");
+    setIsConfirmOpen(true);
+    return true;
+  };
   
   const handleConfirm = async () => {
+    if (opentype !== "profile") {
+      return;
+    }
     let avatarUrl = clubData.club_avatar;
 
     if (clubAvatar) {
@@ -105,7 +147,7 @@ const Clubprofile = () => {
     if (error) {
       console.error("Error updating club:", error);
     } else {
-      alert("Club updated successfully!");
+      //alert("Club updated successfully!");
     }
   };
 
@@ -215,12 +257,24 @@ const Clubprofile = () => {
                 />
             </div>
 
-        {/* Buttons */}
+          {/* Buttons */}
             <div className="flex justify-end items-center gap-4">
-            <button className="bg-[#7CE9BF] text-white px-4 py-2 rounded-md" onClick={handleConfirm} disabled={!isChange}>Confirm</button>
+            <button 
+              className="bg-[#7CE9BF] hover:shadow-[0px_0px_3px_rgba(124,233,191,1)] text-white px-4 py-2 rounded-md" 
+              onClick={isFormValid} 
+              disabled={!isChange}>
+                Confirm
+              </button>
             </div>
-        </div>
 
+          {/* ConfirmCard Modal */}
+          <ConfirmCard
+            isOpen={isConfirmOpen}
+            onClose={() => setIsConfirmOpen(false)}
+            type={opentype}
+            onConfirm={handleConfirm}
+          />
+        </div>
     </div>   
     );
 };
