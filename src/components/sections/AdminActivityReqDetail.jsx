@@ -6,7 +6,7 @@ import {
   Box
 } from "@mui/material";
 import { useNavigate ,useParams,useMatch} from "react-router-dom";
-import supabase from "../../../supabaseClient";
+import supabaseService from "../../service/supabaseService";
 import theme from "../Theme";
 import { styled } from "@mui/system";
 import { useLocation } from "react-router-dom";
@@ -18,14 +18,16 @@ import { CiMail } from "react-icons/ci";
 import {MapPin,Calendar,File} from "lucide-react";
 import ConfirmCard from "../confirmCard";
 const AdminActivityReqDetail = () => {
-    const match = useMatch('/database/ReqDetail/*')
-    const { eventId } = useParams();
+  const match = useMatch('/database/ReqDetail/*')
+  const { eventId } = useParams();
   const [eventDetail, setEventDetail] = useState([]);
   const [loading, setLoading] = useState(true);
   const [rejectReason,setReason] = useState('');
   const [doc,setdoc] = useState('');
   const [isConfirmOpen,setopen] = useState(false);
-const navigate = useNavigate(0);
+  const navigate = useNavigate(0);
+  const supabase = supabaseService.getClient();
+
   useEffect(() => {
     const fetchingEvent = async()=>{
         const {data,error} = await supabase

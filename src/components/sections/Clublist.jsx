@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Filter, Search, Info, ChevronDown } from "lucide-react";
-import supabase from "../../../supabaseClient";
+import supabaseService from "../../service/supabaseService";
 import Loading from "../loading";
 
 let clubs = [];
 const tags = ["วิชาการ","กีฬา","ศิลปะและวัฒนธรรม","อาสาและบำเพ็ญประโยชน์"];
 
 const Clublist = () => {
+  const supabase = supabaseService.getClient();
   const [search, setSearch] = useState("");
   const [hoveredClub, setHoveredClub] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);

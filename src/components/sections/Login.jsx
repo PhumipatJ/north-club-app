@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import { FcGoogle } from "react-icons/fc";
 import authService from "../../service/AuthService";
-import supabase from "../../../supabaseClient";
+import supabaseService from "../../service/supabaseService";
 // sho comment
 const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiInputLabel-root': {
@@ -41,6 +41,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 }));
 
 const Login = () => {
+  const supabase = supabaseService.getClient();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

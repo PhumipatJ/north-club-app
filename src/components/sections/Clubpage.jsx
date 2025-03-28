@@ -5,7 +5,7 @@ import { FaFacebook } from "react-icons/fa";
 import { FaSquareInstagram } from "react-icons/fa6";
 import { Mail ,BellRing} from "lucide-react";
 import Calendar from "../Calendar"
-import supabase from "../../../supabaseClient";
+import supabaseService from "../../service/supabaseService";
 import { useLocation } from "react-router-dom";
 import Loading from "../loading";
 import { Button ,ThemeProvider,Box} from "@mui/material";
@@ -13,6 +13,7 @@ import theme from "../Theme";
 import Clubform from "./Clubform";
 import ConfirmCard from "../confirmCard";
 const Clubpage = ({info}) => {
+  const supabase = supabaseService.getClient();
   const { clubId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();

@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import {SquareChartGantt} from "lucide-react";
 import { useNavigate ,useLocation} from "react-router-dom";
-import supabase from "../../../supabaseClient";
+import supabaseService from "../../service/supabaseService";
 import theme from "../Theme";
 import Loading from "../loading";
 import {styled} from "@mui/system";
@@ -32,6 +32,7 @@ const AdminRespond = () => {
   const [membercount,setCount] = useState(0);
   const [clubdata,setClubdata] = useState([]);
   const [open,setopen] = useState(false);
+  const supabase = supabaseService.getClient();
     useEffect(() => {
     const fetchPendingClubs = async () => {
       const { data, error } = await supabase

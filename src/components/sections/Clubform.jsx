@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Avatar, Button, ThemeProvider, Box } from "@mui/material";
-import supabase from "../../../supabaseClient";
+import supabaseService from "../../service/supabaseService";
 import theme from "../Theme";
 import { X, File, ChevronUp, ChevronDown } from "lucide-react";
 import Loading from "../loading";
 import ConfirmCard from "../confirmCard";
 const Clubform = ({ formdata, onClose ,userInfo}) => {
+  const supabase = supabaseService.getClient();
   const [piconload, Setonload] = useState(true);
   const [isDropdownOpen, setShowDropdown] = useState(false);
   const role = [...formdata?.role_available.split(',')]

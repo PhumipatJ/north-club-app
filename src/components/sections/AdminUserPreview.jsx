@@ -12,7 +12,7 @@ import {
   Button
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import supabase from "../../../supabaseClient";
+import supabaseService from "../../service/supabaseService";
 import theme from "../Theme";
 import { styled } from "@mui/system";
 import { useLocation } from "react-router-dom";
@@ -22,6 +22,7 @@ import {User,UserCog} from "lucide-react";
 const AdminUserPreview = () => {
   const [pendingClubs, setPendingClubs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const supabase = supabaseService.getClient();
 
   useEffect(() => {
     const fetchPendingClubs = async () => {

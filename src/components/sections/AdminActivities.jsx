@@ -13,18 +13,20 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import supabase from "../../../supabaseClient";
 import theme from "../Theme";
 import { styled } from "@mui/system";
 import { useLocation } from "react-router-dom";
 import Loading from "../loading";
 import AdmindatabaseBox from "./AdmindatabaseBox";
 import { List } from "lucide-react";
+import supabaseService from "../../service/supabaseService";
+
 const AdminActivities = () => {
   const [pendingClubs, setPendingClubs] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
+  const supabase = supabaseService.getClient();
 
   useEffect(() => {
     const fetchPendingClubs = async () => {

@@ -4,9 +4,10 @@ import ConfirmCard from "../confirmCard";
 import { FileUp, X } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import supabase from "../../../supabaseClient";
+import supabaseService from "../../service/supabaseService";
 
 const ClubFormManage = ({ isOpen, onClose, clubId, prevform }) => {
+  const supabase = supabaseService.getClient();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isError,setError] = useState(false)
 

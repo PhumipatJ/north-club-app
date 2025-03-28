@@ -6,11 +6,12 @@ import {
   ThemeProvider,
   Box,
 } from "@mui/material";
-import supabase from "../../../supabaseClient";
+import supabaseService from "../../service/supabaseService";
 import theme from "../Theme";
 import { X, File } from "lucide-react";
 
 const ApprovalPopup = ({ clubdata, count, onClose }) => {
+  const supabase = supabaseService.getClient();
   const { clubId } = useParams();
   const club = clubdata;
   const [rejectReason,setReason] = useState("");

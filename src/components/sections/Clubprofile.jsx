@@ -1,9 +1,10 @@
 import { Upload } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import supabase from "../../../supabaseClient";
+import supabaseService from "../../service/supabaseService";
 
 const Clubprofile = () => {
+  const supabase = supabaseService.getClient();
   const { clubId } = useParams();
   const [ isChange, setIsChange ] = useState(false);
   const [clubData, setClubData] = useState({

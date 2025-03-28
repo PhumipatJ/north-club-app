@@ -6,7 +6,7 @@ import { FaSquareInstagram } from "react-icons/fa6";
 import { Mail, ChevronDown } from "lucide-react";
 import { Avatar ,ThemeProvider} from "@mui/material";
 import Calendar from "../Calendar"
-import supabase from "../../../supabaseClient";
+import supabaseService from "../../service/supabaseService";
 import theme from "../Theme";
 const clubInfo = [
   {
@@ -51,6 +51,7 @@ const clubInfo = [
 ];
 
 const Clubmember = () => {
+  const supabase = supabaseService.getClient();
   const { clubId } = useParams();
   const navigate = useNavigate();
 

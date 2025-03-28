@@ -13,7 +13,7 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import supabase from "../../../supabaseClient";
+import supabaseService from "../../service/supabaseService";
 import theme from "../Theme";
 import { styled } from "@mui/system";
 import { useLocation } from "react-router-dom";
@@ -24,6 +24,7 @@ const AdminApprove = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
+  const supabase = supabaseService.getClient();
 
   useEffect(() => {
     const fetchPendingClubs = async () => {

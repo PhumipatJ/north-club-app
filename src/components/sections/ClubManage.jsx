@@ -6,7 +6,6 @@ import { FaSquareInstagram } from "react-icons/fa6";
 import { Mail, Upload, Settings, BellRing} from "lucide-react";
 import EventModal from "../EventModal"; 
 import Calendar from "../Calendar"
-
 import { Button,ThemeProvider } from "@mui/material";
 import theme from "../Theme";
 import ClubFormManage from "./ClubFormManage";
