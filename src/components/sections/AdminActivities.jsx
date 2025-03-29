@@ -138,7 +138,7 @@ const AdminActivities = () => {
                 ) : (
                   pendingClubs.map((event) => (
                     <TableRow key={event.id} sx={{'&:hover':{backgroundColor:'#f9f9f9' , cursor:'pointer'}}} 
-                    onClick={()=>console.log(event.id)}
+                    onClick={()=>navigate(`/database/adminActivities/${event.id}`)}
                     >
                       <TableCell sx={{textAlign:'center', borderColor:'#fff',display:'flex',justifyContent:'center'}}>
                          <Avatar

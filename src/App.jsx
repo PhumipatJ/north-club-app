@@ -62,6 +62,7 @@ function App() {
           <Route path="/clubmanage/:clubId/ClubApplicantsList" element={<Wrapper allowedRoles={['club']} ><ClubApplicantsList/></Wrapper>} />
           <Route path="/clubmanage/:clubId/ClubAllApplicants" element={<Wrapper allowedRoles={['club']} ><ClubAllApplicants/></Wrapper>} />
           <Route path="/clubmanage/:clubId/ClubApplicantsReqDetail" element={<Wrapper allowedRoles={['club']} ><ClubAllApplicants/></Wrapper>} />
+          <Route path="/database/adminActivities/:eventId" element={<Wrapper allowedRoles={['admin']} ><ActivityDetail /></Wrapper>} />
         </Routes>
       </Router>
     </>
