@@ -1,1 +1,31 @@
 @import "tailwindcss";
+
+* {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #7CE9BF #fff
+
+}
+
+body {
+  -webkit-overflow-scrolling: touch; /* ทำให้การเลื่อนใน Safari ลื่น */
+}
+
+/* Custom Scrollbar สำหรับ Chrome, Safari */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #FF7E69;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #FF4C3B; /* เปลี่ยนสีเมื่อ hover */
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 10px;
+}

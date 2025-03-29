@@ -10,7 +10,11 @@ class AuthService {
     }
     return AuthService.instance;
   }
-
+  async signInWithGoogle(){
+    return await this.supabase.auth.signInWithOAuth({
+      provider:'google',
+    });
+  }
   async login(email, password) {
     return await this.supabase.auth.signInWithPassword({ email, password });
   }

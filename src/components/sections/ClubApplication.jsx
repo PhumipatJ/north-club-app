@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { FileUp, ChevronDown, ChevronUp } from "lucide-react";
-import supabase from "../../../supabaseClient";
+import supabaseService from "../../service/supabaseService";
 import authService from "../../service/AuthService";
 import { useNavigate } from "react-router-dom"; 
 
 const ClubApplication = () => {
+  const supabase = supabaseService.getClient();
   const navigate = useNavigate();
   const [currentUserEmail, setCurrentUserEmail] = useState("");
   const [clubName, setClubName] = useState("");

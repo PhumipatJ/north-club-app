@@ -1,9 +1,10 @@
 import { Mail, Settings, User, SquarePen } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLocation,useNavigate } from "react-router-dom";
-import supabase from "../../../supabaseClient";
+import supabaseService from "../../service/supabaseService";
 
 const UserProfile = () => {
+  const supabase = supabaseService.getClient();
   const location = useLocation();
   const userInfo = location.state?.userInfo || {}; 
   const [userClub, setUserClub] = useState([]);

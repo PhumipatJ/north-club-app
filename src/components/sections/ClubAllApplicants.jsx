@@ -1,4 +1,4 @@
-import { useState, useEffect ,} from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   Button,
@@ -16,15 +16,18 @@ import { useNavigate } from "react-router-dom";
 import supabaseService from "../../service/supabaseService";
 import theme from "../Theme";
 import { styled } from "@mui/system";
-import { useLocation } from "react-router-dom";
+import { useLocation ,useParams} from "react-router-dom";
+import { List } from "lucide-react";
 import Loading from "../loading";
-import AdmindatabaseBox from "./AdmindatabaseBox";
-const AdminApprove = () => {
+import ClubApplicantsBox from "./ClubApplicantBox";
+
+const ClubAllApplicants = () => {
   const [pendingClubs, setPendingClubs] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const location = useLocation();
   const supabase = supabaseService.getClient();
+  const location = useLocation();
+  const { clubId } = useParams();
 
   useEffect(() => {
     const fetchPendingClubs = async () => {
@@ -69,43 +72,11 @@ const AdminApprove = () => {
         <div className="flex max-w-6xl w-full">
           <div className=" w-full h-fit flex">
             <h1 className="text-4xl font-bold my-auto ">รายชื่อชมรม</h1>
-            <div className="my-auto flex ml-auto w-fit">
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{
-                  boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
-                  mr: 2,
-                  paddingX: "3vw",
-                  bgcolor: "white",
-                  color: "#1A1A1A",
-                  "&:hover": { bgcolor: "#7CE9BF",boxShadow:"0px 0px 2px #7CE9BF60"},
-                }}
-                onClick={() => navigate("/database/adminRespond")}
-              >
-                คำขอสร้างชมรม
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{
-                  boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
-                  mr: 0,
-                  paddingX: "3vw",
-                  bgcolor: "white",
-                  color: "#1A1A1A",
-                  "&:hover": { bgcolor: "#7CE9BF",boxShadow:"0px 0px 2px #7CE9BF60"},
-                }}
-                onClick={() => navigate("/database/approvalHistory")}
-              >
-                คำขอที่ตอบแล้ว
-              </Button>
-            </div>
           </div>
         </div>
         
         <div className="flex justify-between gap-10 h-[calc(100vh-184px)]">
-          <AdmindatabaseBox/>
+          <ClubApplicantsBox clubId={clubId}/>
           <TableContainer
             component={Paper}
             sx={{
@@ -130,12 +101,11 @@ const AdminApprove = () => {
               <TableHead>
                 <TableRow>
                   <CustomTableCell>รูป</CustomTableCell>
-                  <CustomTableCell>ชื่อชมรม</CustomTableCell>
-                  <CustomTableCell>ประเภท</CustomTableCell>
-                  <CustomTableCell>สมาชิก</CustomTableCell>
-                  <CustomTableCell>วันก่อตั้ง</CustomTableCell>
-                  <CustomTableCell>ที่ปรึกษา</CustomTableCell>
-                  <CustomTableCell>สถานะ</CustomTableCell>
+                  <CustomTableCell>ชื่อ-นามสกุล</CustomTableCell>
+                  <CustomTableCell>คณะ</CustomTableCell>
+                  <CustomTableCell>สาขา</CustomTableCell>
+                  <CustomTableCell>ชั้นปี</CustomTableCell> 
+                  <CustomTableCell>รายละเอียด</CustomTableCell>
                 </TableRow>
               </TableHead>
               <TableBody sx={{overflowY:"auto"}}>
@@ -169,16 +139,11 @@ const AdminApprove = () => {
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.club_type}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.member_count || "N/A"}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.founded_date || "N/A"}</TableCell>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.club_adviser}</TableCell>
-                      {club.club_approval===true?(
-                        <TableCell sx={{textAlign:'center', borderColor:'#fff',color:'#7CE9BF'}}>
-                        Active
-                      </TableCell>
-                      ):(
-                        <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>
-                        Inactive
-                      </TableCell>
-                      )}
+                      <TableCell sx={{borderColor:'#fff'}}>
+                        <div className="h-[100%] w-[100%] justify-center flex" >
+                        <List className="text-[#FF7E69] "/>
+                        </div>
+                        </TableCell>
                     </TableRow>
                   ))
                 )}
@@ -191,4 +156,4 @@ const AdminApprove = () => {
   );
 };
 
-export default AdminApprove;
+export default ClubAllApplicants;

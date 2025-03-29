@@ -1,27 +1,19 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
-  Container,
-  Typography,
   Avatar,
-  CircularProgress,
   Button,
   ThemeProvider,
   Box,
-  TextField,
 } from "@mui/material";
-import { useLocation } from "react-router-dom";
-import supabase from "../../../supabaseClient";
+import supabaseService from "../../service/supabaseService";
 import theme from "../Theme";
-import Loading from "../loading";
 import { X, File } from "lucide-react";
 
-const ApprovalPopup = ({ clubdata, requestID, count, onClose }) => {
+const ApprovalPopup = ({ clubdata, count, onClose }) => {
+  const supabase = supabaseService.getClient();
   const { clubId } = useParams();
-  const [loading, setLoading] = useState(false);
-  const location = useLocation();
   const club = clubdata;
-  const [Doc, setDoc] = useState("");
   const [rejectReason,setReason] = useState("");
   const { data: urlData } = supabase.storage
     .from("club-documents")
@@ -51,6 +43,9 @@ const ApprovalPopup = ({ clubdata, requestID, count, onClose }) => {
   });
   if (!club) return <></>;
   const today = new Date().toISOString().slice(0, 19).replace("T", " "); // YYYY-MM-DD HH:MM:SS
+  const handleclose = () => {
+    onClose();
+  };
   const handleApprove = async (clubId) => {
     console.log(member_count);
     // Insert into approvalHistory
@@ -153,9 +148,7 @@ const ApprovalPopup = ({ clubdata, requestID, count, onClose }) => {
       window.history.back();
     }
   };
-  const handleclose = () => {
-    onClose();
-  };
+ 
 
   return (
     <div className="bg-[rgba(16,16,16,0.5)] w-screen h-screen flex justify-center items-center fixed z-1000 top-0">
@@ -286,7 +279,7 @@ const ApprovalPopup = ({ clubdata, requestID, count, onClose }) => {
                       fontSize: "14px",
                     }}
                   >
-                    <h1>{club.club_type}</h1>
+                    <h1>{club.club_quote}</h1>
                   </div>
                 </div>
                 <div className="flex ml-20 h-fit w-fit max-w-[80%] ">
@@ -428,7 +421,7 @@ const ApprovalPopup = ({ clubdata, requestID, count, onClose }) => {
                         
                       },
                     }}
-                    onClick={() => console.log(rejectReason)}
+                    onClick={() => handleReject()}
                   >
                     ปฏิเสธ
                   </Button>

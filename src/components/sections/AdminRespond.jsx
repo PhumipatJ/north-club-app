@@ -8,7 +8,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
   Paper,
   Avatar,
   ThemeProvider,
@@ -16,7 +15,7 @@ import {
 } from "@mui/material";
 import {SquareChartGantt} from "lucide-react";
 import { useNavigate ,useLocation} from "react-router-dom";
-import supabase from "../../../supabaseClient";
+import supabaseService from "../../service/supabaseService";
 import theme from "../Theme";
 import Loading from "../loading";
 import {styled} from "@mui/system";
@@ -33,6 +32,7 @@ const AdminRespond = () => {
   const [membercount,setCount] = useState(0);
   const [clubdata,setClubdata] = useState([]);
   const [open,setopen] = useState(false);
+  const supabase = supabaseService.getClient();
     useEffect(() => {
     const fetchPendingClubs = async () => {
       const { data, error } = await supabase
@@ -92,7 +92,7 @@ const AdminRespond = () => {
         <ConfirmCard isOpen={open} onClose={()=>setopen(false)} type={"event"}></ConfirmCard>
       )}
       {openDetail === true &&(
-        <ApprovalPopup clubdata={clubdata} requestID={requestID} count={membercount} onClose={handlePopup}/>
+        <ApprovalPopup clubdata={clubdata} count={membercount} onClose={handlePopup}/>
       )}
       <Container className="p-6 mt-24 min-h-[77vh] flex flex-col justify-center">
       <div className="flex max-w-6xl w-full">

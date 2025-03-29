@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import { FcGoogle } from "react-icons/fc";
 import authService from "../../service/AuthService";
+import supabaseService from "../../service/supabaseService";
 // sho comment
 const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiInputLabel-root': {
@@ -40,11 +41,15 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 }));
 
 const Login = () => {
+  const supabase = supabaseService.getClient();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-
+  const [googlereply,setReply] = useState("");
+  useEffect(()=>{
+    console.log(googlereply);
+  },[googlereply])
   const handleSubmit = async (event) => {
     event.preventDefault();
     setMessage("");
@@ -59,7 +64,7 @@ const Login = () => {
       email: email,
       password: password,
     }); */
-
+    console.log(data);
     if (error) {
       setMessage(error.message);
       setEmail("");
@@ -71,7 +76,17 @@ const Login = () => {
       navigate("/");
     }
   };
-
+  const googlelogin = async (event)=>{
+    event.preventDefault();
+    const {logindata,error} = await authService.signInWithGoogle();
+    if(error){
+      setMessage(error.message);
+      return;
+    }
+    if(logindata){
+      navigate("/");
+    }
+  }
   return (
     <div className="flex items-center justify-center bg-gray-50 relative min-h-screen overflow-hidden">
   
@@ -99,7 +114,7 @@ const Login = () => {
           <div className="flex-1 p-8">
             <h2 className="text-center text-3xl font-bold text-gray-900 mb-6">Login</h2>
             <div className="mb-4">
-              <button className="flex items-center justify-center w-full border-1 border-gray-300 py-2 rounded-md text-gray-700 hover:bg-gray-100">
+              <button onClick={googlelogin} className="cursor-pointer flex items-center justify-center w-full border-1 border-gray-300 py-2 rounded-md text-gray-700 hover:bg-gray-100">
                 <FcGoogle className="mr-2" size={20} /> Sign in with Google
               </button>
             </div>

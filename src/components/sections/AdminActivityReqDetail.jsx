@@ -17,7 +17,7 @@ import { FaSquareInstagram } from "react-icons/fa6";
 import { CiMail } from "react-icons/ci";
 import {MapPin,Calendar,File} from "lucide-react";
 import ConfirmCard from "../confirmCard";
-const ActivityDetail = () => {
+const AdminActivityReqDetail = () => {
   const match = useMatch('/database/ReqDetail/*')
   const { eventId } = useParams();
   const [eventDetail, setEventDetail] = useState([]);
@@ -28,6 +28,7 @@ const ActivityDetail = () => {
   const navigate = useNavigate(0);
   const supabase = supabaseService.getClient();
 
+  
   useEffect(() => {
     const fetchingEvent = async()=>{
         const {data,error} = await supabase
@@ -197,6 +198,74 @@ const ActivityDetail = () => {
                 </div>
                 <div className="h-fit w-full flexbox justify-end mt-10  gap-1">
               <ThemeProvider theme={theme}>
+              <h1 className="text-[20px] font-semibold">ตอบกลับ</h1>
+            <div className="flex justify-end pl-10 mt-1">
+            <input
+                    type="text"
+                    placeholder="เหตุผลในการปฏิเสธ"
+                    className="border border-[#1A1A1A7D] rounded-md w-full p-1 mr-4 focus:outline-none focus:border-[#FF7E69] focus:border-2"
+                    onChange={(e) => setReason(e.target.value)}
+                    required
+                  />
+                {rejectReason===''?(<Button
+                  variant="outlined"
+                  color="error"
+                  sx={{
+                    boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                    mr: 2,
+                    paddingX: "3vw",
+                    bgcolor: "white",
+                    color: "#1A1A1A7D",
+                    borderWidth:'2px',
+                    borderColor:'white',
+                    "&:hover": {
+                      boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                      cursor: "no-drop",
+                    },
+                  }}
+                >
+                  ปฏิเสธ
+                </Button>):(
+                    <Button
+                    variant="outlined"
+                    color="error"
+                    sx={{
+                      boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                      mr: 2,
+                      paddingX: "3vw",
+                      bgcolor:"#FF7E69",
+                        color:'white',
+                      borderColor:'#FF7E69',
+                      borderWidth:'2px',
+                      "&:hover": {
+                        boxShadow: "0px 0px 5px 1px #FF7E697D",
+                        
+                      },
+                    }}
+                    onClick={() => handleReject()}
+                  >
+                    ปฏิเสธ
+                  </Button>
+                )}
+                <Button
+                  variant="contained"
+                  color="success"
+                  sx={{
+                    boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                    mr: 0,
+                    paddingX: "3vw",
+                    bgcolor: "#7CE9BF",
+                    color: "#1A1A1A",
+                    "&:hover": {
+                      bgcolor: "#7CE9BF",
+                      boxShadow: "0px 0px 5px 0.1px #7CE9BF",
+                    },
+                  }}
+                  onClick={() => setopen(true)}
+                >
+                  อนุมัติ
+                </Button>
+            </div>
               </ThemeProvider>
             </div>
             </div>
@@ -207,4 +276,4 @@ const ActivityDetail = () => {
   );
 };
 
-export default ActivityDetail;
+export default AdminActivityReqDetail;

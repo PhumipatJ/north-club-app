@@ -70,7 +70,7 @@ const Loading = () => {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <g clip-path="url(#clip0_1129_16577)">
+              <g>
                 <rect width="94" height="94" rx="5" fill="white" />
 
                 <path
