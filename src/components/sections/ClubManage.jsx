@@ -32,6 +32,7 @@ const ClubManage = ({userinfo}) => {
   const [isformpopupOpen,setPopupopen] = useState(false);
 
   const [clubEvent, setClubEvent] = useState([]);
+  const [clubEventExpired, setClubEventExpired] = useState([]);
   const [clubAnnouncement, setClubAnnouncement] = useState([]);
 
   const [clubName, setClubName] = useState("");
@@ -61,14 +62,51 @@ const ClubManage = ({userinfo}) => {
         .from("event")
         .select("id, title, poster, start_date, start_time, end_time, location")
         .eq("club_id", clubId)
-        .eq("approval_status", true)
+        .eq("approval_status", true);
   
       if (error) {
         console.error("Error fetching club data:", error);
-      } 
-      else {
-        //console.log(data);
-        setClubEvent(data);
+      } else {
+        // Separate events into expired and non-expired
+        const expiredEvents = [];
+        const upcomingEvents = [];
+  
+        data.forEach(event => {
+          const isExpired = isEventExpired(event.start_date, event.end_time);
+          if (isExpired) {
+            expiredEvents.push(event);
+          } else {
+            upcomingEvents.push(event);
+          }
+        });
+  
+        // Sort non-expired events by start_date and then start_time
+        upcomingEvents.sort((a, b) => {
+          const [aDay, aMonth, aYear] = a.start_date.split("/").map(Number);
+          const [bDay, bMonth, bYear] = b.start_date.split("/").map(Number);
+          const aStart = new Date(aYear, aMonth - 1, aDay, ...a.start_time.split(":").map(Number));
+          const bStart = new Date(bYear, bMonth - 1, bDay, ...b.start_time.split(":").map(Number));
+  
+          if (aStart !== bStart) {
+            return aStart - bStart; // Sort by start_date and start_time
+          }
+          return 0;
+        });
+  
+        // Sort expired events by end_date and then end_time
+        expiredEvents.sort((a, b) => {
+          const [aDay, aMonth, aYear] = a.end_date.split("/").map(Number);
+          const [bDay, bMonth, bYear] = b.end_date.split("/").map(Number);
+          const aEnd = new Date(aYear, aMonth - 1, aDay, ...a.end_time.split(":").map(Number));
+          const bEnd = new Date(bYear, bMonth - 1, bDay, ...b.end_time.split(":").map(Number));
+  
+          return aEnd - bEnd; // Sort by end_date and end_time
+        });
+  
+        //console.log(upcomingEvents);
+        //console.log(expiredEvents);
+        setClubEvent(upcomingEvents);
+        setClubEventExpired(expiredEvents);
       }
     };
   
@@ -87,7 +125,15 @@ const ClubManage = ({userinfo}) => {
       } 
       else {
         //console.log(data);
-        setClubAnnouncement(data);
+        const sortedAnnouncements = data.sort((a, b) => {
+          const dateA = new Date(a.created_at);
+          const dateB = new Date(b.created_at);
+          
+          // Sorting by created_at in descending order (latest first)
+          return dateB - dateA;
+        });
+  
+        setClubAnnouncement(sortedAnnouncements);
       }
     };
   
@@ -348,6 +394,14 @@ const ClubManage = ({userinfo}) => {
             {/* Event */}
             <h1 className="text-2xl pt-6">กิจกรรม</h1>
             {clubEvent.map((event) => (
+              <div key={event.id}>
+                <EventList id={event.id} clubName={clubName} />
+                <br />
+              </div>
+            ))}
+
+            {/* Expire Event */}
+            {clubEventExpired.map((event) => (
               <div key={event.id}>
                 <EventList id={event.id} clubName={clubName} />
                 <br />

@@ -33,7 +33,7 @@ const AnnouncementList = ({ id, clubName }) => {
           console.error("Error fetching club data:", error);
         } 
         else {
-          console.log(data);
+          //console.log(data);
           setAnnouncementData(data);
         }
       };
