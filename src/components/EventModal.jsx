@@ -160,7 +160,7 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
         setOpentype("errorEmpty")
       }else {
         if (statusText === "Online") {
-          const urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[\w-]*)*$/;
+          const urlPattern = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}.*$/;
           if (!urlPattern.test(location.trim())) {
             setOpentype("errorURL");
             errors.push("Location must be a valid URL for Online status.");
