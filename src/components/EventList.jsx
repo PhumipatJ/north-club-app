@@ -19,6 +19,30 @@ const EventList = ({ id, clubName }) => {
     return `${day} ${monthsInThai[month - 1]} ${year}`;
   };
 
+  const getPlatformName = (url) => {
+    const platforms = {
+      youtube: "YouTube",
+      facebook: "Facebook",
+      twitter: "Twitter",
+      instagram: "Instagram",
+      linkedin: "LinkedIn",
+      tiktok: "TikTok",
+    };
+  
+    const regex = /(youtube\.com|youtu\.be|facebook\.com|twitter\.com|instagram\.com|linkedin\.com|tiktok\.com)/i;
+    const match = url.match(regex);
+  
+    if (match) {
+      // Loop through the platforms and check for a match
+      for (let [key, value] of Object.entries(platforms)) {
+        if (match[0].includes(key)) {
+          return value;
+        }
+      }
+    }
+    return "ตรวจสอบลิงค์จากผู้จัดงาน"; 
+  };
+
   const isEventExpired = (endDate, endTime) => {
     const [day, month, year] = endDate.split("/").map(Number);
     const [hours, minutes] = endTime.split(":").map(Number);
@@ -66,7 +90,7 @@ const EventList = ({ id, clubName }) => {
           <p className="text-gray-500">{clubName}</p>
           <div className="flex items-center gap-2 mt-4">
             <MapPin size={24} color="black" />
-            <span>สถานที่จัดกิจกรรม : {eventData.location}</span>
+            <span>สถานที่จัดกิจกรรม : {getPlatformName(eventData.location)}</span>
           </div>
           <div className="flex items-center gap-2 mt-4">
             <Clock3 size={24} color="black" />
