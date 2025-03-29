@@ -12,6 +12,8 @@ import ClubFormManage from "./ClubFormManage";
 import { useLocation } from "react-router-dom";
 import Loading from "../loading";
 import supabaseService from "../../service/supabaseService";
+import AnnouncementList from "../AnnouncementList";
+import EventList from "../EventList";
 
 const ClubManage = ({userinfo}) => {
   const supabase = supabaseService.getClient();
@@ -28,14 +30,115 @@ const ClubManage = ({userinfo}) => {
   const [prevForm,setPrevform] = useState(null); 
   const [isOpenForm,setOpenform] = useState(false);
   const [isformpopupOpen,setPopupopen] = useState(false);
+
+  const [clubEvent, setClubEvent] = useState([]);
+  const [clubEventExpired, setClubEventExpired] = useState([]);
+  const [clubAnnouncement, setClubAnnouncement] = useState([]);
+
+  const [clubName, setClubName] = useState("");
+
+  const isEventExpired = (endDate, endTime) => {
+    const [day, month, year] = endDate.split("/").map(Number);
+    const [hours, minutes] = endTime.split(":").map(Number);
+    
+    const eventEndDateTime = new Date(year, month - 1, day, hours, minutes); // Convert to Date object
+    const now = new Date(); 
+    
+    return now > eventEndDateTime; 
+  };
+
   useEffect(()=>{
     setonLoad(true);
-    console.log(userinfo)
+    //console.log(userinfo)
     setTimeout(() => {
       setonLoad(false);
     }, 200);
   
   },[location])
+
+  useEffect(() => {
+    const fetchClubEvent = async () => {
+      const { data, error } = await supabase
+        .from("event")
+        .select("id, title, poster, start_date, start_time, end_time, location")
+        .eq("club_id", clubId)
+        .eq("approval_status", true);
+  
+      if (error) {
+        console.error("Error fetching club data:", error);
+      } else {
+        // Separate events into expired and non-expired
+        const expiredEvents = [];
+        const upcomingEvents = [];
+  
+        data.forEach(event => {
+          const isExpired = isEventExpired(event.start_date, event.end_time);
+          if (isExpired) {
+            expiredEvents.push(event);
+          } else {
+            upcomingEvents.push(event);
+          }
+        });
+  
+        // Sort non-expired events by start_date and then start_time
+        upcomingEvents.sort((a, b) => {
+          const [aDay, aMonth, aYear] = a.start_date.split("/").map(Number);
+          const [bDay, bMonth, bYear] = b.start_date.split("/").map(Number);
+          const aStart = new Date(aYear, aMonth - 1, aDay, ...a.start_time.split(":").map(Number));
+          const bStart = new Date(bYear, bMonth - 1, bDay, ...b.start_time.split(":").map(Number));
+  
+          if (aStart !== bStart) {
+            return aStart - bStart; // Sort by start_date and start_time
+          }
+          return 0;
+        });
+  
+        // Sort expired events by end_date and then end_time
+        expiredEvents.sort((a, b) => {
+          const [aDay, aMonth, aYear] = a.end_date.split("/").map(Number);
+          const [bDay, bMonth, bYear] = b.end_date.split("/").map(Number);
+          const aEnd = new Date(aYear, aMonth - 1, aDay, ...a.end_time.split(":").map(Number));
+          const bEnd = new Date(bYear, bMonth - 1, bDay, ...b.end_time.split(":").map(Number));
+  
+          return aEnd - bEnd; // Sort by end_date and end_time
+        });
+  
+        //console.log(upcomingEvents);
+        //console.log(expiredEvents);
+        setClubEvent(upcomingEvents);
+        setClubEventExpired(expiredEvents);
+      }
+    };
+  
+    fetchClubEvent();
+  }, [clubId]);
+
+  useEffect(() => {
+    const fetchClubAnnouncement = async () => {
+      const { data, error } = await supabase
+        .from("announcement")
+        .select("id, title, poster, created_at")
+        .eq("club_id", clubId)
+  
+      if (error) {
+        console.error("Error fetching club data:", error);
+      } 
+      else {
+        //console.log(data);
+        const sortedAnnouncements = data.sort((a, b) => {
+          const dateA = new Date(a.created_at);
+          const dateB = new Date(b.created_at);
+          
+          // Sorting by created_at in descending order (latest first)
+          return dateB - dateA;
+        });
+  
+        setClubAnnouncement(sortedAnnouncements);
+      }
+    };
+  
+    fetchClubAnnouncement();
+  }, [clubId]);
 
   useEffect(() => {
     const fetchClubData = async () => {
@@ -49,11 +152,18 @@ const ClubManage = ({userinfo}) => {
         console.error("Error fetching club data:", error);
       } else {
         setClub(data);
+        //console.log("Club Name:", data.club_name);
       }
     };
   
     fetchClubData();
   }, [clubId]);
+
+  useEffect(() => {
+    if (club) {
+      setClubName(club.club_name)
+    }
+  }, [club]); 
   
   useEffect(() => {
     const fetchMembers = async () => {
@@ -99,7 +209,6 @@ const ClubManage = ({userinfo}) => {
     fetchMembers();
   }, [clubId]);
   
-  
   //console.log(clubTest);
   //console.log(members);
   useEffect(()=>{
@@ -110,22 +219,23 @@ const ClubManage = ({userinfo}) => {
       .eq("club_id",clubId)
       .single()
       if(formError){
-        console.log(formError);
+        //console.log(formError);
         setPrevform(Formdata);
         return;
       }
       if(Formdata.length !== 0){
         setPrevform(Formdata);
-        console.log(Formdata);
+        //console.log(Formdata);
       }
       else{
-        console.log("test");
+        //console.log("test");
       }
     };
     fetchClubForm();
   },[clubId,isformpopupOpen]);
 
-
+  
+  
   return (
     <div className="bg-gray-50">
       {onLoading?(
@@ -269,12 +379,14 @@ const ClubManage = ({userinfo}) => {
             <h1 className="text-2xl text-center self-stretch">ปฎิทินกิจกรรม</h1>
             <Calendar className="mt-2"/>
           </div>
+          
+          {/* Modal */}
           <div className="w-2/3 justify-start ">
             <div className="bg-white shadow-lg rounded-lg pt-4 flex flex-col min-h-[25vh] items-center justify-center overflow-hidden cursor-pointer
                 hover:bg-gray-100 group"
                 onClick={openModal}>
                 
-                {/* Create Event */}
+                {/* Create Activity */}
                 <div className="flex items-center flex-row">
                     <div className="flex flex-col items-center ">
                         <Upload className="w-10 h-10 text-[#FF7E69]" />
@@ -287,10 +399,34 @@ const ClubManage = ({userinfo}) => {
                             className="relative w-36 translate-x-1/2 duration-300 group-hover:translate-x-1/5"/>
                     </div>
                 </div>
-
-                
-            
             </div>
+              
+            {/* Announcement */}
+            <h1 className="text-2xl pt-6">ประกาศ</h1>
+            {clubAnnouncement.map((announcement) => (
+              <div key={announcement.id}>
+                <AnnouncementList id={announcement.id} clubName={clubName} />
+                <br />
+              </div>
+            ))}
+
+            {/* Event */}
+            <h1 className="text-2xl pt-6">กิจกรรม</h1>
+            {clubEvent.map((event) => (
+              <div key={event.id}>
+                <EventList id={event.id} clubName={clubName} />
+                <br />
+              </div>
+            ))}
+
+            {/* Expire Event */}
+            {clubEventExpired.map((event) => (
+              <div key={event.id}>
+                <EventList id={event.id} clubName={clubName} />
+                <br />
+              </div>
+            ))}
+
           </div>
         </div>
 
