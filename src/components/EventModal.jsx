@@ -129,7 +129,6 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
 
   const isFormValid = () => {
     const errors = [];
-    setOpentype("error")
     if (eventText === "กิจกรรม") {
       if (!eventTitle.trim()) {
         setOpentype("errorEmpty")
@@ -202,7 +201,6 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
       setOpentype("errorEmpty")
       errors.push("applicationDocument is required.");
     }
-      
 
     if (errors.length > 0) {
       console.log("Form validation failed:", errors);
@@ -269,7 +267,7 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
       }
     }
 
-    alert("Club created successfully");
+    window.location.reload();
 
     /*
 
