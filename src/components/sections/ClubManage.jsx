@@ -218,6 +218,7 @@ const ClubManage = ({userinfo}) => {
       .select("*")
       .eq("club_id",clubId)
       .single()
+
       if(formError){
         //console.log(formError);
         setPrevform(Formdata);
@@ -225,7 +226,7 @@ const ClubManage = ({userinfo}) => {
       }
       if(Formdata.length !== 0){
         setPrevform(Formdata);
-        //console.log(Formdata);
+        console.log(Formdata);
       }
       else{
         //console.log("test");
@@ -283,12 +284,14 @@ const ClubManage = ({userinfo}) => {
             </div>
             </div>
             
+            {/* Setting */}
             <div className=" flex-col justify-between flex mb-6 ">
               <div className=" justify-end flex ">
               <Settings className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => navigate(`/Clubprofile/${clubId}`)}/>
               </div>
             <div className="justify-center mt-16 flex">
-              {prevForm?.form_status?(<p className="text-[#7CE9BF] flex gap-2"><BellRing style={{}}/>กำลังเปิดรับสมัคร</p>):(<></>)}
+            
+            {prevForm?.form_status?(<p className="text-[#7CE9BF] flex gap-2"><BellRing style={{}}/>กำลังเปิดรับสมัคร</p>):(<></>)}
             </div>
               <ThemeProvider theme={theme}>
                 <div className="">
