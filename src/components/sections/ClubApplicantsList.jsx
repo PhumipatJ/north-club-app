@@ -22,7 +22,7 @@ import Loading from "../loading";
 import ClubApplicantsBox from "./ClubApplicantBox";
 
 const ClubApplicantsList = () => {
-  const [pendingClubs, setPendingClubs] = useState([]);
+  const [clubApplicants, setClubApplicants] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const supabase = supabaseService.getClient();
@@ -32,23 +32,16 @@ const ClubApplicantsList = () => {
   useEffect(() => {
     const fetchPendingClubs = async () => {
       const { data, error } = await supabase
-        .from("clubs")
-        .select("*, member_count:clubMembers(count)")
-        .eq("club_approval", true);
+        .from("userform")
+        .select("* , user: user_id(name)")
+        .eq("club_id", clubId);    
 
       if (error) {
         console.error("Error fetching clubs:", error);
       } else {
-        setPendingClubs(
-          data.map((club) => ({
-            ...club,
-            member_count: club.member_count[0]?.count || 0,
-            founded_date: new Date(club.approve_date).toLocaleDateString(
-              "th-TH",
-              { day: "2-digit", month: "2-digit", year: "numeric" }
-            ),
-          }))
-        );
+        console.log(data)
+        const sortedData = data.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+        setClubApplicants(sortedData);
       }
       setTimeout(() => {
         setLoading(false);
@@ -66,12 +59,21 @@ const ClubApplicantsList = () => {
   if(loading){
     return <Loading/>
   }
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Container className="p-6 mt-24 min-h-[77vh] flex flex-col justify-center">
         <div className="flex max-w-6xl w-full">
           <div className=" w-full h-fit flex">
-            <h1 className="text-4xl font-bold my-auto ">รายชื่อชมรม</h1>
+            <h1 className="text-4xl font-bold my-auto ">รายชื่อผู้สมัครชมรม</h1>
           </div>
         </div>
         
@@ -102,9 +104,8 @@ const ClubApplicantsList = () => {
                 <TableRow>
                   <CustomTableCell>รูป</CustomTableCell>
                   <CustomTableCell>ชื่อ-นามสกุล</CustomTableCell>
-                  <CustomTableCell>คณะ</CustomTableCell>
-                  <CustomTableCell>สาขา</CustomTableCell>
-                  <CustomTableCell>ชั้นปี</CustomTableCell>
+                  <CustomTableCell>วันที่สมัคร</CustomTableCell>
+                  <CustomTableCell>ตำแหน่ง</CustomTableCell>
                   <CustomTableCell>รายละเอียด</CustomTableCell>
                 </TableRow>
               </TableHead>
@@ -115,30 +116,22 @@ const ClubApplicantsList = () => {
                       Loading...
                     </TableCell>
                   </TableRow>
-                ) : pendingClubs.length === 0 ? (
+                ) : clubApplicants.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={8} align="center" sx={{borderColor:'#fff'}}>
-                      ไม่มีชมรม
+                      ไม่มีผู้สมัคร
                     </TableCell>
                   </TableRow>
                 ) : (
-                  pendingClubs.map((club) => (
+                  clubApplicants.map((club) => (
                     <TableRow key={club.club_id} sx={{'&:hover':{backgroundColor:'#f9f9f9' , cursor:'pointer'}}} 
-                    onClick={()=>navigate(`/clubmanage/${clubId}/ClubApplicantsReqDetail`)}>
+                    onClick={()=>navigate(`/ClubApplicantsReqDetail/${club.id}`)}>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>
-                        <Avatar
-                          src={`${
-                            supabase.storage
-                              .from("club-avatars")
-                              .getPublicUrl(club.club_avatar).data.publicUrl
-                          }`}
-                          alt={club.club_name}
-                        />
+                        <Avatar src="/assets/Maskgroup.png"/>
                       </TableCell>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.club_name}</TableCell>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.club_type}</TableCell>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.member_count || "N/A"}</TableCell>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.founded_date || "N/A"}</TableCell>
+                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.user?.name || "N/A"}</TableCell>
+                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{formatDate(club.created_at) || "N/A"}</TableCell>
+                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.role_apply || "N/A"}</TableCell>
                       <TableCell sx={{borderColor:'#fff'}}>
                         <div className="h-[100%] w-[100%] justify-center flex" >
                         <List className="text-[#FF7E69] "/>

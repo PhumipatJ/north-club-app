@@ -51,13 +51,12 @@ const Clubform = ({ formdata, onClose ,userInfo}) => {
   const handleConfirm = () => {
     if(isFormValid()){
       setConfirmopen(true);
-      setTypeopen('');
+      setTypeopen('registrationConfirm');
     }
     else{
        setConfirmopen(true);
        setTypeopen('error');
        setTexterror("No role Selected");
-       
     }
   };
   const handleSelectRole = (role) =>{

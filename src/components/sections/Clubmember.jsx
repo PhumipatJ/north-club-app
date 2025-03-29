@@ -125,7 +125,7 @@ const Clubmember = () => {
   
   
   //console.log(clubTest);
-  console.log(members);
+  //console.log(members);
 
 
 
