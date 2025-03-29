@@ -111,7 +111,22 @@ const confirmCardConfig = {
       confirmedTitle: "ส่งคำขอเรียบร้อย",
       confirmedDescription: "รอการตอบกลับทางอีเมลได้เลย!",
     },
-      
+    alreadyInClub: {
+      title: "คุณอยู่ชมรมนี้แล้ว",
+      confirmText: "",
+      cancelText: "ตกลง",
+      description: "คุณไม่สามารถสมัครชมรมที่คุณมีรายชื่อยู่แล้วได้",
+      confirmedTitle: "",
+      confirmedDescription: "",
+    },
+    alreadyApplied: {
+      title: "คุณได้สมัครเรียบร้อยแล้ว",
+      confirmText: "",
+      cancelText: "ตกลง",
+      description: "ชมรมสามารถสมัครเข้าชมรม ได้เพียงรอบเดียวเท่านั้น",
+      confirmedTitle: "",
+      confirmedDescription: "",
+    },
   };
   
   export const getConfirmCardConfig = (type) =>
