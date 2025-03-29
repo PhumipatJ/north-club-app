@@ -274,15 +274,12 @@ const Clubpage = ({info}) => {
           setFormopen(true);
         }
         else if(await isJoined() !== null){
-          setOpentype('error');
-          setOpentext('คุณอยู่ชมรมนี้แล้ว');
+          setOpentype('alreadyInClub');
           setConfirm(true);
         }
         else{
-          setOpentype('error');
-          setOpentext('คุณได้สมัครเรียบร้อยแล้ว');
+          setOpentype('alreadyApplied');
           setConfirm(true);
-
         }
       }
     }
