@@ -235,6 +235,19 @@ const ClubManage = ({userinfo}) => {
     fetchClubForm();
   },[clubId,isformpopupOpen]);
 
+  const handleCloseRegistration = async () => {
+    const { error } = await supabase
+      .from("ClubRegisterForm")
+      .update({ form_status: false }) // Set form_status to false
+      .eq("club_id", clubId); // Match by club_id
+  
+    if (error) {
+      console.error("Error updating form_status:", error);
+    } else {
+      window.location.reload(); 
+    }
+  };
+  
   
   
   return (
@@ -307,6 +320,7 @@ const ClubManage = ({userinfo}) => {
                   color: "#1A1A1A",
                   "&:hover": { bgcolor: "#FF7E69",boxShadow:"0px 0px 2px #FF7E6960"},
                 }}
+                onClick={handleCloseRegistration}
               >
                 ปิดรับสมัคร
               </Button>):(<Button

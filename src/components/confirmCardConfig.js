@@ -87,12 +87,12 @@ const confirmCardConfig = {
         confirmedTitle: "",
         confirmedDescription: "",  
     },
-    apply: {
-        title: "ยืนยันการเปิดรับสมัคร!",
-        confirmText: "",
-        cancelText: "ตกลง",
-        description: "",
-        confirmedTitle: "",
+    applyRegistration: {
+        title: "ยืนยันการเปิดรับสมัคร",
+        confirmText: "ตกลง",
+        cancelText: "ยกเลิก",
+        description: "กรุณาตรวจเช็คข้อมูลให้ครบถ้วนก่อนยืนยัน",
+        confirmedTitle: "เปิดรับสมัครเรียบร้อย!",
         confirmedDescription: "",  
     },
     eventApprove: {

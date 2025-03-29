@@ -328,7 +328,7 @@ const ClubFormManage = ({ isOpen, onClose, clubId, prevform }) => {
               <button
                 className="bg-[#7CE9BF] hover:bg-emerald-400 active:bg-emerald-500 px-6 py-2 rounded shadow "
                 type="button"
-                onClick={()=>{setIsConfirmOpen(true);setOpentype("apply")}}
+                onClick={()=>{setIsConfirmOpen(true);setOpentype("applyRegistration");}}
               >
                 เปิดรับสมัครสมาชิก
               </button>

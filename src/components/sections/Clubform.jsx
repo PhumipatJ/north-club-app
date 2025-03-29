@@ -57,7 +57,6 @@ const Clubform = ({ formdata, onClose ,userInfo}) => {
        setConfirmopen(true);
        setTypeopen('error');
        setTexterror("No role Selected");
-       
     }
   };
   const handleSelectRole = (role) =>{
