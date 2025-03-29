@@ -103,6 +103,15 @@ const confirmCardConfig = {
         confirmedTitle: "ส่งคำขอเรียบร้อย",
         confirmedDescription: "รอการตอบกลับทางอีเมลได้เลย!",
       },
+    registrationConfirm: {
+      title: "ยืนยันการสมัคร",
+      confirmText: "ตกลง",
+      cancelText: "ยกเลิก",
+      description: "กรุณาตรวจเช็คข้อมูลให้ครบถ้วนก่อนยืนยัน",
+      confirmedTitle: "ส่งคำขอเรียบร้อย",
+      confirmedDescription: "รอการตอบกลับทางอีเมลได้เลย!",
+    },
+      
   };
   
   export const getConfirmCardConfig = (type) =>
