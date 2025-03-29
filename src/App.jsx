@@ -25,6 +25,9 @@ import ScrollTop from './components/ScrollTop';
 import AdminActivities from './components/sections/AdminActivities';
 import AdminActivitiesRequest from './components/sections/AdminActivitiesRequest';
 import AdminActivityReqDetail from './components/sections/adminActivityReqDetail';
+import ClubApplicantsList from './components/sections/ClubApplicantsList';
+import ClubAllApplicants from './components/sections/ClubAllApplicants';
+import ClubApplicantsReqDetail from './components/sections/ClubApplicantsReqDetail';
 function App() {
   const [userinfo,setinfo] = useState();
   const sendUserinfo = useCallback((info)=>{
@@ -56,6 +59,9 @@ function App() {
           <Route path="/database/adminActivities" element={<Wrapper allowedRoles={['admin']} ><AdminActivities /></Wrapper>} />
           <Route path="/database/adminActivitiesReq" element={<Wrapper allowedRoles={['admin']} ><AdminActivitiesRequest /></Wrapper>} />
           <Route path="/database/ReqDetail/:eventId" element={<Wrapper allowedRoles={['admin']} ><AdminActivityReqDetail /></Wrapper>} />
+          <Route path="/clubmanage/:clubId/ClubApplicantsList" element={<Wrapper allowedRoles={['club']} ><ClubApplicantsList/></Wrapper>} />
+          <Route path="/clubmanage/:clubId/ClubAllApplicants" element={<Wrapper allowedRoles={['club']} ><ClubAllApplicants/></Wrapper>} />
+          <Route path="/clubmanage/:clubId/ClubApplicantsReqDetail" element={<Wrapper allowedRoles={['club']} ><ClubAllApplicants/></Wrapper>} />
         </Routes>
       </Router>
     </>
