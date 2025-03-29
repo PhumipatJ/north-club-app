@@ -30,7 +30,13 @@ const EventList = ({ id, clubName }) => {
     };
   
     const regex = /(youtube\.com|youtu\.be|facebook\.com|twitter\.com|instagram\.com|linkedin\.com|tiktok\.com)/i;
-    const match = url.match(regex);
+    let match = null;
+    try {
+      match = url.match(regex);
+    } catch (error) {
+      console.error("Error matching the URL:", error);
+      return "Error processing URL"; // Return fallback value if error occurs
+    }
   
     if (match) {
       // Loop through the platforms and check for a match

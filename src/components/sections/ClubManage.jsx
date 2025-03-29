@@ -36,6 +36,16 @@ const ClubManage = ({userinfo}) => {
 
   const [clubName, setClubName] = useState("");
 
+  const isEventExpired = (endDate, endTime) => {
+    const [day, month, year] = endDate.split("/").map(Number);
+    const [hours, minutes] = endTime.split(":").map(Number);
+    
+    const eventEndDateTime = new Date(year, month - 1, day, hours, minutes); // Convert to Date object
+    const now = new Date(); 
+    
+    return now > eventEndDateTime; 
+  };
+
   useEffect(()=>{
     setonLoad(true);
     //console.log(userinfo)
@@ -178,6 +188,7 @@ const ClubManage = ({userinfo}) => {
     fetchClubForm();
   },[clubId,isformpopupOpen]);
 
+  
   
   return (
     <div className="bg-gray-50">
