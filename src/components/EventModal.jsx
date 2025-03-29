@@ -130,8 +130,13 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
   const isFormValid = () => {
     const errors = [];
     if (eventText === "กิจกรรม") {
-      if (!eventTitle.trim()) errors.push("Event title is required.");
+      if (!eventTitle.trim()) {
+        setOpentype("errorEmpty")
+        errors.push("Event title is required.");
+      }
+        
       if (!selectedDate) {
+        setOpentype("errorEmpty")
         errors.push("Selected date is required.");
       } else {
         const selectedDateObj = new Date(selectedDate); // Convert string to Date
@@ -147,23 +152,55 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
         }
       }
 
-      if (!startTime || !endTime)
-        errors.push("Start time and end time are required.");
-      if (!location.trim()) errors.push("Location is required.");
-      if (!eventDescription.trim())
+      if (!startTime || !endTime) {
+          errors.push("Start time and end time are required.");
+      }
+        
+      if(!location.trim()) {
+        setOpentype("errorEmpty")
+      }else {
+        if (statusText === "Online") {
+          const urlPattern = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}.*$/;
+          if (!urlPattern.test(location.trim())) {
+            setOpentype("errorURL");
+            errors.push("Location must be a valid URL for Online status.");
+          }
+        } else if (statusText === "Offline") {
+          setOpentype("errorEmpty");
+          errors.push("Location is required for Offline status.");
+        }
+      }
+      
+      if (!eventDescription.trim()) {
         errors.push("eventDescription is required.");
+      }
+        
     }
 
     if (eventText === "ประกาศ") {
-      if (!announcementTitle) errors.push("announcementTitle is required.");
-      if (!announcementDescription)
+      if (!announcementTitle) {
+        setOpentype("errorEmpty")
+        errors.push("announcementTitle is required.");
+      }
+                 
+      if (!announcementDescription) {
         errors.push("announcementDescription is required.");
+        setOpentype("errorEmpty")
+      }
+        
     }
 
     //console.log(clubPoster)
     //console.log(applicationDocument)
-    if (!clubPoster) errors.push("clubPoster is required.");
-    if (!applicationDocument) errors.push("applicationDocument is required.");
+    if (!clubPoster) {
+      setOpentype("errorUpload")
+      errors.push("clubPoster is required.");
+    }
+      
+    if (!applicationDocument) {
+      setOpentype("errorEmpty")
+      errors.push("applicationDocument is required.");
+    }
 
     if (errors.length > 0) {
       console.log("Form validation failed:", errors);
@@ -175,7 +212,7 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
 
   const handleConfirmEvent = async () => {
     if (!isFormValid()) {
-      setOpentype("error")
+      setIsConfirmOpen(true)
       return;
     }
     const posterUrl = await uploadFile(clubPoster, "club-avatars");
@@ -230,7 +267,7 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
       }
     }
 
-    alert("Club created successfully");
+    window.location.reload();
 
     /*
 
