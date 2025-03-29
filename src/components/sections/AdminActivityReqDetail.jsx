@@ -28,6 +28,7 @@ const AdminActivityReqDetail = () => {
   const navigate = useNavigate(0);
   const supabase = supabaseService.getClient();
 
+  
   useEffect(() => {
     const fetchingEvent = async()=>{
         const {data,error} = await supabase

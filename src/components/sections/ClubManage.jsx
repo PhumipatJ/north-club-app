@@ -248,8 +248,6 @@ const ClubManage = ({userinfo}) => {
     }
   };
   
-  
-  
   return (
     <div className="bg-gray-50">
       {onLoading?(

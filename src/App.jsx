@@ -24,7 +24,7 @@ import AdminUserPreview from './components/sections/AdminUserPreview';
 import ScrollTop from './components/ScrollTop';
 import AdminActivities from './components/sections/AdminActivities';
 import AdminActivitiesRequest from './components/sections/AdminActivitiesRequest';
-import AdminActivityReqDetail from './components/sections/adminActivityReqDetail';
+import AdminActivityReqDetail from './components/sections/AdminActivityReqDetail';
 import ClubApplicantsList from './components/sections/ClubApplicantsList';
 import ClubAllApplicants from './components/sections/ClubAllApplicants';
 import ClubApplicantsReqDetail from './components/sections/ClubApplicantsReqDetail';

@@ -1,4 +1,4 @@
-import { useState, useEffect ,} from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   Button,
@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import supabaseService from "../../service/supabaseService";
 import theme from "../Theme";
 import { styled } from "@mui/system";
-import { useLocation } from "react-router-dom";
+import { useLocation ,useParams} from "react-router-dom";
 import { List } from "lucide-react";
 import Loading from "../loading";
 import ClubApplicantsBox from "./ClubApplicantBox";
@@ -27,7 +27,7 @@ const ClubAllApplicants = () => {
   const navigate = useNavigate();
   const supabase = supabaseService.getClient();
   const location = useLocation();
-  const clubId = location.state?.clubId;
+  const { clubId } = useParams();
 
   useEffect(() => {
     const fetchPendingClubs = async () => {

@@ -92,10 +92,72 @@ const ClubFormManage = ({ isOpen, onClose, clubId, prevform }) => {
 
     return true;
   };
+  
+  const handleConfirm = async () => {
+    if (!isFormValid()) return;
+  
+    try {
+      // Convert string to Date object
+      const selectedDateObj = new Date(selectedDate);
+      
+      if (isNaN(selectedDateObj.getTime())) {
+        console.error("Invalid date format:", selectedDate);
+        return;
+      }
+  
+      // Format date to "YYYY-MM-DD HH:MM:SS"
+      const formattedDate = `${selectedDateObj.toISOString().split("T")[0]} ${endTime}:00`;
+  
+      const PosterUrl = await uploadFile(clubPoster, "club-avatars");
+  
+      if (prevform === null) {
+        // Insert new form
+        const { data, error } = await supabase
+          .from("ClubRegisterForm")
+          .insert([
+            {
+              club_id: clubId,
+              form_title: Title,
+              form_discrip: Description,
+              form_status: true,
+              role_available: Role,
+              Pic: PosterUrl,
+              date_close: formattedDate, // Correct timestamp format
+            },
+          ]);
+  
+        if (error) throw error;
+      } else {
+        // Update existing form
+        const { data, error } = await supabase
+          .from("ClubRegisterForm")
+          .update({
+            form_title: Title,
+            form_discrip: Description,
+            form_status: true,
+            role_available: Role,
+            Pic: PosterUrl,
+            date_close: formattedDate, // Correct timestamp format
+          })
+          .eq("club_id", clubId);
+  
+        if (error) throw error;
+      }
+  
+      console.log("Form saved successfully!");
+    } catch (error) {
+      console.error("Error saving form:", error);
+    }
+  };
+  
+
+  
+  /*
   const handleConfirm = async () => {
     if (!isFormValid()) {
       return;
     }
+
     if (prevform === null) {
       const formattedDate =
         selectedDate.toLocaleDateString("en-GB", {
@@ -122,14 +184,17 @@ const ClubFormManage = ({ isOpen, onClose, clubId, prevform }) => {
         console.log(error);
         return;
       }
-    } else {
+    } 
+    else {
       const formattedDate =
         selectedDate.toLocaleDateString("en-GB", {
           day: "2-digit",
           month: "2-digit",
           year: "numeric",
         }) + " "+ endTime;
-        const PosterUrl = await uploadFile(clubPoster, "club-avatars");
+
+      const PosterUrl = await uploadFile(clubPoster, "club-avatars");
+
       const { data: data, error: error } = await supabase
         .from("ClubRegisterForm")
         .update({
@@ -147,6 +212,7 @@ const ClubFormManage = ({ isOpen, onClose, clubId, prevform }) => {
       }
     }
   };
+  */
 
   const handelonclose = () => {
     onClose();
