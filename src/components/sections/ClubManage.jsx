@@ -291,7 +291,7 @@ const ClubManage = ({userinfo}) => {
               {prevForm?.form_status?(<p className="text-[#7CE9BF] flex gap-2"><BellRing style={{}}/>กำลังเปิดรับสมัคร</p>):(<></>)}
             </div>
               <ThemeProvider theme={theme}>
-                <div className="bg-red-200">
+                <div className="">
                 {prevForm?.form_status?(<Button
                 variant="contained"
                 color="primary"
@@ -323,6 +323,25 @@ const ClubManage = ({userinfo}) => {
               </Button>)}
                 </div>
               </ThemeProvider>
+              <div className="mt-2 text-left">
+                <ThemeProvider theme={theme}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{
+                      boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                      mr: 0,
+                      paddingX: "2vw",
+                      bgcolor: "white",
+                      color: "#1A1A1A",
+                      "&:hover": { bgcolor: "#7CE9BF",boxShadow:"0px 0px 2px #7CE9BF60"},
+                    }}
+                    onClick={() => navigate(`/clubmanage/${clubId}/ClubApplicantsList`, { state: { clubId } })}
+                  >
+                    จัดการรายชื่อผู้สมัคร
+                  </Button>
+                </ThemeProvider>
+              </div>
             </div>
           </div>
         </div>
