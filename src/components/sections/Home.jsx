@@ -35,9 +35,9 @@ const Home = () => {
             'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
           },
           body: JSON.stringify({
-            to: 'recipient@example.com',
+            to: 'shotapoi1412@gmail.com',
             subject: 'ทดสอบส่งอีเมลผ่าน Gmail API',
-            body: '<h1>ทดสอบ</h1><p>นี่คือการทดสอบส่งอีเมลผ่าน Gmail API จาก Supabase Edge Function</p>'
+            html: '<h1>ทดสอบ</h1><p>นี่คือการทดสอบส่งอีเมลผ่าน Gmail API จาก Supabase Edge Function</p>'
           })
         });
         
@@ -61,9 +61,9 @@ const Home = () => {
                 </div>
                 
                 {/* Illustration */}
-                <div className="relative flex justify-center items-center w-64 h-64 md:w-96 md:h-96 my-8 md:my-0 pr-8">
+                <div className="relative flex justify-center items-end w-64 h-64 md:w-120 md:h-96 pb-5">
                     <div className="absolute w-60 h-60 md:w-84 md:h-84 bg-[#FF7E69] rounded-full"></div>
-                    <img src="/assets/Group.svg" alt="Illustration" className="relative w-64 md:w-96 h-auto" />
+                    <img src="/assets/Group.svg" alt="Illustration" className="relative w-64 md:w-[140%] -mb-7" />
                 </div>
                 
                 {/* Right Section */}
