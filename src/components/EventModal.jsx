@@ -131,9 +131,11 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
     const errors = [];
     setOpentype("error")
     if (eventText === "กิจกรรม") {
-      if (!eventTitle.trim()) 
+      if (!eventTitle.trim()) {
         setOpentype("errorEmpty")
         errors.push("Event title is required.");
+      }
+        
       if (!selectedDate) {
         setOpentype("errorEmpty")
         errors.push("Selected date is required.");
@@ -151,8 +153,10 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
         }
       }
 
-      if (!startTime || !endTime)
-        errors.push("Start time and end time are required.");
+      if (!startTime || !endTime) {
+          errors.push("Start time and end time are required.");
+      }
+        
       if(!location.trim()) {
         setOpentype("errorEmpty")
       }else {
@@ -168,28 +172,37 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
         }
       }
       
-      if (!eventDescription.trim())
+      if (!eventDescription.trim()) {
         errors.push("eventDescription is required.");
+      }
+        
     }
 
     if (eventText === "ประกาศ") {
-      if (!announcementTitle) 
+      if (!announcementTitle) {
         setOpentype("errorEmpty")
         errors.push("announcementTitle is required.");
-         
-      if (!announcementDescription)
+      }
+                 
+      if (!announcementDescription) {
         errors.push("announcementDescription is required.");
         setOpentype("errorEmpty")
+      }
+        
     }
 
     //console.log(clubPoster)
     //console.log(applicationDocument)
-    if (!clubPoster) 
+    if (!clubPoster) {
       setOpentype("errorUpload")
       errors.push("clubPoster is required.");
-    if (!applicationDocument)
+    }
+      
+    if (!applicationDocument) {
       setOpentype("errorEmpty")
       errors.push("applicationDocument is required.");
+    }
+      
 
     if (errors.length > 0) {
       console.log("Form validation failed:", errors);
