@@ -37,7 +37,7 @@ const EventList = ({ id, clubName }) => {
     try {
       match = url.match(regex);
     } catch (error) {
-      console.error("Error matching the URL:", error);
+      //console.error("Error matching the URL:", error);
       return "Error processing URL"; // Return fallback value if error occurs
     }
   
