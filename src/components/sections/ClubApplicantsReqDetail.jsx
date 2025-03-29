@@ -17,9 +17,9 @@ import { FaSquareInstagram } from "react-icons/fa6";
 import { CiMail } from "react-icons/ci";
 import {MapPin,Calendar,File} from "lucide-react";
 import ConfirmCard from "../confirmCard";
+
 const ClubApplicantsReqDetail = () => {
-  const match = useMatch('/database/ReqDetail/*')
-  const { eventId } = useParams();
+  const { applicantId } = useParams();
   const [eventDetail, setEventDetail] = useState([]);
   const [loading, setLoading] = useState(true);
   const [rejectReason,setReason] = useState('');
@@ -28,36 +28,10 @@ const ClubApplicantsReqDetail = () => {
   const navigate = useNavigate(0);
   const supabase = supabaseService.getClient();
 
-  useEffect(() => {
-    const fetchingEvent = async()=>{
-        const {data,error} = await supabase
-        .from("event")
-        .select("*, clubs!inner(club_name,club_id,facebook,instagram,mail)")
-        .eq("id",eventId)
-        .single()
-        if(error){
-            console.log(error);
-            return;
-        }
-        else{
-            setEventDetail(data)
-            setdoc(
-              supabase.storage
-              .from('club-documents')
-              .getPublicUrl("/"+data?.document).data.publicUrl
-            )
-            setTimeout(() => {
-                setLoading(false);
-              }, 500);
-        }
-
-    }
-      
-    fetchingEvent();
-  }, []);
   const handlelink =(link)=>{
     window.open(link,"_blank");
   }
+
   const handleApprove = async () =>{
     const { error: updateError } = await supabase
     .from("event")
@@ -68,6 +42,7 @@ const ClubApplicantsReqDetail = () => {
     console.error(`Failed to update role for ${email}:`, updateError);
   }
   }
+  
   if(loading){
     return <Loading/>
   }
@@ -243,7 +218,7 @@ const ClubApplicantsReqDetail = () => {
                     }}
                     onClick={() => handleReject()}
                   >
-                    UAI
+                    ปฏิเสธ
                   </Button>
                 )}
                 <Button
@@ -262,7 +237,7 @@ const ClubApplicantsReqDetail = () => {
                   }}
                   onClick={() => setopen(true)}
                 >
-                  UIA
+                  อนุมัติ
                 </Button>
             </div>
               </ThemeProvider>
