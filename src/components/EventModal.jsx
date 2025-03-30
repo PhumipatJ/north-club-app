@@ -158,8 +158,8 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
           errors.push("Start time and end time are required.");
       } 
       
-      console.log(startTime);
-      console.log(endTime);
+      //console.log(startTime);
+      //console.log(endTime);
       if (startTime >= endTime) {
         setOpentype("errorStartTime");
         errors.push("Start time must be earlier than end time.");
@@ -174,10 +174,7 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
             setOpentype("errorURL");
             errors.push("Location must be a valid URL for Online status.");
           }
-        } else if (statusText === "Offline") {
-          setOpentype("errorEmpty");
-          errors.push("Location is required for Offline status.");
-        }
+        } 
       }
       
       if (!eventDescription.trim()) {
