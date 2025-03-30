@@ -20,6 +20,7 @@ const Clubform = ({ formdata, onClose ,userInfo}) => {
   const [texterror,setTexterror] = useState('');
   //confirmcard
   const handleclose = () => {
+    console.log("hi")
     setRoleSelected('');
     setDescript('');
     setfolioURL('');

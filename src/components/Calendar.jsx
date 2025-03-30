@@ -27,13 +27,13 @@ const Calendar = () => {
   //console.log(selectedYear);
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-md p-4 scale-80">
+    <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-md p-4 scale-80 ">
       <div className="flex justify-between items-center mb-4">
-        <ChevronLeft onClick={() => handleMonthChange(-1)} className="text-lg font-bold" />
+        <ChevronLeft onClick={() => handleMonthChange(-1)} className="text-lg font-bold cursor-pointer" />
         <h2 className="text-xl font-semibold text-center text-gray-900">
           {currentDate.format("MMMM YYYY")}
         </h2>
-        <ChevronRight onClick={() => handleMonthChange(1)} className="text-lg font-bold"/>
+        <ChevronRight onClick={() => handleMonthChange(1)} className="text-lg font-bold cursor-pointer"/>
       </div>
       <p className="text-center text-sm text-gray-400">Today: {today.format("DD MMMM YYYY")}</p>
       <div className="grid grid-cols-7 gap-2 mt-4 text-center text-gray-600">
@@ -41,7 +41,7 @@ const Calendar = () => {
           <div key={day} className="font-semibold">{day}</div>
         ))}
         {[...Array(startDay)].map((_, i) => (
-          <div key={"prev-" + i} className="text-gray-400 pt-2">
+          <div key={"prev-" + i} className="text-gray-400 pt-2 select-none">
             {prevMonthDays - startDay + i + 1}
           </div>
         ))}
@@ -49,7 +49,7 @@ const Calendar = () => {
           <button
             key={day}
             onClick={() => setSelectedDate(day)}
-            className={`w-10 h-10 flex items-center justify-center rounded-md transition ${
+            className={`w-10 h-10 flex items-center justify-center rounded-md cursor-pointer transition ${
               selectedDate === day  ? "bg-[#FF7E69] text-white" : "hover:bg-gray-200"
             } ${today.isSame(currentDate, "month") && today.date() === day ? "border-2 border-[#7CE9BF]" : ""}`}
           >
@@ -57,7 +57,7 @@ const Calendar = () => {
           </button>
         ))}
         {[...Array(nextMonthDays)].map((_, i) => (
-          <div key={"next-" + i} className="text-gray-400 pr-2 pt-2">{i + 1}</div>
+          <div key={"next-" + i} className="text-gray-400 pr-2 pt-2 select-none">{i + 1}</div>
         ))}
       </div>
     </div>

@@ -19,7 +19,6 @@ const ConfirmCard = ({ isOpen, onClose, type, onConfirm, text, onSecondConfirm }
       onConfirm && onConfirm();
     }
   };
-
   if (!isOpen) return null; // Don't render if not open
 
   return (
@@ -36,7 +35,7 @@ const ConfirmCard = ({ isOpen, onClose, type, onConfirm, text, onSecondConfirm }
               <p className="text-gray-600">{config.confirmedDescription}</p>
               <button
                 className="mt-4 bg-[#FF7E69] hover:bg-[#FF5135] text-white px-6 py-2 rounded-md"
-                onClick={onSecondConfirm || onClose}
+                onClick={onSecondConfirm}
               >
                 ตกลง
               </button>
