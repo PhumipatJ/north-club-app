@@ -79,7 +79,8 @@ const ClubManage = ({userinfo}) => {
             upcomingEvents.push(event);
           }
         });
-  
+        
+        try {
         // Sort non-expired events by start_date and then start_time
         upcomingEvents.sort((a, b) => {
           const [aDay, aMonth, aYear] = a.start_date.split("/").map(Number);
@@ -92,7 +93,8 @@ const ClubManage = ({userinfo}) => {
           }
           return 0;
         });
-  
+        
+        
         // Sort expired events by end_date and then end_time
         expiredEvents.sort((a, b) => {
           const [aDay, aMonth, aYear] = a.end_date.split("/").map(Number);
@@ -102,6 +104,9 @@ const ClubManage = ({userinfo}) => {
   
           return aEnd - bEnd; // Sort by end_date and end_time
         });
+        } catch (error) {
+          //console.error("Error sorting expiredEvents:", error);
+        }
   
         //console.log(upcomingEvents);
         //console.log(expiredEvents);
