@@ -1,4 +1,4 @@
-import { Mail, User, SquarePen } from "lucide-react";
+import { Mail, ChevronUp, ChevronDown } from "lucide-react";
 import { useState, useEffect} from "react";
 import {
   Container,
@@ -9,17 +9,12 @@ import {
 import { useNavigate ,useParams} from "react-router-dom";
 import supabaseService from "../../service/supabaseService";
 import theme from "../Theme";
-import { styled } from "@mui/system";
 import { useLocation } from "react-router-dom";
 import Loading from "../loading";
 import ClubApplicantsBox from "./ClubApplicantBox";
-import { FaFacebook } from "react-icons/fa";
-import { FaSquareInstagram } from "react-icons/fa6";
-import { CiMail } from "react-icons/ci";
-import {MapPin,Calendar,File} from "lucide-react";
 import ConfirmCard from "../confirmCard";
 
-const ClubAllMembersDetail = () => {
+const ClubAllMembersDetail = ({info}) => {
   const { clubId } = useParams();
   const location = useLocation();
   const email = location.state?.email;
@@ -31,6 +26,46 @@ const ClubAllMembersDetail = () => {
   const supabase = supabaseService.getClient();
   const [clubApplicant, setClubApplicant] = useState([]);
 
+  const [userClubPosition, setUserClubPosition] = useState("");
+
+  const positionOrder = [
+    "ประธานชมรม", 
+    "รองประธานชมรม", 
+    "กรรมการ", 
+    "เลขานุการ", 
+    "ผู้ช่วยเลขานุการ", 
+    "สมาชิกชมรม"
+  ];
+  const [isDropdownOpen, setShowDropdown] = useState(false);
+  const [roleSelected,setRoleSelected] = useState('');
+
+  
+  const handleSelectRole = (role) =>{
+    setRoleSelected(role);
+    setShowDropdown(false);
+  }
+
+    useEffect(() => {
+        const getClubPosition = async () => {
+            const { data, error } = await supabase
+                .from("clubMembers")
+                .select("position")
+                .eq("email", info.email)
+                .eq("club_id", clubId)
+                .single();
+
+            if (error) {
+                console.error("Error fetching club position:", error);
+            } else {
+                //console.log(data.position);
+                setUserClubPosition(data.position);
+            }
+        };
+
+        getClubPosition();
+    }, [email, clubId]); // Re-run when email or clubId changes
+
+
   useEffect(() => {
     const fetchApplicantUser = async () => {
         const { data, error } = await supabase
@@ -41,7 +76,7 @@ const ClubAllMembersDetail = () => {
       if (error) {
         console.error("Error fetching clubs:", error);
       } else {
-        console.log(data)
+        //console.log(data)
         setClubApplicant(data);
       }
       setLoading(false);
@@ -112,29 +147,124 @@ const ClubAllMembersDetail = () => {
                 </div>
               </div>
 
-              <div className="flex flex-row justify-between w-full mt-6">
+            <div className="flex flex-row justify-between w-full mt-6">
                 {/* ข้อมูลส่วนตัว */}
                 <div className="flex flex-col w-full">
-                  <h3 className="text-lg font-semibold mb-2">ข้อมูลส่วนตัว</h3>
-                  
-                  <div className="flex flex-row p-4 gap-8 rounded-lg">
-                    <div className="flex flex-col">
-                      <p className="mb-6"><strong>ชื่อ : </strong>{clubApplicant[0]?.user.gender === "M" ? "นาย" : "นาง"} {clubApplicant[0]?.user.name}</p>
-                      <p className="mb-6"><strong>คณะ : </strong>{clubApplicant[0]?.user.faculty}</p>
-                    </div>
-                    <div className="flex flex-col justify-end">
-                      <p className="mb-6"><strong>ชั้นปี : </strong>{new Date().getFullYear() + 543 - clubApplicant[0]?.user.admission_year}</p>
-                      <p className="mb-6"><strong>สาขา : </strong>{clubApplicant[0]?.user.department}</p>
-                    </div>
-                    <div className="flex flex-col justify-end">
-                      <p className="mb-6"><strong>ตำแหน่ง : </strong>{clubApplicant[0].position}</p>
-                      <p className="mb-6"><strong>หน้าที่ในชมรม : </strong>{clubApplicant[0].clubPosition || "ผู้ดูแลชมรม"}</p>
-                    </div>
-                  </div>
-                </div>
-   
+                    <h3 className="text-lg font-semibold mb-2">ข้อมูลส่วนตัว</h3>
 
-              </div>
+                    <div className="flex flex-row p-4 gap-8 rounded-lg">
+                    <div className="flex flex-col">
+                        <p className="mb-6 mt-3">
+                        <strong>ชื่อ : </strong>
+                        {clubApplicant[0]?.user.gender === "M" ? "นาย" : "นาง"} {clubApplicant[0]?.user.name}
+                        </p>
+                        <p className="mb-6"> <strong>ชั้นปี : </strong> 
+                        {new Date().getFullYear() + 543 - clubApplicant[0]?.user.admission_year}
+                        </p>
+                        <p className="mb-6"><strong>คณะ : </strong>
+                        {clubApplicant[0]?.user.faculty}
+                        </p>
+                        <p className="mb-6"><strong>สาขา : </strong>
+                        {clubApplicant[0]?.user.department}
+                        </p>
+                    </div>
+
+
+                    <div className="flex flex-col">
+                        {/* ตำแหน่ง dropdown */}
+                        <div className="flex items-center mb-6">
+                            <p className="mr-4"><strong>ตำแหน่ง :</strong></p>
+                            <div className="relative">
+                                <button
+                                type="button"
+                                onClick={() => setShowDropdown(!isDropdownOpen)}
+                                className="cursor-pointer border border-[#FF7E69] rounded-md w-50 p-2 text-left bg-white"
+                                >
+                                <div className="flex flex-row items-center justify-between">
+                                    <div>{roleSelected || clubApplicant[0].position}</div>
+                                    <div className="text-[#FF7E69]">
+                                    {isDropdownOpen ? (
+                                        <ChevronUp size={20} />
+                                    ) : (
+                                        <ChevronDown size={20} />
+                                    )}
+                                    </div>
+                                </div>
+                                </button>
+                                {isDropdownOpen && (
+                                <ul className="absolute w-50 mt-1 rounded-md bg-white shadow-md z-10">
+                                    {positionOrder.map((type, index) => (
+                                    <li
+                                        key={index}
+                                        onClick={() => {
+                                        handleSelectRole(type);
+                                        }}
+                                        className="p-2 cursor-pointer hover:bg-[#FF7E69] hover:rounded-md"
+                                    >
+                                        {type}
+                                    </li>
+                                    ))}
+                                </ul>
+                                )}
+                            </div>
+
+                            <div className="relative ml-10">
+                                {roleSelected==='' || roleSelected === clubApplicant[0].position ?(<Button
+                                    variant="outlined"
+                                    color="error"
+                                    sx={{
+                                        boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                        mr: 2,
+                                        paddingX: "3vw",
+                                        bgcolor: "white",
+                                        color: "#1A1A1A7D",
+                                        borderWidth:'2px',
+                                        borderColor:'white',
+                                        "&:hover": {
+                                        boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                        cursor: "no-drop",
+                                        },
+                                    }}
+                                    >
+                                    เปลี่ยนตำแหน่ง
+                                    </Button>):(
+                                        <Button
+                                        variant="outlined"
+                                        color="error"
+                                        sx={{
+                                        boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                        mr: 2,
+                                        paddingX: "3vw",
+                                        bgcolor:"#FF7E69",
+                                            color:'white',
+                                        borderColor:'#FF7E69',
+                                        borderWidth:'2px',
+                                        "&:hover": {
+                                            boxShadow: "0px 0px 5px 1px #FF7E697D",
+                                            
+                                        },
+                                        }}
+                                        onClick={() => {
+                                            console.log(roleSelected);
+                                            console.log(userClubPosition.position);
+                                        }}
+                                    >
+                                        เปลี่ยนตำแหน่ง
+                                    </Button>
+                                    )}
+                            </div>
+
+                        </div>
+
+                        <p className="mb-6">
+                        <strong>หน้าที่ในชมรม : </strong>
+                        {clubApplicant[0].clubPosition || "ผู้ดูแลชมรม"}
+                        </p>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
              
        
               {/* Reply */}
@@ -185,8 +315,7 @@ const ClubAllMembersDetail = () => {
                               },
                             }}
                             onClick={() => {
-                              setOpentype("reject");
-                              setopen(true);
+                              
                             }}
                           >
                             ยุติการเป็นสมาชิกชมรม
