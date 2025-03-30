@@ -40,7 +40,7 @@ const ClubApplicantsList = () => {
       if (error) {
         console.error("Error fetching clubs:", error);
       } else {
-        //console.log(data)
+        //console.log(clubId)
         const sortedData = data.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
         setClubApplicants(sortedData);
       }
@@ -131,6 +131,7 @@ const ClubApplicantsList = () => {
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>
                         <Avatar src="/assets/Maskgroup.png"/>
                       </TableCell>
+
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.user?.name || "N/A"}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.user?.email || "N/A"}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{formatDate(club.created_at) || "N/A"}</TableCell>

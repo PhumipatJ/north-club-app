@@ -28,6 +28,7 @@ import AdminActivityReqDetail from './components/sections/AdminActivityReqDetail
 import ClubApplicantsList from './components/sections/ClubApplicantsList';
 import ClubAllApplicants from './components/sections/ClubAllApplicants';
 import ClubApplicantsReqDetail from './components/sections/ClubApplicantsReqDetail';
+import ClubAllMembersDetail from './components/sections/ClubAllMembersDetail';
 function App() {
   const [userinfo,setinfo] = useState();
   const sendUserinfo = useCallback((info)=>{
@@ -63,6 +64,7 @@ function App() {
           <Route path="/clubmanage/:clubId/ClubAllApplicants" element={<Wrapper allowedRoles={['club']} ><ClubAllApplicants/></Wrapper>} />
           <Route path="/ClubApplicantsReqDetail/:clubId" element={<Wrapper allowedRoles={['club']} ><ClubApplicantsReqDetail/></Wrapper>} />
           <Route path="/database/adminActivities/:eventId" element={<Wrapper allowedRoles={['admin']} ><ActivityDetail /></Wrapper>} />
+          <Route path="/ClubAllMembersDetail/:clubId" element={<Wrapper allowedRoles={['club']} ><ClubAllMembersDetail /></Wrapper>} />
         </Routes>
       </Router>
     </>

@@ -55,7 +55,7 @@ const ClubAllApplicants = () => {
           return positionOrder.indexOf(a.position) - positionOrder.indexOf(b.position);
         });
   
-        console.log(sortedData);
+        //console.log(sortedData);
         setClubMembers(sortedData);
       }
       setTimeout(() => {
@@ -150,7 +150,7 @@ const ClubAllApplicants = () => {
                 ) : (
                   clubMembers.map((club) => (
                     <TableRow key={club.club_id} sx={{'&:hover':{backgroundColor:'#f9f9f9' , cursor:'pointer'}}} 
-                    onClick={()=>navigate(`/clubs/${club.club_id}`)}>
+                    onClick={() => navigate(`/ClubAllMembersDetail/${clubId}`, { state: { email: club.user?.email } })}>
                       <TableCell sx={{ textAlign: 'center', borderColor: '#fff' }}>
                         {club.position !== "สมาชิกชมรม" ? (
                           <UserCog className="text-[#FF7E69]" />
@@ -158,6 +158,7 @@ const ClubAllApplicants = () => {
                           <User className="text-[#7CE9BF]" />
                         )}
                       </TableCell>
+
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.user?.name}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.user?.email}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{formatDate(club.created_at)}</TableCell>
