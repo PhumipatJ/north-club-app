@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import {User,UserCog} from "lucide-react";
 import {
   Container,
   Button,
@@ -89,6 +90,14 @@ const ClubAllApplicants = () => {
         <div className="flex max-w-6xl w-full">
           <div className=" w-full h-fit flex">
             <h1 className="text-4xl font-bold my-auto ">จัดการสมาชิกชมรม</h1>
+            <div className="my-auto flex ml-auto w-fit gap-5">
+              <div className="flex items-center mr-5">
+                <User className="text-[#7CE9BF]"/>&nbsp;นักศึกษา
+              </div>
+              <div className="flex items-center ">
+                <UserCog className="text-[#FF7E69]"/>&nbsp;ผู้ดูแลชมรม
+              </div>
+            </div>
           </div>
         </div>
         
@@ -117,7 +126,7 @@ const ClubAllApplicants = () => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  <CustomTableCell>รูป</CustomTableCell>
+                  <CustomTableCell></CustomTableCell>
                   <CustomTableCell>ชื่อ-นามสกุล</CustomTableCell>
                   <CustomTableCell>Email</CustomTableCell>
                   <CustomTableCell>วันที่เข้าชมรม</CustomTableCell>
@@ -142,8 +151,12 @@ const ClubAllApplicants = () => {
                   clubMembers.map((club) => (
                     <TableRow key={club.club_id} sx={{'&:hover':{backgroundColor:'#f9f9f9' , cursor:'pointer'}}} 
                     onClick={()=>navigate(`/clubs/${club.club_id}`)}>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>
-                        <Avatar src="/assets/Maskgroup.png"/>
+                      <TableCell sx={{ textAlign: 'center', borderColor: '#fff' }}>
+                        {club.position !== "สมาชิกชมรม" ? (
+                          <UserCog className="text-[#FF7E69]" />
+                        ) : (
+                          <User className="text-[#7CE9BF]" />
+                        )}
                       </TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.user?.name}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.user?.email}</TableCell>
