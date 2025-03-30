@@ -135,6 +135,22 @@ const confirmCardConfig = {
       confirmedTitle: "",
       confirmedDescription: "",
     },
+    approve: {
+      title: "อนุมัติ",
+      confirmText: "ตกลง",
+      cancelText: "ยกเลิก",
+      description: "",
+      confirmedTitle: "อนุมัติเรียบร้อย",
+      confirmedDescription: "",
+    },
+    reject: {
+      title: "ปฏิเสธ",
+      confirmText: "ตกลง",
+      cancelText: "ยกเลิก",
+      description: "",
+      confirmedTitle: "ปฏิเสธเรียบร้อย",
+      confirmedDescription: "",
+    },
   };
   
   export const getConfirmCardConfig = (type) =>
