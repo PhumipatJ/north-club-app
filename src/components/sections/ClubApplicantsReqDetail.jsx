@@ -26,6 +26,7 @@ const ClubApplicantsReqDetail = () => {
   const [loading, setLoading] = useState(true);
   const [rejectReason,setReason] = useState('');
   const [isConfirmOpen,setopen] = useState(false);
+  const [Opentype, setOpentype] = useState(''); // Tracks the action to confirm
   const navigate = useNavigate(0);
   const supabase = supabaseService.getClient();
   const [clubApplicant, setClubApplicant] = useState([]);
@@ -120,13 +121,29 @@ const ClubApplicantsReqDetail = () => {
   
       console.log("Applicant role updated to 'club':", updateData);
   
-      // Navigate back to the previous page after the approval process
-      navigate(-1);  // Goes back one page in the history stack
+      navigate(-1);  
   
     } catch (err) {
       console.error("Error during approve process:", err);
     }
   };
+
+  const handleConfirm = () => {
+    setopen(true);
+  };
+
+  const handleSecondConfirm = () => {
+    if (Opentype === "approve") {
+      handleApprove();
+    } else if (Opentype === "reject") {
+      handleReject();
+    }
+  
+  };
+
+  const handleclose = () => {
+    
+  }
 
   const formatDate = (dateString) => {
     const monthsInThai = [
@@ -298,7 +315,10 @@ const ClubApplicantsReqDetail = () => {
                                 
                               },
                             }}
-                            onClick={() => handleReject()}
+                            onClick={() => {
+                              setOpentype("reject");
+                              setopen(true);
+                            }}
                           >
                             ปฏิเสธ
                           </Button>
@@ -317,7 +337,10 @@ const ClubApplicantsReqDetail = () => {
                               boxShadow: "0px 0px 5px 0.1px #7CE9BF",
                             },
                           }}
-                          onClick={() => handleApprove()}
+                          onClick={() => {
+                            setOpentype("approve");
+                            setopen(true);
+                          }}
                         >
                           อนุมัติ
                         </Button>
@@ -330,6 +353,15 @@ const ClubApplicantsReqDetail = () => {
           </div>
       </div>
     </Container>
+    {isConfirmOpen && (
+      <ConfirmCard
+        isOpen={isConfirmOpen}
+        onClose={() => setopen(false)}
+        onConfirm={handleConfirm}
+        type={Opentype} 
+        onSecondConfirm={handleSecondConfirm}
+      />
+    )}
   </ThemeProvider>
   );
 };
