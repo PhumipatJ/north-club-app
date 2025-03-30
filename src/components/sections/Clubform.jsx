@@ -20,6 +20,7 @@ const Clubform = ({ formdata, onClose ,userInfo}) => {
   const [texterror,setTexterror] = useState('');
   //confirmcard
   const handleclose = () => {
+    console.log("hi")
     setRoleSelected('');
     setDescript('');
     setfolioURL('');
@@ -66,7 +67,7 @@ const Clubform = ({ formdata, onClose ,userInfo}) => {
   return (
     <div className="bg-[rgba(16,16,16,0.5)] w-screen h-screen flex justify-center items-center fixed z-1000 top-0">
       {piconload && <Loading />}
-      <ConfirmCard isOpen={isConfirmOpen} onConfirm={Confirm} onClose={()=>setConfirmopen(false)} onsecondConfirm={handleclose} type={typeopen} text={texterror||" "}/>
+      <ConfirmCard isOpen={isConfirmOpen} onConfirm={Confirm} onClose={()=>setConfirmopen(false)} onSecondConfirm={()=>window.location.reload()} type={typeopen} text={texterror||" "}/>
       <ThemeProvider theme={theme}>
         <div className="bg-white w-[60vw] rounded-[8px] h-[90vh]">
           <div className=" w-[100%] h-[10%] flex justify-between px-5 shadow-[0px_0px_2px_rgba(26,26,26,0.25)]">

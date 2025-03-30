@@ -6,7 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import supabase from "../../supabaseClient";
 
-const EventModal = ({ isOpen, onClose, clubId }) => {
+const EventModal = ({ isOpen, onClose, clubId ,userId}) => {
   const [eventText, setEventText] = useState("กิจกรรม");
   const [eventTextColor, setEventTextColor] = useState("");
   const [eventColor, setEventColor] = useState("bg-[#7CE9BF]");
@@ -239,6 +239,7 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
           poster: posterUrl,
           document: docUrl,
           approval_status: false,
+          postby:userId,
         },
       ]);
 
@@ -258,6 +259,7 @@ const EventModal = ({ isOpen, onClose, clubId }) => {
             poster: posterUrl,
             document: docUrl,
             approval_status: false,
+            postby:userId,
           },
         ]);
 

@@ -49,7 +49,7 @@ const ClubManage = ({userinfo}) => {
 
   useEffect(()=>{
     setonLoad(true);
-    //console.log(userinfo)
+    console.log(userinfo)
     setTimeout(() => {
       setonLoad(false);
     }, 200);
@@ -253,8 +253,8 @@ const ClubManage = ({userinfo}) => {
       {onLoading?(
         <Loading/>
       ):(<></>)}
-      <EventModal isOpen={isOpen} onClose={closeModal} clubId={clubId}/>
-      <ClubFormManage isOpen={isformpopupOpen} onClose={()=>{setPopupopen(false);}} clubId={clubId} prevform={prevForm}/>
+      <EventModal isOpen={isOpen} onClose={closeModal} clubId={clubId} userId={userinfo?.id}/>
+      <ClubFormManage isOpen={isformpopupOpen} onClose={()=>{setPopupopen(false)}} clubId={clubId} prevform={prevForm}/>
       <div className="max-w-5xl mx-auto rounded-lg overflow-hidden">
       <div className="bg-white drop-shadow-lg mt-24">
         {/* Club Banner */}
@@ -349,6 +349,7 @@ const ClubManage = ({userinfo}) => {
                       paddingX: "2vw",
                       bgcolor: "white",
                       color: "#1A1A1A",
+                      width:'100%',
                       "&:hover": { bgcolor: "#7CE9BF",boxShadow:"0px 0px 2px #7CE9BF60"},
                     }}
                     onClick={() => navigate(`/clubmanage/${clubId}/ClubApplicantsList`, { state: { clubId } })}
