@@ -352,11 +352,7 @@ const Navbar = ({sendUserinfo}) => {
                       <div className="flex flex-row">
                         <User className="text-[#7CE9BF] fill-[#7CE9BF]" />
                         <p className="text-gray-500 text-sm">
-                          {userInfo?.role === "student"
-                            ? "นักศึกษา"
-                            : userInfo?.role === "club"
-                            ? "กรรมการชมรม"
-                            : "กองกิจการนักศึกษา"}
+                          {userInfo?.role === "student" ? "นักศึกษา" : userInfo?.role === "club" ? "นักศึกษาสังกัดชมรม" : "กองกิจการนักศึกษา"}
                         </p>
                       </div>
                     </div>
