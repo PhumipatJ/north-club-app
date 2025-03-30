@@ -102,14 +102,24 @@ const Clubpage = ({info}) => {
         });
   
         // Sort expired events by end_date and then end_time
-        expiredEvents.sort((a, b) => {
-          const [aDay, aMonth, aYear] = a.end_date.split("/").map(Number);
-          const [bDay, bMonth, bYear] = b.end_date.split("/").map(Number);
-          const aEnd = new Date(aYear, aMonth - 1, aDay, ...a.end_time.split(":").map(Number));
-          const bEnd = new Date(bYear, bMonth - 1, bDay, ...b.end_time.split(":").map(Number));
-  
-          return aEnd - bEnd; // Sort by end_date and end_time
-        });
+        try {
+          expiredEvents.sort((a, b) => {
+            try {
+              const [aDay, aMonth, aYear] = a.end_date.split("/").map(Number);
+              const [bDay, bMonth, bYear] = b.end_date.split("/").map(Number);
+              const aEnd = new Date(aYear, aMonth - 1, aDay, ...a.end_time.split(":").map(Number));
+              const bEnd = new Date(bYear, bMonth - 1, bDay, ...b.end_time.split(":").map(Number));
+        
+              return aEnd - bEnd; // Sort by end_date and end_time
+            } catch (error) {
+              //console.error("Error parsing event date/time:", error);
+              return 0; // Keep order unchanged if error occurs
+            }
+          });
+        } catch (error) {
+          //console.error("Error sorting expiredEvents:", error);
+        }
+        
   
         //console.log(upcomingEvents);
         //console.log(expiredEvents);

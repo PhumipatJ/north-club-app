@@ -34,7 +34,7 @@ const ClubApplicantsList = () => {
     const fetchApplicantUser = async () => {
       const { data, error } = await supabase
         .from("userform")
-        .select("id,club_id,created_at,role_apply , user: user_id(name)")
+        .select("id,club_id,created_at,role_apply , user: user_id(name,email)")
         .eq("club_id", clubId);    
 
       if (error) {
@@ -74,7 +74,7 @@ const ClubApplicantsList = () => {
       <Container className="p-6 mt-24 min-h-[77vh] flex flex-col justify-center">
         <div className="flex max-w-6xl w-full">
           <div className=" w-full h-fit flex">
-            <h1 className="text-4xl font-bold my-auto ">รายชื่อผู้สมัครชมรม</h1>
+            <h1 className="text-4xl font-bold my-auto ">จัดการผู้สมัครชมรม</h1>
           </div>
         </div>
         
@@ -105,6 +105,7 @@ const ClubApplicantsList = () => {
                 <TableRow>
                   <CustomTableCell>รูป</CustomTableCell>
                   <CustomTableCell>ชื่อ-นามสกุล</CustomTableCell>
+                  <CustomTableCell>Email</CustomTableCell>
                   <CustomTableCell>วันที่สมัคร</CustomTableCell>
                   <CustomTableCell>ตำแหน่ง</CustomTableCell>
                   <CustomTableCell>รายละเอียด</CustomTableCell>
@@ -131,6 +132,7 @@ const ClubApplicantsList = () => {
                         <Avatar src="/assets/Maskgroup.png"/>
                       </TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.user?.name || "N/A"}</TableCell>
+                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.user?.email || "N/A"}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{formatDate(club.created_at) || "N/A"}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.role_apply || "N/A"}</TableCell>
                       <TableCell sx={{borderColor:'#fff'}}>

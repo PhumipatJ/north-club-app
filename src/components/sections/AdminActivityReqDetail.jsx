@@ -41,6 +41,7 @@ const AdminActivityReqDetail = () => {
             return;
         }
         else{
+            console.log(data)
             setEventDetail(data)
             setdoc(
               supabase.storage
@@ -56,22 +57,41 @@ const AdminActivityReqDetail = () => {
       
     fetchingEvent();
   }, []);
+
   const handlelink =(link)=>{
     window.open(link,"_blank");
   }
-  const handleApprove = async () =>{
-    const { error: updateError } = await supabase
-    .from("event")
-    .update({ approval_status: true })
-    .eq("id", eventDetail.id);
 
-  if (updateError) {
-    console.error(`Failed to update role for ${email}:`, updateError);
+  const handleApprove = async () =>{
+      const { error: updateError } = await supabase
+      .from("event")
+      .update({ approval_status: true })
+      .eq("id", eventDetail.id);
+
+    if (updateError) {
+      console.error(`Failed to update event:`, updateError);
+    }
+    navigate(-1); 
   }
+
+  const handleReject = async () => {
+      const { error: rejectError } = await supabase
+        .from('event')
+        .delete()
+        .eq('id', eventDetail.id);
+  
+      if (rejectError) {
+        console.error("Error rejecting event:", error);
+        return;
+      }
+      navigate(-1);  
+  
   }
+
   if(loading){
     return <Loading/>
   }
+
   return (
     <ThemeProvider theme={theme}>
       <ConfirmCard
@@ -261,7 +281,7 @@ const AdminActivityReqDetail = () => {
                       boxShadow: "0px 0px 5px 0.1px #7CE9BF",
                     },
                   }}
-                  onClick={() => setopen(true)}
+                  onClick={() => handleApprove()}
                 >
                   อนุมัติ
                 </Button>

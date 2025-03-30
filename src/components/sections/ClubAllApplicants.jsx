@@ -32,9 +32,9 @@ const ClubAllApplicants = () => {
   useEffect(() => {
     const fetchPendingClubs = async () => {
       const { data, error } = await supabase
-        .from("clubs")
-        .select("*, member_count:clubMembers(count)")
-        .eq("club_approval", true);
+        .from("clubMembers")
+        .select("club_id,email,position,created_at , user: user_id(name,email)")
+        .eq("club_id", clubId);
 
       if (error) {
         console.error("Error fetching clubs:", error);
@@ -71,7 +71,7 @@ const ClubAllApplicants = () => {
       <Container className="p-6 mt-24 min-h-[77vh] flex flex-col justify-center">
         <div className="flex max-w-6xl w-full">
           <div className=" w-full h-fit flex">
-            <h1 className="text-4xl font-bold my-auto ">รายชื่อชมรม</h1>
+            <h1 className="text-4xl font-bold my-auto ">จัดการสมาชิกชมรม</h1>
           </div>
         </div>
         
@@ -102,9 +102,9 @@ const ClubAllApplicants = () => {
                 <TableRow>
                   <CustomTableCell>รูป</CustomTableCell>
                   <CustomTableCell>ชื่อ-นามสกุล</CustomTableCell>
-                  <CustomTableCell>คณะ</CustomTableCell>
-                  <CustomTableCell>สาขา</CustomTableCell>
-                  <CustomTableCell>ชั้นปี</CustomTableCell> 
+                  <CustomTableCell>Email</CustomTableCell>
+                  <CustomTableCell>วันที่เข้าชมรม</CustomTableCell>
+                  <CustomTableCell>ตำแหน่ง</CustomTableCell>
                   <CustomTableCell>รายละเอียด</CustomTableCell>
                 </TableRow>
               </TableHead>
@@ -126,18 +126,11 @@ const ClubAllApplicants = () => {
                     <TableRow key={club.club_id} sx={{'&:hover':{backgroundColor:'#f9f9f9' , cursor:'pointer'}}} 
                     onClick={()=>navigate(`/clubs/${club.club_id}`)}>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>
-                        <Avatar
-                          src={`${
-                            supabase.storage
-                              .from("club-avatars")
-                              .getPublicUrl(club.club_avatar).data.publicUrl
-                          }`}
-                          alt={club.club_name}
-                        />
+                        <Avatar src="/assets/Maskgroup.png"/>
                       </TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.club_name}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.club_type}</TableCell>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.member_count || "N/A"}</TableCell>
+                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.club_type}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.founded_date || "N/A"}</TableCell>
                       <TableCell sx={{borderColor:'#fff'}}>
                         <div className="h-[100%] w-[100%] justify-center flex" >
