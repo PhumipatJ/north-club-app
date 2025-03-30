@@ -113,7 +113,7 @@ const Home = () => {
             .getPublicUrl(item.poster).data;
           return publicUrl;
         });
-        console.log(eventImgUrls);
+        //console.log(eventImgUrls);
         setEventimg(eventImgUrls); // set URL ของรูปภาพเข้า state
         componentsload++;
       }
@@ -176,6 +176,9 @@ const Home = () => {
 
     return `${day} ${monthNames[monthIndex]} ${yyyy}`;
   };
+  const handleDayselect = (value) =>{
+    console.log(value);
+  }
   if (loading) {
     return (
       <>
@@ -345,12 +348,12 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="bg-sky-100 mt-10 w-full px-40 flex flex-col">
+      <div className="mt-10 w-full px-40 flex flex-col">
         <h2 className="text-3xl font-bold text-[#7CE9BF] mb-1 w-full text-center">
           ปฎิทินกิจกรรม
         </h2>
-        <div className="bg-amber-200 flex">
-          <Calendar></Calendar>
+        <div className="flex">
+          <Calendar daySelect={handleDayselect}></Calendar>
         </div>
       </div>
     </div>

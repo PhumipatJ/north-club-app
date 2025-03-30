@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import dayjs from "dayjs";
 
-const Calendar = () => {
+const Calendar = ({daySelect}) => {
   const today = dayjs();
   const [currentDate, setCurrentDate] = useState(today);
   const [selectedDate, setSelectedDate] = useState(today.date());
@@ -16,18 +16,20 @@ const Calendar = () => {
   const handleMonthChange = (increment) => {
     setCurrentDate(currentDate.add(increment, "month"));
   };
-
+  useEffect(()=>{
+    daySelect(`${selectedDay}/${selectedMonth}/${selectedYear}`);
+  },[selectedDate])
   const selectedFullDate = currentDate.date(selectedDate);
   const selectedDay = selectedFullDate.date(); // Day of the month
   const selectedMonth = selectedFullDate.month() + 1; // Month (0-based, so add 1)
   const selectedYear = selectedFullDate.year(); // Year
 
-  //console.log(selectedDay);
-  //console.log(selectedMonth);
-  //console.log(selectedYear);
+  // console.log(selectedDay);
+  // console.log(selectedMonth);
+  // console.log(selectedYear);
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-md p-4 scale-80 ">
+    <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-md p-4 scale-80 min-h-[430px]">
       <div className="flex justify-between items-center mb-4">
         <ChevronLeft onClick={() => handleMonthChange(-1)} className="text-lg font-bold cursor-pointer" />
         <h2 className="text-xl font-semibold text-center text-gray-900">

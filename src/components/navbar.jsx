@@ -49,7 +49,7 @@ const Navbar = ({sendUserinfo}) => {
   useEffect(() => {
     const getSessionAndRole = async () => {
       const sessionData = await authService.getSession();
-      console.log(sessionData);
+      //console.log(sessionData);
       setSession(sessionData);
       if(session === null){
         console.log("now log out")
