@@ -50,6 +50,28 @@ const ClubApplicantsReqDetail = () => {
     fetchApplicantUser();
   }, [clubId, applicantId]);
 
+  const handleReject = async () => {
+  
+    try {
+      const { data, error } = await supabase
+        .from('userform')
+        .delete()
+        .eq('club_id', clubId) 
+        .eq('id', applicantId);
+  
+      if (error) {
+        console.error("Error rejecting applicant:", error);
+        return;
+      }
+  
+      console.log("Applicant rejected successfully:", data);
+      navigate(-1);  
+  
+    } catch (err) {
+      console.error("Error during rejection process:", err);
+    }
+  };
+
   if(loading){
     return <Loading/>
   }
@@ -215,7 +237,7 @@ const ClubApplicantsReqDetail = () => {
                               boxShadow: "0px 0px 5px 0.1px #7CE9BF",
                             },
                           }}
-                          onClick={() => setopen(true)}
+                          onClick={() => handleApprove()}
                         >
                           อนุมัติ
                         </Button>
