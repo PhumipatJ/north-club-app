@@ -26,7 +26,7 @@ const ClubApplicantsReqDetail = () => {
   const [loading, setLoading] = useState(true);
   const [rejectReason,setReason] = useState('');
   const [isConfirmOpen,setopen] = useState(false);
-  const [Opentype, setOpentype] = useState(''); // Tracks the action to confirm
+  const [Opentype, setOpentype] = useState('');
   const navigate = useNavigate(0);
   const supabase = supabaseService.getClient();
   const [clubApplicant, setClubApplicant] = useState([]);
