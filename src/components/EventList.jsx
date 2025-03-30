@@ -131,7 +131,7 @@ const EventList = ({ id, clubName }) => {
             {isModalOpen && (
               <>
               <div className="fixed inset-0 bg-black/30 flex justify-center items-center z-50"> 
-                <div className="max-w-4xl mx-auto h-[85%] p-12 shadow-lg rounded-xl border border-gray-200 bg-white mt-24 mb-8 ">
+                <div className="max-w-4xl mx-auto h-[85%] p-12 shadow-lg rounded-xl border border-gray-200 bg-white mt-24 mb-8 overflow-y-auto">
                   <button
                     className="absolute top-26 right-83 text-gray-500 hover:text-gray-700"
                     onClick={() => setIsModalOpen(false)}
