@@ -25,13 +25,14 @@ const Clubform = ({ formdata, onClose ,userInfo}) => {
     setfolioURL('');
     onClose();
   };
+  
   const isFormValid = () => {
-    const urlPattern = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}.*$/;
+    const googleDrivePattern = /^(https?:\/\/)?(www\.)?drive\.google\.com\/.*$/;
 
     if (roleSelected === '') {
       setTypeopen('errorEmpty');
       return false;
-    } else if (folioURL && !urlPattern.test(folioURL)) {
+    } else if (folioURL && !googleDrivePattern.test(folioURL)) {
       setTypeopen('errorURL');
       return false;
     } else {
@@ -52,6 +53,7 @@ const Clubform = ({ formdata, onClose ,userInfo}) => {
     if (error) {
       console.log(error);
     }
+
   }
   const handleConfirm = () => {
     if(isFormValid()){
@@ -70,7 +72,13 @@ const Clubform = ({ formdata, onClose ,userInfo}) => {
   return (
     <div className="bg-[rgba(16,16,16,0.5)] w-screen h-screen flex justify-center items-center fixed z-1000 top-0">
       {piconload && <Loading />}
-      <ConfirmCard isOpen={isConfirmOpen} onConfirm={Confirm} onClose={()=>setConfirmopen(false)} onsecondConfirm={handleclose} type={typeopen} text={texterror||" "}/>
+      <ConfirmCard 
+        isOpen={isConfirmOpen} 
+        onConfirm={()=>Confirm()} 
+        onClose={()=>setConfirmopen(false)} 
+        onsecondConfirm={()=>handleclose()} 
+        type={typeopen} 
+        text={texterror||" "}/>
       <ThemeProvider theme={theme}>
         <div className="bg-white w-[60vw] rounded-[8px] h-[90vh]">
           <div className=" w-[100%] h-[10%] flex justify-between px-5 shadow-[0px_0px_2px_rgba(26,26,26,0.25)]">
@@ -276,7 +284,7 @@ const Clubform = ({ formdata, onClose ,userInfo}) => {
                           htmlFor="eventName"
                         >
                           <div className="items-end gap-3 mb-1">
-                          Portfolio (ตามที่ชมรมกำหนด)<p className="text-[13px] text-[#99a1af] font-medium">(upload .pdf to Google Drive)</p>
+                          Portfolio (ตามที่ชมรมกำหนด)<p className="text-[13px] text-[#99a1af] font-medium">(upload .pdf to Google Drive) ใส่หรือไม่ก็ได้</p>
 
                           </div>
                         </label>
