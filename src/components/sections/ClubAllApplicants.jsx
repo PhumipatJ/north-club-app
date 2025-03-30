@@ -22,7 +22,7 @@ import Loading from "../loading";
 import ClubApplicantsBox from "./ClubApplicantBox";
 
 const ClubAllApplicants = () => {
-  const [pendingClubs, setPendingClubs] = useState([]);
+  const [clubMembers, setClubMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const supabase = supabaseService.getClient();
@@ -30,25 +30,42 @@ const ClubAllApplicants = () => {
   const { clubId } = useParams();
 
   useEffect(() => {
-    const fetchPendingClubs = async () => {
+    const fetchClubMembers = async () => {
       const { data, error } = await supabase
         .from("clubMembers")
-        .select("club_id,email,position,created_at , user:email(name,email)")
+        .select("club_id, email, position, created_at, user(name, email)")
         .eq("club_id", clubId);
-
+  
       if (error) {
         console.error("Error fetching clubs:", error);
       } else {
-        console.log(data);
-        setPendingClubs(data);
+        // Define the custom order of positions
+        const positionOrder = [
+          "ประธานชมรม", 
+          "รองประธานชมรม", 
+          "กรรมการ", 
+          "เลขานุการ", 
+          "ผู้ช่วยเลขานุการ", 
+          "สมาชิกชมรม"
+        ];
+  
+        // Sort data by the custom position order
+        const sortedData = data.sort((a, b) => {
+          return positionOrder.indexOf(a.position) - positionOrder.indexOf(b.position);
+        });
+  
+        console.log(sortedData);
+        setClubMembers(sortedData);
       }
       setTimeout(() => {
         setLoading(false);
       }, 500);
     };
-
-    fetchPendingClubs();
+  
+    fetchClubMembers();
   }, []);
+  
+  
   
   const CustomTableCell = styled(TableCell)({
     borderBottom: '2px solid #FF7E69',
@@ -58,6 +75,14 @@ const ClubAllApplicants = () => {
   if(loading){
     return <Loading/>
   }
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
   return (
     <ThemeProvider theme={theme}>
       <Container className="p-6 mt-24 min-h-[77vh] flex flex-col justify-center">
@@ -107,14 +132,14 @@ const ClubAllApplicants = () => {
                       Loading...
                     </TableCell>
                   </TableRow>
-                ) : pendingClubs.length === 0 ? (
+                ) : clubMembers.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={8} align="center" sx={{borderColor:'#fff'}}>
                       ไม่มีชมรม
                     </TableCell>
                   </TableRow>
                 ) : (
-                  pendingClubs.map((club) => (
+                  clubMembers.map((club) => (
                     <TableRow key={club.club_id} sx={{'&:hover':{backgroundColor:'#f9f9f9' , cursor:'pointer'}}} 
                     onClick={()=>navigate(`/clubs/${club.club_id}`)}>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>
@@ -122,8 +147,8 @@ const ClubAllApplicants = () => {
                       </TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.user?.name}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.user?.email}</TableCell>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.club_type}</TableCell>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.founded_date || "N/A"}</TableCell>
+                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{formatDate(club.created_at)}</TableCell>
+                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.position}</TableCell>
                       <TableCell sx={{borderColor:'#fff'}}>
                         <div className="h-[100%] w-[100%] justify-center flex" >
                         <List className="text-[#FF7E69] "/>
