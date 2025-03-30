@@ -28,14 +28,14 @@ const AdminActivityReqDetail = () => {
   const navigate = useNavigate(0);
   const supabase = supabaseService.getClient();
 
-  
+
   useEffect(() => {
     const fetchingEvent = async()=>{
         const {data,error} = await supabase
-        .from("event")
-        .select("*, clubs!inner(club_name,club_id,facebook,instagram,mail)")
-        .eq("id",eventId)
-        .single()
+          .from("event")
+          .select("*, clubs!inner(club_name,club_id,facebook,instagram,mail)")
+          .eq("id",eventId)
+          .single()
         if(error){
             console.log(error);
             return;
@@ -106,7 +106,7 @@ const AdminActivityReqDetail = () => {
           </div>
         </div>
         
-        <div className="flex justify-between gap-10 h-fit ">
+        <div className="flex justify-between gap-10 h-fit">
           <AdmindatabaseBox/>
           <div className="mx-auto p-12 shadow-lg rounded-xl border border-gray-200 bg-white mb-10 mt-10 h-fit max-w-[75%]">
             <div className="flex flex-col w-full">

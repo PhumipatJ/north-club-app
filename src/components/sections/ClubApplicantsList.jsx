@@ -31,10 +31,10 @@ const ClubApplicantsList = () => {
   //const clubId = location.state?.clubId;
 
   useEffect(() => {
-    const fetchPendingClubs = async () => {
+    const fetchApplicantUser = async () => {
       const { data, error } = await supabase
         .from("userform")
-        .select("* , user: user_id(name)")
+        .select("id,club_id,created_at,role_apply , user: user_id(name)")
         .eq("club_id", clubId);    
 
       if (error) {
@@ -49,7 +49,7 @@ const ClubApplicantsList = () => {
       }, 500);
     };
 
-    fetchPendingClubs();
+    fetchApplicantUser();
   }, []);
   
   const CustomTableCell = styled(TableCell)({
@@ -126,7 +126,7 @@ const ClubApplicantsList = () => {
                 ) : (
                   clubApplicants.map((club) => (
                     <TableRow key={club.club_id} sx={{'&:hover':{backgroundColor:'#f9f9f9' , cursor:'pointer'}}} 
-                    onClick={()=>navigate(`/ClubApplicantsReqDetail/${club.id}`)}>
+                    onClick={() => navigate(`/ClubApplicantsReqDetail/${clubId}`, { state: { applicantId: club.id } })}>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>
                         <Avatar src="/assets/Maskgroup.png"/>
                       </TableCell>
