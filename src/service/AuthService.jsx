@@ -48,8 +48,7 @@ class AuthService {
       .from("clubMembers")
       .select("position")
       .eq("email", email)
-      .single();
-    return error ? null : data.position;
+    return error ? null : data.map(item => item.position);
   }
 
   async getEmail(userId) {

@@ -29,7 +29,7 @@ const Navbar = ({sendUserinfo}) => {
   const [userClub, setUserClub] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
 
-  const [userClubPosition, setUserClubPosition] = useState("");
+  const [userClubPosition, setUserClubPosition] = useState([]);
 
   useEffect(() => {
     if (session && userInfo) {
@@ -62,10 +62,11 @@ const Navbar = ({sendUserinfo}) => {
         const role = await authService.getUserRole(sessionData.user.id);
         setUserRole(role);
         const clubPosition = await authService.getUserClubPosition(sessionData.user.email);
-        console.log(clubPosition)
+        //console.log(clubPosition)
         setUserClubPosition(clubPosition)
       }
     };
+
 
     const { data: authListener } = authService.supabase.auth.onAuthStateChange(
       (_event, session) => {
@@ -276,7 +277,7 @@ const Navbar = ({sendUserinfo}) => {
                     {" "}
                     {/* Scrollable container */}
                     {userClub
-                      .filter((club) => club?.position !== "สมาชิก")
+                      .filter((club) => club?.position !== "สมาชิกชมรม")
                       .map((club, index) => (
                         <div
                           key={index}

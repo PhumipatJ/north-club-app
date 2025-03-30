@@ -24,6 +24,7 @@ const Clubform = ({ formdata, onClose ,userInfo}) => {
     setDescript('');
     setfolioURL('');
     onClose();
+    window.location.reload();
   };
   
   const isFormValid = () => {
@@ -76,7 +77,7 @@ const Clubform = ({ formdata, onClose ,userInfo}) => {
         isOpen={isConfirmOpen} 
         onConfirm={()=>Confirm()} 
         onClose={()=>setConfirmopen(false)} 
-        onsecondConfirm={()=>handleclose()} 
+        onSecondConfirm={()=>handleclose()} 
         type={typeopen} 
         text={texterror||" "}/>
       <ThemeProvider theme={theme}>
