@@ -71,6 +71,7 @@ const ClubApplicantsReqDetail = () => {
     }
   }
   
+  
   const handleApprove = async () => {
     
     try {
