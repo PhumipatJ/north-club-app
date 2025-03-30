@@ -423,29 +423,41 @@ const ClubManage = ({userinfo}) => {
               
             {/* Announcement */}
             <h1 className="text-2xl pt-6">ประกาศ</h1>
-            {clubAnnouncement.map((announcement) => (
-              <div key={announcement.id}>
-                <AnnouncementList id={announcement.id} clubName={clubName} />
-                <br />
+            {clubAnnouncement.length === 0 ? (
+              <div className="bg-gray-100 text-gray-500 text-center py-4 rounded-lg">
+                ไม่มีประกาศ
               </div>
-            ))}
+            ) : (
+              clubAnnouncement.map((announcement) => (
+                <div key={announcement.id}>
+                  <AnnouncementList id={announcement.id} clubName={clubName} />
+                  <br />
+                </div>
+              ))
+            )}
 
             {/* Event */}
             <h1 className="text-2xl pt-6">กิจกรรม</h1>
-            {clubEvent.map((event) => (
-              <div key={event.id}>
-                <EventList id={event.id} clubName={clubName} />
-                <br />
+            {clubEvent.length === 0 && clubEventExpired.length === 0 ? (
+              <div className="bg-gray-100 text-gray-500 text-center py-4 rounded-lg">
+                ไม่มีกิจกรรม
               </div>
-            ))}
-
-            {/* Expire Event */}
-            {clubEventExpired.map((event) => (
-              <div key={event.id}>
-                <EventList id={event.id} clubName={clubName} />
-                <br />
-              </div>
-            ))}
+            ) : (
+              <>
+                {clubEvent.map((event) => (
+                  <div key={event.id}>
+                    <EventList id={event.id} clubName={clubName} />
+                    <br />
+                  </div>
+                ))}
+                {clubEventExpired.map((event) => (
+                  <div key={event.id}>
+                    <EventList id={event.id} clubName={clubName} />
+                    <br />
+                  </div>
+                ))}
+              </>
+            )}
 
           </div>
         </div>
