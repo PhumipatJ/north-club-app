@@ -261,21 +261,25 @@ const Clubpage = ({info}) => {
     console.log(data);
     return data;
   }
+
   const handleOpenform = async() =>{
+
     if(info?.role === undefined){
       setOpentype('login');
       setConfirm(true);
-    }else{
+    }
+    else{
       if(info?.role === 'admin'){
-        console.log('you are admin bro')
+        setOpentype('adminProhibit');
+        setConfirm(true);
+      }
+      else if(info?.role === 'club'){
+        setOpentype('alreadyInClub');
+        setConfirm(true);
       }
       else{
         if(await isAppiled() === null){
           setFormopen(true);
-        }
-        else if(await isJoined() !== null){
-          setOpentype('alreadyInClub');
-          setConfirm(true);
         }
         else{
           setOpentype('alreadyApplied');

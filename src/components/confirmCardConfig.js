@@ -127,6 +127,14 @@ const confirmCardConfig = {
       confirmedTitle: "",
       confirmedDescription: "",
     },
+    adminProhibit: {
+      title: "คุณเป็นแอดมิน",
+      confirmText: "",
+      cancelText: "ตกลง",
+      description: "",
+      confirmedTitle: "",
+      confirmedDescription: "",
+    },
   };
   
   export const getConfirmCardConfig = (type) =>
