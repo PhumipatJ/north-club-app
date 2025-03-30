@@ -33,22 +33,14 @@ const ClubAllApplicants = () => {
     const fetchPendingClubs = async () => {
       const { data, error } = await supabase
         .from("clubMembers")
-        .select("club_id,email,position,created_at , user: user_id(name,email)")
+        .select("club_id,email,position,created_at , user:email(name,email)")
         .eq("club_id", clubId);
 
       if (error) {
         console.error("Error fetching clubs:", error);
       } else {
-        setPendingClubs(
-          data.map((club) => ({
-            ...club,
-            member_count: club.member_count[0]?.count || 0,
-            founded_date: new Date(club.approve_date).toLocaleDateString(
-              "th-TH",
-              { day: "2-digit", month: "2-digit", year: "numeric" }
-            ),
-          }))
-        );
+        console.log(data);
+        setPendingClubs(data);
       }
       setTimeout(() => {
         setLoading(false);

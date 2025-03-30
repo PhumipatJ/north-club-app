@@ -40,7 +40,7 @@ const ClubApplicantsList = () => {
       if (error) {
         console.error("Error fetching clubs:", error);
       } else {
-        console.log(data)
+        //console.log(data)
         const sortedData = data.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
         setClubApplicants(sortedData);
       }
