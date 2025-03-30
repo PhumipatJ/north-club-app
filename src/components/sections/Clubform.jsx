@@ -26,10 +26,15 @@ const Clubform = ({ formdata, onClose ,userInfo}) => {
     onClose();
   };
   const isFormValid = () => {
-    if(roleSelected === '') {
+    const urlPattern = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}.*$/;
+
+    if (roleSelected === '') {
+      setTypeopen('errorEmpty');
       return false;
-    }
-    else{
+    } else if (folioURL && !urlPattern.test(folioURL)) {
+      setTypeopen('errorURL');
+      return false;
+    } else {
       return true;
     }
   };
@@ -55,7 +60,6 @@ const Clubform = ({ formdata, onClose ,userInfo}) => {
     }
     else{
        setConfirmopen(true);
-       setTypeopen('error');
        setTexterror("No role Selected");
     }
   };
