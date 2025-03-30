@@ -24,6 +24,7 @@ const AdminUserPreview = () => {
   const [loading, setLoading] = useState(true);
   const supabase = supabaseService.getClient();
 
+
   useEffect(() => {
     const fetchPendingClubs = async () => {
       const { data, error } = await supabase
@@ -64,11 +65,11 @@ const AdminUserPreview = () => {
           <div className=" w-full h-fit flex">
             <h1 className="text-4xl font-bold my-auto ">ผู้ใช้ทั้งหมด</h1>
             <div className="my-auto flex ml-auto w-fit gap-5">
-              <div className="flex items-center ">
-                <User className="text-[#7CE9BF]"/> : Student
+              <div className="flex items-center mr-5">
+                <User className="text-[#7CE9BF]"/>&nbsp;นักศึกษา
               </div>
               <div className="flex items-center ">
-                <UserCog className="text-[#FF7E69]"/> : Club's Staff
+                <UserCog className="text-[#FF7E69]"/>&nbsp;ผู้ดูแลชมรม
               </div>
             </div>
           </div>

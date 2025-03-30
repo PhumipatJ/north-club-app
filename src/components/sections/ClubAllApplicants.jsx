@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import {User,UserCog} from "lucide-react";
 import {
   Container,
   Button,
@@ -22,7 +23,7 @@ import Loading from "../loading";
 import ClubApplicantsBox from "./ClubApplicantBox";
 
 const ClubAllApplicants = () => {
-  const [pendingClubs, setPendingClubs] = useState([]);
+  const [clubMembers, setClubMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const supabase = supabaseService.getClient();
@@ -30,33 +31,42 @@ const ClubAllApplicants = () => {
   const { clubId } = useParams();
 
   useEffect(() => {
-    const fetchPendingClubs = async () => {
+    const fetchClubMembers = async () => {
       const { data, error } = await supabase
         .from("clubMembers")
-        .select("club_id,email,position,created_at , user: user_id(name,email)")
+        .select("club_id, email, position, created_at, user(name, email)")
         .eq("club_id", clubId);
-
+  
       if (error) {
         console.error("Error fetching clubs:", error);
       } else {
-        setPendingClubs(
-          data.map((club) => ({
-            ...club,
-            member_count: club.member_count[0]?.count || 0,
-            founded_date: new Date(club.approve_date).toLocaleDateString(
-              "th-TH",
-              { day: "2-digit", month: "2-digit", year: "numeric" }
-            ),
-          }))
-        );
+        // Define the custom order of positions
+        const positionOrder = [
+          "ประธานชมรม", 
+          "รองประธานชมรม", 
+          "กรรมการ", 
+          "เลขานุการ", 
+          "ผู้ช่วยเลขานุการ", 
+          "สมาชิกชมรม"
+        ];
+  
+        // Sort data by the custom position order
+        const sortedData = data.sort((a, b) => {
+          return positionOrder.indexOf(a.position) - positionOrder.indexOf(b.position);
+        });
+  
+        console.log(sortedData);
+        setClubMembers(sortedData);
       }
       setTimeout(() => {
         setLoading(false);
       }, 500);
     };
-
-    fetchPendingClubs();
+  
+    fetchClubMembers();
   }, []);
+  
+  
   
   const CustomTableCell = styled(TableCell)({
     borderBottom: '2px solid #FF7E69',
@@ -66,12 +76,28 @@ const ClubAllApplicants = () => {
   if(loading){
     return <Loading/>
   }
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
   return (
     <ThemeProvider theme={theme}>
       <Container className="p-6 mt-24 min-h-[77vh] flex flex-col justify-center">
         <div className="flex max-w-6xl w-full">
           <div className=" w-full h-fit flex">
             <h1 className="text-4xl font-bold my-auto ">จัดการสมาชิกชมรม</h1>
+            <div className="my-auto flex ml-auto w-fit gap-5">
+              <div className="flex items-center mr-5">
+                <User className="text-[#7CE9BF]"/>&nbsp;นักศึกษา
+              </div>
+              <div className="flex items-center ">
+                <UserCog className="text-[#FF7E69]"/>&nbsp;ผู้ดูแลชมรม
+              </div>
+            </div>
           </div>
         </div>
         
@@ -100,7 +126,7 @@ const ClubAllApplicants = () => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  <CustomTableCell>รูป</CustomTableCell>
+                  <CustomTableCell></CustomTableCell>
                   <CustomTableCell>ชื่อ-นามสกุล</CustomTableCell>
                   <CustomTableCell>Email</CustomTableCell>
                   <CustomTableCell>วันที่เข้าชมรม</CustomTableCell>
@@ -115,23 +141,27 @@ const ClubAllApplicants = () => {
                       Loading...
                     </TableCell>
                   </TableRow>
-                ) : pendingClubs.length === 0 ? (
+                ) : clubMembers.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={8} align="center" sx={{borderColor:'#fff'}}>
                       ไม่มีชมรม
                     </TableCell>
                   </TableRow>
                 ) : (
-                  pendingClubs.map((club) => (
+                  clubMembers.map((club) => (
                     <TableRow key={club.club_id} sx={{'&:hover':{backgroundColor:'#f9f9f9' , cursor:'pointer'}}} 
                     onClick={()=>navigate(`/clubs/${club.club_id}`)}>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>
-                        <Avatar src="/assets/Maskgroup.png"/>
+                      <TableCell sx={{ textAlign: 'center', borderColor: '#fff' }}>
+                        {club.position !== "สมาชิกชมรม" ? (
+                          <UserCog className="text-[#FF7E69]" />
+                        ) : (
+                          <User className="text-[#7CE9BF]" />
+                        )}
                       </TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.user?.name}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.user?.email}</TableCell>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.club_type}</TableCell>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.founded_date || "N/A"}</TableCell>
+                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{formatDate(club.created_at)}</TableCell>
+                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.position}</TableCell>
                       <TableCell sx={{borderColor:'#fff'}}>
                         <div className="h-[100%] w-[100%] justify-center flex" >
                         <List className="text-[#FF7E69] "/>
