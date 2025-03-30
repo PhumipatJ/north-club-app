@@ -102,14 +102,24 @@ const Clubpage = ({info}) => {
         });
   
         // Sort expired events by end_date and then end_time
-        expiredEvents.sort((a, b) => {
-          const [aDay, aMonth, aYear] = a.end_date.split("/").map(Number);
-          const [bDay, bMonth, bYear] = b.end_date.split("/").map(Number);
-          const aEnd = new Date(aYear, aMonth - 1, aDay, ...a.end_time.split(":").map(Number));
-          const bEnd = new Date(bYear, bMonth - 1, bDay, ...b.end_time.split(":").map(Number));
-  
-          return aEnd - bEnd; // Sort by end_date and end_time
-        });
+        try {
+          expiredEvents.sort((a, b) => {
+            try {
+              const [aDay, aMonth, aYear] = a.end_date.split("/").map(Number);
+              const [bDay, bMonth, bYear] = b.end_date.split("/").map(Number);
+              const aEnd = new Date(aYear, aMonth - 1, aDay, ...a.end_time.split(":").map(Number));
+              const bEnd = new Date(bYear, bMonth - 1, bDay, ...b.end_time.split(":").map(Number));
+        
+              return aEnd - bEnd; // Sort by end_date and end_time
+            } catch (error) {
+              //console.error("Error parsing event date/time:", error);
+              return 0; // Keep order unchanged if error occurs
+            }
+          });
+        } catch (error) {
+          //console.error("Error sorting expiredEvents:", error);
+        }
+        
   
         //console.log(upcomingEvents);
         //console.log(expiredEvents);
@@ -261,21 +271,25 @@ const Clubpage = ({info}) => {
     console.log(data);
     return data;
   }
+
   const handleOpenform = async() =>{
+
     if(info?.role === undefined){
       setOpentype('login');
       setConfirm(true);
-    }else{
+    }
+    else{
       if(info?.role === 'admin'){
-        console.log('you are admin bro')
+        setOpentype('adminProhibit');
+        setConfirm(true);
+      }
+      else if(info?.role === 'club'){
+        setOpentype('alreadyInClub');
+        setConfirm(true);
       }
       else{
         if(await isAppiled() === null){
           setFormopen(true);
-        }
-        else if(await isJoined() !== null){
-          setOpentype('alreadyInClub');
-          setConfirm(true);
         }
         else{
           setOpentype('alreadyApplied');
@@ -288,10 +302,18 @@ const Clubpage = ({info}) => {
   //console.log(members);
   return (
     <div className="bg-gray-50">
-      <ConfirmCard isOpen={confirmOpen} type={openType} onClose={()=>setConfirm(false)} text={openText}></ConfirmCard>
+      <ConfirmCard 
+        isOpen={confirmOpen} 
+        type={openType} 
+        onClose={()=>setConfirm(false)} 
+        text={openText}>
+      </ConfirmCard>
       {onLoad?(<Loading/>):(<></>)}
       {isFormopen&&(
-        <Clubform formdata={{...applyForm, clubname:club?.club_name}} onClose={()=>setFormopen(false)} userInfo={info}/>
+        <Clubform 
+          formdata={{...applyForm, clubname:club?.club_name}} 
+          onClose={()=>window.location.reload()} 
+          userInfo={info}/>
       )}
       <div className="max-w-5xl mx-auto rounded-lg overflow-hidden">
       <div className="bg-white drop-shadow-lg mt-24">

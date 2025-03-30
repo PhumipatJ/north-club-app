@@ -31,16 +31,16 @@ const ClubApplicantsList = () => {
   //const clubId = location.state?.clubId;
 
   useEffect(() => {
-    const fetchPendingClubs = async () => {
+    const fetchApplicantUser = async () => {
       const { data, error } = await supabase
         .from("userform")
-        .select("* , user: user_id(name)")
+        .select("id,club_id,created_at,role_apply , user: user_id(name,email)")
         .eq("club_id", clubId);    
 
       if (error) {
         console.error("Error fetching clubs:", error);
       } else {
-        console.log(data)
+        //console.log(data)
         const sortedData = data.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
         setClubApplicants(sortedData);
       }
@@ -49,7 +49,7 @@ const ClubApplicantsList = () => {
       }, 500);
     };
 
-    fetchPendingClubs();
+    fetchApplicantUser();
   }, []);
   
   const CustomTableCell = styled(TableCell)({
@@ -74,7 +74,7 @@ const ClubApplicantsList = () => {
       <Container className="p-6 mt-24 min-h-[77vh] flex flex-col justify-center">
         <div className="flex max-w-6xl w-full">
           <div className=" w-full h-fit flex">
-            <h1 className="text-4xl font-bold my-auto ">รายชื่อผู้สมัครชมรม</h1>
+            <h1 className="text-4xl font-bold my-auto ">จัดการผู้สมัครชมรม</h1>
           </div>
         </div>
         
@@ -105,6 +105,7 @@ const ClubApplicantsList = () => {
                 <TableRow>
                   <CustomTableCell>รูป</CustomTableCell>
                   <CustomTableCell>ชื่อ-นามสกุล</CustomTableCell>
+                  <CustomTableCell>Email</CustomTableCell>
                   <CustomTableCell>วันที่สมัคร</CustomTableCell>
                   <CustomTableCell>ตำแหน่ง</CustomTableCell>
                   <CustomTableCell>รายละเอียด</CustomTableCell>
@@ -126,17 +127,19 @@ const ClubApplicantsList = () => {
                 ) : (
                   clubApplicants.map((club) => (
                     <TableRow key={club.club_id} sx={{'&:hover':{backgroundColor:'#f9f9f9' , cursor:'pointer'}}} 
-                    onClick={()=>navigate(`/ClubApplicantsReqDetail/${club.id}`)}>
+                    onClick={() => navigate(`/ClubApplicantsReqDetail/${clubId}`, { state: { applicantId: club.id } })}>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>
                         <Avatar src="/assets/Maskgroup.png"/>
                       </TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.user?.name || "N/A"}</TableCell>
+                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.user?.email || "N/A"}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{formatDate(club.created_at) || "N/A"}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.role_apply || "N/A"}</TableCell>
                       <TableCell sx={{borderColor:'#fff'}}>
                         <div className="h-[100%] w-[100%] justify-center flex" >
                         <List className="text-[#FF7E69] "/>
                         </div>
+                        
                         </TableCell>
                     </TableRow>
                   ))

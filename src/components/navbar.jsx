@@ -29,6 +29,8 @@ const Navbar = ({sendUserinfo}) => {
   const [userClub, setUserClub] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
 
+  const [userClubPosition, setUserClubPosition] = useState([]);
+
   useEffect(() => {
     if (session && userInfo) {
       sendUserinfo(userInfo);  // เรียกใช้ฟังก์ชันจาก parent
@@ -55,11 +57,16 @@ const Navbar = ({sendUserinfo}) => {
       else{
         console.log("am in")
       }
+
       if (sessionData) {
         const role = await authService.getUserRole(sessionData.user.id);
         setUserRole(role);
+        const clubPosition = await authService.getUserClubPosition(sessionData.user.email);
+        //console.log(clubPosition)
+        setUserClubPosition(clubPosition)
       }
     };
+
 
     const { data: authListener } = authService.supabase.auth.onAuthStateChange(
       (_event, session) => {
@@ -270,7 +277,7 @@ const Navbar = ({sendUserinfo}) => {
                     {" "}
                     {/* Scrollable container */}
                     {userClub
-                      .filter((club) => club?.position !== "สมาชิก")
+                      .filter((club) => club?.position !== "สมาชิกชมรม")
                       .map((club, index) => (
                         <div
                           key={index}
@@ -345,11 +352,7 @@ const Navbar = ({sendUserinfo}) => {
                       <div className="flex flex-row">
                         <User className="text-[#7CE9BF] fill-[#7CE9BF]" />
                         <p className="text-gray-500 text-sm">
-                          {userInfo?.role === "student"
-                            ? "นักศึกษา"
-                            : userInfo?.role === "club"
-                            ? "กรรมการชมรม"
-                            : "กองกิจการนักศึกษา"}
+                          {userInfo?.role === "student" ? "นักศึกษา" : userInfo?.role === "club" ? "นักศึกษาสังกัดชมรม" : "กองกิจการนักศึกษา"}
                         </p>
                       </div>
                     </div>

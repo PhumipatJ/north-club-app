@@ -148,12 +148,21 @@ const EventModal = ({ isOpen, onClose, clubId ,userId}) => {
         //console.log(thirtyDaysAhead);
 
         if (selectedDateObj < thirtyDaysAhead) {
+          setOpentype("errorTimeInterval")
           errors.push("Selected date must be more than " + thirtyDaysAhead);
         }
       }
 
       if (!startTime || !endTime) {
+        setOpentype("errorEmpty")
           errors.push("Start time and end time are required.");
+      } 
+      
+      //console.log(startTime);
+      //console.log(endTime);
+      if (startTime >= endTime) {
+        setOpentype("errorStartTime");
+        errors.push("Start time must be earlier than end time.");
       }
         
       if(!location.trim()) {
@@ -165,13 +174,11 @@ const EventModal = ({ isOpen, onClose, clubId ,userId}) => {
             setOpentype("errorURL");
             errors.push("Location must be a valid URL for Online status.");
           }
-        } else if (statusText === "Offline") {
-          setOpentype("errorEmpty");
-          errors.push("Location is required for Offline status.");
-        }
+        } 
       }
       
       if (!eventDescription.trim()) {
+        setOpentype("errorEmpty");
         errors.push("eventDescription is required.");
       }
         
@@ -184,8 +191,8 @@ const EventModal = ({ isOpen, onClose, clubId ,userId}) => {
       }
                  
       if (!announcementDescription) {
-        errors.push("announcementDescription is required.");
         setOpentype("errorEmpty")
+        errors.push("announcementDescription is required.");
       }
         
     }
@@ -207,6 +214,7 @@ const EventModal = ({ isOpen, onClose, clubId ,userId}) => {
       return false;
     }
 
+    setOpentype('event');
     return true;
   };
 
