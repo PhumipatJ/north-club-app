@@ -43,6 +43,14 @@ class AuthService {
     return error ? null : data.role;
   }
 
+  async getUserClubPosition(email) {
+    const { data, error } = await this.supabase
+      .from("clubMembers")
+      .select("position")
+      .eq("email", email)
+    return error ? null : data.position;
+  }
+
   async getEmail(userId) {
     const { data, error } = await this.supabase
       .from("user")

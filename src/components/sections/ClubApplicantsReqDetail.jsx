@@ -71,6 +71,63 @@ const ClubApplicantsReqDetail = () => {
     }
   }
   
+  const handleApprove = async () => {
+    
+    try {
+      // Step 1: Accept the applicant into the 'clubMembers' table
+      const { data: clubMemberData, error: clubMemberError } = await supabase
+        .from('clubMembers')
+        .insert([
+          {
+            email: clubApplicant[0]?.user.email, // Assuming you have the applicant's email
+            club_id: clubId, // The current club ID
+            position: "สมาชิกชมรม", // The applicant's role apply in the club
+            clubPosition: clubApplicant[0]?.role_apply // You can adjust the club position if necessary
+          }
+        ]); // Ensures no duplicates for email and club_id
+    
+      if (clubMemberError) {
+        console.error("Error adding applicant to clubMembers:", clubMemberError);
+        return;
+      }
+  
+      console.log("Applicant added to clubMembers:", clubMemberData);
+  
+      // Step 2: Delete the applicant from the 'userform' table
+      const { data: deleteData, error: deleteError } = await supabase
+        .from('userform')
+        .delete()
+        .eq('club_id', clubId)
+        .eq('id', applicantId);
+  
+      if (deleteError) {
+        console.error("Error deleting applicant from userform:", deleteError);
+        return;
+      }
+  
+      console.log("Applicant deleted from userform:", deleteData);
+  
+      // Step 3: Update the applicant's role to "club" in the 'user' table
+      const { data: updateData, error: updateError } = await supabase
+        .from('user')
+        .update({ role: 'club' })
+        .eq('id', clubApplicant[0]?.user_id); // Assuming you have the user ID for the applicant
+  
+      if (updateError) {
+        console.error("Error updating user role:", updateError);
+        return;
+      }
+  
+      console.log("Applicant role updated to 'club':", updateData);
+  
+      // Navigate back to the previous page after the approval process
+      navigate(-1);  // Goes back one page in the history stack
+  
+    } catch (err) {
+      console.error("Error during approve process:", err);
+    }
+  };
+
   const formatDate = (dateString) => {
     const monthsInThai = [
       "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
