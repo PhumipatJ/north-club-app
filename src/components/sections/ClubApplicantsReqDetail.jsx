@@ -51,7 +51,6 @@ const ClubApplicantsReqDetail = () => {
   }, [clubId, applicantId]);
 
   const handleReject = async () => {
-  
     try {
       const { data, error } = await supabase
         .from('userform')
@@ -70,6 +69,20 @@ const ClubApplicantsReqDetail = () => {
     } catch (err) {
       console.error("Error during rejection process:", err);
     }
+  }
+  
+  const formatDate = (dateString) => {
+    const monthsInThai = [
+      "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+      "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+    ];
+  
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = monthsInThai[date.getMonth()];
+    const year = date.getFullYear();
+  
+    return `${day} ${month} ${year}`;
   };
 
   if(loading){
@@ -86,12 +99,23 @@ const ClubApplicantsReqDetail = () => {
         </div>
       </div>
       
-      <div className="flex justify-between gap-10 h-[calc(100vh-184px)] items-stretch">
+      <div className="flex justify-between gap-10 items-stretch">
         <ClubApplicantsBox clubId={clubId}/>
           <div className="mt-10 p-12 shadow-lg rounded-xl border border-gray-200 bg-white w-full flex-grow ">
 
             
-            <div className="flex flex-col items-center justify-center h-full p-6 w-full ">
+            <div className="flex flex-col items-center justify-center h-full px-6 w-full ">
+              <div className="flex flex-col text-left w-full justify-start">
+                <div className="mt-2">
+                  <span className="text-gray-400 text-sm">วันที่สมัคร</span>
+                </div>
+                <div>
+                  <span className="bg-[#FF7E69] text-white px-3 py-1 rounded-md text-sm font-semibold">
+                    {formatDate(clubApplicant[0].created_at)}
+                  </span>
+                </div>  
+              </div>
+              
 
               {/* Applicant Data */}
               <div className="relative flex flex-col items-center ">
@@ -162,14 +186,13 @@ const ClubApplicantsReqDetail = () => {
               
               {/* คำอธิบายเพิ่มเติม */}
               
-              <div className="flex flex-row justify-between w-full">
+              <div className="flex flex-col w-full">
                 <h3 className="text-lg font-semibold mb-2">คำอธิบายเพิ่มเติม</h3>
-                <p className="mb-6">{clubApplicant[0].Description}</p>
+                <div className="flex max-w-3xl">
+                  <p className="mb-6 px-6 break-words max-w-full">{clubApplicant[0].Description}</p>
+                </div>
               </div>
-              
-              
-
-              
+       
               {/* Reply */}
               <div className="flex flex-col w-full bg-grey">
                 <div className="h-fit w-full flexbox justify-end mt-10  gap-1">
