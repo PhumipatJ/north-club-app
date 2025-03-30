@@ -139,6 +139,7 @@ const ClubApplicantsList = () => {
                         <div className="h-[100%] w-[100%] justify-center flex" >
                         <List className="text-[#FF7E69] "/>
                         </div>
+                        
                         </TableCell>
                     </TableRow>
                   ))

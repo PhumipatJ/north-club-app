@@ -128,8 +128,8 @@ const ClubAllApplicants = () => {
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>
                         <Avatar src="/assets/Maskgroup.png"/>
                       </TableCell>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.club_name}</TableCell>
-                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.club_type}</TableCell>
+                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.user?.name}</TableCell>
+                      <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.user?.email}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.club_type}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.founded_date || "N/A"}</TableCell>
                       <TableCell sx={{borderColor:'#fff'}}>
