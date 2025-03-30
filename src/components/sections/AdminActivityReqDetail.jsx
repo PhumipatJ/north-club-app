@@ -25,6 +25,7 @@ const AdminActivityReqDetail = () => {
   const [rejectReason,setReason] = useState('');
   const [doc,setdoc] = useState('');
   const [isConfirmOpen,setopen] = useState(false);
+  const [Opentype, setOpentype] = useState('');
   const navigate = useNavigate(0);
   const supabase = supabaseService.getClient();
 
@@ -88,20 +89,34 @@ const AdminActivityReqDetail = () => {
   
   }
 
+  const handleConfirm = () => {
+    setopen(true);
+  };
+
+  const handleSecondConfirm = () => {
+    if (Opentype === "approve") {
+      handleApprove();
+    } else if (Opentype === "reject") {
+      handleReject();
+    }
+  
+  };
+
   if(loading){
     return <Loading/>
   }
 
   return (
     <ThemeProvider theme={theme}>
+      {isConfirmOpen && (
       <ConfirmCard
-          isOpen={isConfirmOpen}
-          onClose={() => setopen(false)}
-          type=""
-          text=""
-          onConfirm={handleApprove}
-          onsecondConfirm={()=>navigate('/database/adminActivitiesReq')}
-        />
+        isOpen={isConfirmOpen}
+        onClose={() => setopen(false)}
+        type={Opentype}
+        onConfirm={handleConfirm}
+        onSecondConfirm={handleSecondConfirm}
+      />
+    )}
       <Container className="p-6 mt-24 min-h-[77vh] flex flex-col justify-center">
         <div className="flex max-w-6xl w-full">
           <div className=" w-full h-fit flex">
@@ -262,7 +277,10 @@ const AdminActivityReqDetail = () => {
                         
                       },
                     }}
-                    onClick={() => handleReject()}
+                    onClick={() => {
+                      setOpentype("reject");
+                      setopen(true);
+                    }}
                   >
                     ปฏิเสธ
                   </Button>
@@ -281,7 +299,10 @@ const AdminActivityReqDetail = () => {
                       boxShadow: "0px 0px 5px 0.1px #7CE9BF",
                     },
                   }}
-                  onClick={() => handleApprove()}
+                  onClick={() => {
+                    setOpentype("approve");
+                    setopen(true);
+                  }}
                 >
                   อนุมัติ
                 </Button>
