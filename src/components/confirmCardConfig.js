@@ -79,6 +79,22 @@ const confirmCardConfig = {
       confirmedTitle: "",
       confirmedDescription: "",  
     },
+    errorTimeInterval: {
+      title: "เวลาประกาศไม่ถูกต้อง",
+      confirmText: "",
+      cancelText: "ตกลง",
+      description: "กรุณาเลือกเวลาประกาศล่วงหน้าก่อน 1 เดือน",
+      confirmedTitle: "",
+      confirmedDescription: "",  
+    },
+    errorStartTime: {
+      title: "เวลาเริ่มและสิ้นสุดไม่ถูกต้อง",
+      confirmText: "",
+      cancelText: "ตกลง",
+      description: "กรุณาเลือกเวลาเริ่มต้นและเวลาสิ้นสุด ให้เวลาเริ่มต้นมีช่วงเวลาน้อยกว่าเวลาสิ้นสุด",
+      confirmedTitle: "",
+      confirmedDescription: "",  
+    },
     error: {
         title: "Error!",
         confirmText: "",
