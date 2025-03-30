@@ -292,10 +292,18 @@ const Clubpage = ({info}) => {
   //console.log(members);
   return (
     <div className="bg-gray-50">
-      <ConfirmCard isOpen={confirmOpen} type={openType} onClose={()=>setConfirm(false)} text={openText}></ConfirmCard>
+      <ConfirmCard 
+        isOpen={confirmOpen} 
+        type={openType} 
+        onClose={()=>setConfirm(false)} 
+        text={openText}>
+      </ConfirmCard>
       {onLoad?(<Loading/>):(<></>)}
       {isFormopen&&(
-        <Clubform formdata={{...applyForm, clubname:club?.club_name}} onClose={()=>setFormopen(false)} userInfo={info}/>
+        <Clubform 
+          formdata={{...applyForm, clubname:club?.club_name}} 
+          onClose={()=>window.location.reload()} 
+          userInfo={info}/>
       )}
       <div className="max-w-5xl mx-auto rounded-lg overflow-hidden">
       <div className="bg-white drop-shadow-lg mt-24">
