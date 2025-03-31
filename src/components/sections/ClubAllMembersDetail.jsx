@@ -36,6 +36,14 @@ const ClubAllMembersDetail = ({info}) => {
     "ผู้ช่วยเลขานุการ", 
     "สมาชิกชมรม"
   ];
+
+  const positionOrderProhibit = [
+    "กรรมการ", 
+    "เลขานุการ", 
+    "ผู้ช่วยเลขานุการ", 
+    "สมาชิกชมรม"
+  ];
+
   const [isDropdownOpen, setShowDropdown] = useState(false);
   const [roleSelected,setRoleSelected] = useState('');
 
@@ -57,13 +65,13 @@ const ClubAllMembersDetail = ({info}) => {
             if (error) {
                 console.error("Error fetching club position:", error);
             } else {
-                //console.log(data.position);
+                //console.log("ตำแหน่งผู้ใช้ : " + data.position);
                 setUserClubPosition(data.position);
             }
         };
 
         getClubPosition();
-    }, [email, clubId]); // Re-run when email or clubId changes
+    }, ); // Re-run when email or clubId changes
 
 
   useEffect(() => {
@@ -102,6 +110,26 @@ const ClubAllMembersDetail = ({info}) => {
   if(loading){
     return <Loading/>
   }
+
+  const handleChangePosition = async () => {
+    //console.log("ตำแหน่งรายละเอียด : " + clubApplicant[0].position);
+    //console.log("ตำแหน่งที่เลือก : " + roleSelected);
+    //console.log("ตำแหน่งผู้ใช้ : " + userClubPosition);
+    //console.log("email ผู้ถูกเปลี่ยน : " + email);
+
+    const { error: updateError } = await supabase
+      .from("clubMembers")
+      .update({ position: roleSelected })
+      .eq("email", email)
+      .eq("club_id", clubId);
+
+      if (updateError) {
+        console.error(`Failed to update event:`, updateError);
+      }
+      
+      window.location.reload();
+  }
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -174,85 +202,170 @@ const ClubAllMembersDetail = ({info}) => {
                         {/* ตำแหน่ง dropdown */}
                         <div className="flex items-center mb-6">
                             <p className="mr-4"><strong>ตำแหน่ง :</strong></p>
-                            <div className="relative">
-                                <button
-                                type="button"
-                                onClick={() => setShowDropdown(!isDropdownOpen)}
-                                className="cursor-pointer border border-[#FF7E69] rounded-md w-50 p-2 text-left bg-white"
-                                >
-                                <div className="flex flex-row items-center justify-between">
-                                    <div>{roleSelected || clubApplicant[0].position}</div>
-                                    <div className="text-[#FF7E69]">
-                                    {isDropdownOpen ? (
-                                        <ChevronUp size={20} />
-                                    ) : (
-                                        <ChevronDown size={20} />
+                            
+                            {info.email === email ? (    
+                              <div>
+                                {clubApplicant[0].position}
+                                <button className="p-2 border border-transparent text-white">.</button>
+                              </div>
+                              ) : userClubPosition === "ประธานชมรม" ? (
+                                // Show dropdown and button if user is "ประธานชมรม"
+                                <div className="flex items-center">
+                                  <div className="relative">
+                                    <button
+                                      type="button"
+                                      onClick={() => setShowDropdown(!isDropdownOpen)}
+                                      className="cursor-pointer border border-[#FF7E69] rounded-md w-50 p-2 text-left bg-white"
+                                    >
+                                      <div className="flex flex-row items-center justify-between">
+                                        <div>{roleSelected || clubApplicant[0].position}</div>
+                                        <div className="text-[#FF7E69]">
+                                          {isDropdownOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                                        </div>
+                                      </div>
+                                    </button>
+                                    {isDropdownOpen && (
+                                      <ul className="absolute w-50 mt-1 rounded-md bg-white shadow-md z-10">
+                                        {positionOrder.map((type, index) => (
+                                          <li
+                                            key={index}
+                                            onClick={() => handleSelectRole(type)}
+                                            className="p-2 cursor-pointer hover:bg-[#FF7E69] hover:rounded-md"
+                                          >
+                                            {type}
+                                          </li>
+                                        ))}
+                                      </ul>
                                     )}
-                                    </div>
-                                </div>
-                                </button>
-                                {isDropdownOpen && (
-                                <ul className="absolute w-50 mt-1 rounded-md bg-white shadow-md z-10">
-                                    {positionOrder.map((type, index) => (
-                                    <li
-                                        key={index}
-                                        onClick={() => {
-                                        handleSelectRole(type);
-                                        }}
-                                        className="p-2 cursor-pointer hover:bg-[#FF7E69] hover:rounded-md"
-                                    >
-                                        {type}
-                                    </li>
-                                    ))}
-                                </ul>
-                                )}
-                            </div>
+                                  </div>
 
-                            <div className="relative ml-10">
-                                {roleSelected==='' || roleSelected === clubApplicant[0].position ?(<Button
-                                    variant="outlined"
-                                    color="error"
-                                    sx={{
-                                        boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
-                                        mr: 2,
-                                        paddingX: "3vw",
-                                        bgcolor: "white",
-                                        color: "#1A1A1A7D",
-                                        borderWidth:'2px',
-                                        borderColor:'white',
-                                        "&:hover": {
-                                        boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
-                                        cursor: "no-drop",
-                                        },
-                                    }}
-                                    >
-                                    เปลี่ยนตำแหน่ง
-                                    </Button>):(
-                                        <Button
+                                  <div className="relative ml-10">
+                                    {roleSelected === "" || roleSelected === clubApplicant[0].position ? (
+                                      <Button
                                         variant="outlined"
                                         color="error"
                                         sx={{
-                                        boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
-                                        mr: 2,
-                                        paddingX: "3vw",
-                                        bgcolor:"#FF7E69",
-                                            color:'white',
-                                        borderColor:'#FF7E69',
-                                        borderWidth:'2px',
-                                        "&:hover": {
-                                            boxShadow: "0px 0px 5px 1px #FF7E697D",
-                                            
-                                        },
+                                          boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                          mr: 2,
+                                          paddingX: "3vw",
+                                          bgcolor: "white",
+                                          color: "#1A1A1A7D",
+                                          borderWidth: "2px",
+                                          borderColor: "white",
+                                          "&:hover": {
+                                            boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                            cursor: "no-drop",
+                                          },
                                         }}
-                                        onClick={() => {
-                                            console.log(roleSelected);
-                                            console.log(userClubPosition.position);
-                                        }}
-                                    >
+                                      >
                                         เปลี่ยนตำแหน่ง
-                                    </Button>
+                                      </Button>
+                                    ) : (
+                                      <Button
+                                        variant="outlined"
+                                        color="error"
+                                        sx={{
+                                          boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                          mr: 2,
+                                          paddingX: "3vw",
+                                          bgcolor: "#FF7E69",
+                                          color: "white",
+                                          borderColor: "#FF7E69",
+                                          borderWidth: "2px",
+                                          "&:hover": {
+                                            boxShadow: "0px 0px 5px 1px #FF7E697D",
+                                          },
+                                        }}
+                                        onClick={() => handleChangePosition()}
+                                      >
+                                        เปลี่ยนตำแหน่ง
+                                      </Button>
                                     )}
-                            </div>
+                                  </div>
+                                </div>
+                              ) : userClubPosition !== "ประธานชมรม" && clubApplicant[0].position !== "สมาชิกชมรม" ? (
+                                // Show only text if user is not "ประธานชมรม" and position is not "สมาชิกชมรม"
+                                <div>
+                                  {clubApplicant[0].position}
+                                  <button className="p-2 border border-transparent text-white">.</button>
+                                </div>
+                              ) : (
+                                // Show dropdown and button for others
+                                <div className="flex items-center">
+                                  <div className="relative">
+                                    <button
+                                      type="button"
+                                      onClick={() => setShowDropdown(!isDropdownOpen)}
+                                      className="cursor-pointer border border-[#FF7E69] rounded-md w-50 p-2 text-left bg-white"
+                                    >
+                                      <div className="flex flex-row items-center justify-between">
+                                        <div>{roleSelected || clubApplicant[0].position}</div>
+                                        <div className="text-[#FF7E69]">
+                                          {isDropdownOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                                        </div>
+                                      </div>
+                                    </button>
+                                    {isDropdownOpen && (
+                                      <ul className="absolute w-50 mt-1 rounded-md bg-white shadow-md z-10">
+                                        {positionOrderProhibit.map((type, index) => (
+                                          <li
+                                            key={index}
+                                            onClick={() => handleSelectRole(type)}
+                                            className="p-2 cursor-pointer hover:bg-[#FF7E69] hover:rounded-md"
+                                          >
+                                            {type}
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    )}
+                                  </div>
+
+                                  <div className="relative ml-10">
+                                    {roleSelected === "" || roleSelected === clubApplicant[0].position ? (
+                                      <Button
+                                        variant="outlined"
+                                        color="error"
+                                        sx={{
+                                          boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                          mr: 2,
+                                          paddingX: "3vw",
+                                          bgcolor: "white",
+                                          color: "#1A1A1A7D",
+                                          borderWidth: "2px",
+                                          borderColor: "white",
+                                          "&:hover": {
+                                            boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                            cursor: "no-drop",
+                                          },
+                                        }}
+                                      >
+                                        เปลี่ยนตำแหน่ง
+                                      </Button>
+                                    ) : (
+                                      <Button
+                                        variant="outlined"
+                                        color="error"
+                                        sx={{
+                                          boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                          mr: 2,
+                                          paddingX: "3vw",
+                                          bgcolor: "#FF7E69",
+                                          color: "white",
+                                          borderColor: "#FF7E69",
+                                          borderWidth: "2px",
+                                          "&:hover": {
+                                            boxShadow: "0px 0px 5px 1px #FF7E697D",
+                                          },
+                                        }}
+                                        onClick={() => handleChangePosition()}
+                                      >
+                                        เปลี่ยนตำแหน่ง
+                                      </Button>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+
 
                         </div>
 
@@ -271,7 +384,9 @@ const ClubAllMembersDetail = ({info}) => {
               <div className="flex flex-col w-full bg-grey">
                 <div className="h-fit w-full flexbox justify-end mt-10  gap-1">
                   <ThemeProvider theme={theme}> 
+                    <h3 className="text-lg font-semibold mb-2">ยุติการเป็นสมาชิกชมรม</h3>
                     <div className="flex justify-end pl-10 mt-1">
+                      
                     <input
                             type="text"
                             placeholder="เหตุผลในการยุติการเป็นสมาชิกชมรม"
@@ -296,7 +411,7 @@ const ClubAllMembersDetail = ({info}) => {
                             },
                           }}
                         >
-                          ยุติการเป็นสมาชิกชมรม
+                          ตกลง
                         </Button>):(
                             <Button
                             variant="outlined"
@@ -318,7 +433,7 @@ const ClubAllMembersDetail = ({info}) => {
                               
                             }}
                           >
-                            ยุติการเป็นสมาชิกชมรม
+                            ตกลง
                           </Button>
                         )}
                     </div>
