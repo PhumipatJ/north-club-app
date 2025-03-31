@@ -57,17 +57,6 @@ const ClubManage = ({userinfo}) => {
   },[location]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      //console.log(userinfo.role);
-      if(userinfo.role !== "club"){
-        window.location.reload();
-      }
-    }, 1000); 
-  
-    return () => clearInterval(interval); // Cleanup เมื่อ component ถูก unmount
-  }, []);
-
-  useEffect(() => {
     const fetchClubEvent = async () => {
       const { data, error } = await supabase
         .from("event")
@@ -263,6 +252,14 @@ const ClubManage = ({userinfo}) => {
       window.location.reload(); 
     }
   };
+
+  const handleCheckRoleSetting = async () => {
+    console.log(userinfo.role);
+    if(userinfo.role !== "club"){
+      window.location.reload();
+    }
+    navigate(`/Clubprofile/${clubId}`)
+  };
   
   return (
     <div className="bg-gray-50">
@@ -314,7 +311,7 @@ const ClubManage = ({userinfo}) => {
             {/* Setting */}
             <div className=" flex-col justify-between flex mb-6 ">
               <div className=" justify-end flex ">
-              <Settings className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => navigate(`/Clubprofile/${clubId}`)}/>
+              <Settings className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => handleCheckRoleSetting()}/>
               </div>
             <div className="justify-center mt-16 flex">
             
