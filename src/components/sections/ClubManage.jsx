@@ -290,7 +290,9 @@ const ClubManage = ({userinfo}) => {
       window.location.reload();
     }
   };
-  
+  const handleDayselect = (value) =>{
+    console.log(value);
+  }
   return (
     <div className="bg-gray-50" onClick={() => handleCheckRoleSetting()}> 
       {onLoading?(
@@ -452,7 +454,7 @@ const ClubManage = ({userinfo}) => {
         <div className="flex flex-row p-6 mt-8 justify-between">
           <div className="w-fit ">
             <h1 className="text-2xl text-center self-stretch">ปฎิทินกิจกรรม</h1>
-            <Calendar className="mt-2"/>
+            <Calendar className="mt-2" daySelect={handleDayselect}/>
           </div>
           
           {/* Modal */}
