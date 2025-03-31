@@ -49,7 +49,7 @@ const ClubManage = ({userinfo}) => {
 
   useEffect(()=>{
     setonLoad(true);
-    //console.log(userinfo)
+    console.log(userinfo)
     setTimeout(() => {
       setonLoad(false);
     }, 200);
@@ -79,7 +79,8 @@ const ClubManage = ({userinfo}) => {
             upcomingEvents.push(event);
           }
         });
-  
+        
+        try {
         // Sort non-expired events by start_date and then start_time
         upcomingEvents.sort((a, b) => {
           const [aDay, aMonth, aYear] = a.start_date.split("/").map(Number);
@@ -92,7 +93,8 @@ const ClubManage = ({userinfo}) => {
           }
           return 0;
         });
-  
+        
+        
         // Sort expired events by end_date and then end_time
         expiredEvents.sort((a, b) => {
           const [aDay, aMonth, aYear] = a.end_date.split("/").map(Number);
@@ -102,6 +104,9 @@ const ClubManage = ({userinfo}) => {
   
           return aEnd - bEnd; // Sort by end_date and end_time
         });
+        } catch (error) {
+          //console.error("Error sorting expiredEvents:", error);
+        }
   
         //console.log(upcomingEvents);
         //console.log(expiredEvents);
@@ -253,8 +258,8 @@ const ClubManage = ({userinfo}) => {
       {onLoading?(
         <Loading/>
       ):(<></>)}
-      <EventModal isOpen={isOpen} onClose={closeModal} clubId={clubId}/>
-      <ClubFormManage isOpen={isformpopupOpen} onClose={()=>{setPopupopen(false);}} clubId={clubId} prevform={prevForm}/>
+      <EventModal isOpen={isOpen} onClose={closeModal} clubId={clubId} userId={userinfo?.id}/>
+      <ClubFormManage isOpen={isformpopupOpen} onClose={()=>{setPopupopen(false)}} clubId={clubId} prevform={prevForm}/>
       <div className="max-w-5xl mx-auto rounded-lg overflow-hidden">
       <div className="bg-white drop-shadow-lg mt-24">
         {/* Club Banner */}
@@ -349,6 +354,7 @@ const ClubManage = ({userinfo}) => {
                       paddingX: "2vw",
                       bgcolor: "white",
                       color: "#1A1A1A",
+                      width:'100%',
                       "&:hover": { bgcolor: "#7CE9BF",boxShadow:"0px 0px 2px #7CE9BF60"},
                     }}
                     onClick={() => navigate(`/clubmanage/${clubId}/ClubApplicantsList`, { state: { clubId } })}
@@ -418,29 +424,41 @@ const ClubManage = ({userinfo}) => {
               
             {/* Announcement */}
             <h1 className="text-2xl pt-6">ประกาศ</h1>
-            {clubAnnouncement.map((announcement) => (
-              <div key={announcement.id}>
-                <AnnouncementList id={announcement.id} clubName={clubName} />
-                <br />
+            {clubAnnouncement.length === 0 ? (
+              <div className="bg-gray-100 text-gray-500 text-center py-4 rounded-lg">
+                ไม่มีประกาศ
               </div>
-            ))}
+            ) : (
+              clubAnnouncement.map((announcement) => (
+                <div key={announcement.id}>
+                  <AnnouncementList id={announcement.id} clubName={clubName} />
+                  <br />
+                </div>
+              ))
+            )}
 
             {/* Event */}
             <h1 className="text-2xl pt-6">กิจกรรม</h1>
-            {clubEvent.map((event) => (
-              <div key={event.id}>
-                <EventList id={event.id} clubName={clubName} />
-                <br />
+            {clubEvent.length === 0 && clubEventExpired.length === 0 ? (
+              <div className="bg-gray-100 text-gray-500 text-center py-4 rounded-lg">
+                ไม่มีกิจกรรม
               </div>
-            ))}
-
-            {/* Expire Event */}
-            {clubEventExpired.map((event) => (
-              <div key={event.id}>
-                <EventList id={event.id} clubName={clubName} />
-                <br />
-              </div>
-            ))}
+            ) : (
+              <>
+                {clubEvent.map((event) => (
+                  <div key={event.id}>
+                    <EventList id={event.id} clubName={clubName} />
+                    <br />
+                  </div>
+                ))}
+                {clubEventExpired.map((event) => (
+                  <div key={event.id}>
+                    <EventList id={event.id} clubName={clubName} />
+                    <br />
+                  </div>
+                ))}
+              </>
+            )}
 
           </div>
         </div>

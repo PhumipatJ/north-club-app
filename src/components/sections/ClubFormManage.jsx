@@ -62,8 +62,12 @@ const ClubFormManage = ({ isOpen, onClose, clubId, prevform }) => {
 
   const isFormValid = () => {
     const errors = [];
-    if (!Title.trim()) errors.push("Event title is required.");
+    if (!Title.trim()) {
+      setOpentype("errorEmpty")
+      errors.push("Event title is required.");
+    }
     if (!selectedDate) {
+      setOpentype("errorEmpty")
       errors.push("Selected date is required.");
     } else {
       const selectedDateObj = new Date(selectedDate); // Convert string to Date
@@ -75,16 +79,25 @@ const ClubFormManage = ({ isOpen, onClose, clubId, prevform }) => {
       //console.log(thirtyDaysAhead);
 
       if (selectedDateObj <= thirtyDaysAhead) {
+        setOpentype("errorEmpty")
         errors.push("Selected date must be more than " + thirtyDaysAhead);
       }
     }
-    if(!endTime.trim()) errors.push("endTime is required");
-    if (!Role.trim()) errors.push("Role is required.");
-    if (clubPoster==='') errors.push("clubPoster is required.");
+    if(!endTime.trim()) {
+      setOpentype("errorEmpty")
+      errors.push("endTime is required");
+    }
+    if (!Role.trim()) {
+      setOpentype("errorEmpty")
+      errors.push("Role is required.");
+    }
+    if (clubPoster==='') {
+      setOpentype("errorEmpty")
+      errors.push("clubPoster is required.");
+    }
 
     if (errors.length > 0) {
         console.log(...errors);
-      setOpentype('error');
       setOpentext(...errors);
       setError(true);
       return false;
@@ -94,7 +107,12 @@ const ClubFormManage = ({ isOpen, onClose, clubId, prevform }) => {
   };
   
   const handleConfirm = async () => {
-    if (!isFormValid()) return;
+    if (!isFormValid()) {
+      setIsConfirmOpen(true)
+      return;
+    }
+
+     
   
     try {
       // Convert string to Date object

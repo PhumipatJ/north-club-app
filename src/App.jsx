@@ -28,6 +28,7 @@ import AdminActivityReqDetail from './components/sections/AdminActivityReqDetail
 import ClubApplicantsList from './components/sections/ClubApplicantsList';
 import ClubAllApplicants from './components/sections/ClubAllApplicants';
 import ClubApplicantsReqDetail from './components/sections/ClubApplicantsReqDetail';
+import ClubAllMembersDetail from './components/sections/ClubAllMembersDetail';
 function App() {
   const [userinfo,setinfo] = useState();
   const sendUserinfo = useCallback((info)=>{
@@ -47,7 +48,7 @@ function App() {
           <Route path="/clubmember/:clubId" element={<><Clubmember/><Footer /></>} />
           <Route path="/stats" element={<><Statpage /><Footer /></>} />
           <Route path="/clubApplication" element={<Wrapper allowedRoles={['student', 'club', 'admin']} ><ClubApplication /><Footer /></Wrapper>} />
-          <Route path="/clubmanage/:clubId" element={<Wrapper allowedRoles={['club']} ><ClubManage/><Footer /></Wrapper>} />
+          <Route path="/clubmanage/:clubId" element={<Wrapper allowedRoles={['club']} ><ClubManage userinfo={userinfo}/><Footer /></Wrapper>} />
           <Route path="/docs" element={<><Clubfile /><Footer /></>} />
           <Route path="/database" element={<Wrapper allowedRoles={['admin']} ><AdminApprove /></Wrapper>} />
           <Route path="/database/adminRespond" element={<Wrapper allowedRoles={['admin']} ><AdminRespond /></Wrapper>} />
@@ -61,8 +62,9 @@ function App() {
           <Route path="/database/ReqDetail/:eventId" element={<Wrapper allowedRoles={['admin']} ><AdminActivityReqDetail /></Wrapper>} />
           <Route path="/clubmanage/:clubId/ClubApplicantsList" element={<Wrapper allowedRoles={['club']} ><ClubApplicantsList/></Wrapper>} />
           <Route path="/clubmanage/:clubId/ClubAllApplicants" element={<Wrapper allowedRoles={['club']} ><ClubAllApplicants/></Wrapper>} />
-          <Route path="/ClubApplicantsReqDetail/:applicantId" element={<Wrapper allowedRoles={['club']} ><ClubApplicantsReqDetail/></Wrapper>} />
+          <Route path="/ClubApplicantsReqDetail/:clubId" element={<Wrapper allowedRoles={['club']} ><ClubApplicantsReqDetail/></Wrapper>} />
           <Route path="/database/adminActivities/:eventId" element={<Wrapper allowedRoles={['admin']} ><ActivityDetail /></Wrapper>} />
+          <Route path="/ClubAllMembersDetail/:clubId" element={<Wrapper allowedRoles={['club']} ><ClubAllMembersDetail info={userinfo}/></Wrapper>} />
         </Routes>
       </Router>
     </>

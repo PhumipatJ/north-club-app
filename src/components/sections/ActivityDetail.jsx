@@ -121,7 +121,7 @@ const ActivityDetail = () => {
                             alt="KMUTNB Alumni Talk Season 2"
                             className="w-fit h-full object-cover rounded-lg" />
                     </div>
-                    <div className="flex-1 px-4">
+                    <div className="flex-1 px-4 overflow-auto">
                         <div className="flex items-center justify-between mb-2">
                             <span className="bg-[#FF7E69] text-white px-3 py-1 rounded-md text-sm font-semibold">
                                 {eventDetail.start_date}
