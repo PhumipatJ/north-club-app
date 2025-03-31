@@ -29,11 +29,14 @@ import ClubApplicantsList from './components/sections/ClubApplicantsList';
 import ClubAllApplicants from './components/sections/ClubAllApplicants';
 import ClubApplicantsReqDetail from './components/sections/ClubApplicantsReqDetail';
 import AdminDoc from './components/sections/AdminDoc';
+import ClubAllMembersDetail from './components/sections/ClubAllMembersDetail';
 function App() {
   const [userinfo,setinfo] = useState();
   const sendUserinfo = useCallback((info)=>{
     setinfo(info);
   })
+
+
   return (
     <>
       <Router>
@@ -48,7 +51,7 @@ function App() {
           <Route path="/clubmember/:clubId" element={<><Clubmember/><Footer /></>} />
           <Route path="/stats" element={<><Statpage /><Footer /></>} />
           <Route path="/clubApplication" element={<Wrapper allowedRoles={['student', 'club', 'admin']} ><ClubApplication /><Footer /></Wrapper>} />
-          <Route path="/clubmanage/:clubId" element={<Wrapper allowedRoles={['club']} ><ClubManage userinfo={userinfo}/><Footer /></Wrapper>} />
+          <Route path="/clubmanage/:clubId" element={<Wrapper allowedRoles={['club']} prohibitedClubPosition = "สมาชิกชมรม"  ><ClubManage userinfo={userinfo}/><Footer /></Wrapper>} />
           <Route path="/docs" element={<><Clubfile /><Footer /></>} />
           <Route path="/database" element={<Wrapper allowedRoles={['admin']} ><AdminApprove /></Wrapper>} />
           <Route path="/database/adminRespond" element={<Wrapper allowedRoles={['admin']} ><AdminRespond /></Wrapper>} />
@@ -65,6 +68,7 @@ function App() {
           <Route path="/ClubApplicantsReqDetail/:clubId" element={<Wrapper allowedRoles={['club']} ><ClubApplicantsReqDetail/></Wrapper>} />
           <Route path="/database/adminActivities/:eventId" element={<Wrapper allowedRoles={['admin']} ><ActivityDetail /></Wrapper>} />
           <Route path="/database/doc" element={<Wrapper allowedRoles={['admin']}><AdminDoc/></Wrapper>}/>
+          <Route path="/ClubAllMembersDetail/:clubId" element={<Wrapper allowedRoles={['club']} ><ClubAllMembersDetail info={userinfo}/></Wrapper>} />
         </Routes>
       </Router>
     </>

@@ -29,12 +29,13 @@ const ClubAllApplicants = () => {
   const supabase = supabaseService.getClient();
   const location = useLocation();
   const { clubId } = useParams();
+  const [userClubDuty, setUserClubDuty] = useState([]);
 
   useEffect(() => {
     const fetchClubMembers = async () => {
       const { data, error } = await supabase
         .from("clubMembers")
-        .select("club_id, email, position, created_at, user(name, email)")
+        .select("club_id, email, position, clubPosition, created_at, user(name, email)")
         .eq("club_id", clubId);
   
       if (error) {
@@ -55,8 +56,17 @@ const ClubAllApplicants = () => {
           return positionOrder.indexOf(a.position) - positionOrder.indexOf(b.position);
         });
   
-        console.log(sortedData);
+        //console.log(sortedData);
         setClubMembers(sortedData);
+
+        // Extract unique clubPosition values from the sortedData
+        const uniquePositions = [...new Set(sortedData.map(item => item.clubPosition))];
+
+        // Replace null with "ผู้ดูแลชมรม"
+        const updatedPositions = uniquePositions.filter(position => position !== null);
+
+        // Update the state with the unique club positions
+        setUserClubDuty(updatedPositions);
       }
       setTimeout(() => {
         setLoading(false);
@@ -92,7 +102,7 @@ const ClubAllApplicants = () => {
             <h1 className="text-4xl font-bold my-auto ">จัดการสมาชิกชมรม</h1>
             <div className="my-auto flex ml-auto w-fit gap-5">
               <div className="flex items-center mr-5">
-                <User className="text-[#7CE9BF]"/>&nbsp;นักศึกษา
+                <User className="text-[#7CE9BF]"/>&nbsp;สมาชิกทั่วไป
               </div>
               <div className="flex items-center ">
                 <UserCog className="text-[#FF7E69]"/>&nbsp;ผู้ดูแลชมรม
@@ -101,6 +111,7 @@ const ClubAllApplicants = () => {
           </div>
         </div>
         
+
         <div className="flex justify-between gap-10 h-[calc(100vh-184px)]">
           <ClubApplicantsBox clubId={clubId}/>
           <TableContainer
@@ -150,7 +161,7 @@ const ClubAllApplicants = () => {
                 ) : (
                   clubMembers.map((club) => (
                     <TableRow key={club.club_id} sx={{'&:hover':{backgroundColor:'#f9f9f9' , cursor:'pointer'}}} 
-                    onClick={()=>navigate(`/clubs/${club.club_id}`)}>
+                    onClick={() => navigate(`/ClubAllMembersDetail/${clubId}`, { state: { email: club.user?.email, duties : userClubDuty } })}>
                       <TableCell sx={{ textAlign: 'center', borderColor: '#fff' }}>
                         {club.position !== "สมาชิกชมรม" ? (
                           <UserCog className="text-[#FF7E69]" />
@@ -158,6 +169,7 @@ const ClubAllApplicants = () => {
                           <User className="text-[#7CE9BF]" />
                         )}
                       </TableCell>
+
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.user?.name}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{club.user?.email}</TableCell>
                       <TableCell sx={{textAlign:'center', borderColor:'#fff'}}>{formatDate(club.created_at)}</TableCell>

@@ -111,7 +111,7 @@ const Clublist = () => {
   return (
     <div className="max-w-4xl mx-auto p-4 mt-24 ">
       <div className="flex flex-row items-center justify-between">
-        <h1 className="text-4xl font-bold mb-4">Club list</h1>
+        <h1 className="text-4xl font-bold mb-4">ชมรมทั้งหมด</h1>
         
         {/* Search bar */}
         <div className="relative mb-6">
@@ -120,7 +120,7 @@ const Clublist = () => {
           </div>
           <input
             type="text"
-            placeholder="Enter Club Name"
+            placeholder="ค้นหาชมรม"
             className="w-full border rounded-lg p-2 pl-10 focus:ring-2 focus:ring-[#FF7E69] pl-10 
                       border-none outline-none shadow-[0_2px_4px_rgba(0,0,0,0.1)] text-[#333] h-10 rounded-[20px]"
             value={search}
@@ -185,7 +185,7 @@ const Clublist = () => {
                       </span>
                     ))}
                   </div>
-                  <p className="text-sm mt-4">ประธานชมรม: {club.president}</p>
+
                 </div>
               </div>
             )}

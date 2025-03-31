@@ -127,6 +127,14 @@ const confirmCardConfig = {
       confirmedTitle: "ส่งคำขอเรียบร้อย",
       confirmedDescription: "รอการตอบกลับทางอีเมลได้เลย!",
     },
+    registrationClose: {
+      title: "ปิดรับการสมัคร",
+      confirmText: "ตกลง",
+      cancelText: "ยกเลิก",
+      description: "ทำการปิดรับการสมัครของชมรม?",
+      confirmedTitle: "ปิดรับเรียบร้อย",
+      confirmedDescription: "",
+    },
     alreadyInClub: {
       title: "คุณอยู่ชมรมนี้แล้ว",
       confirmText: "",

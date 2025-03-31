@@ -36,6 +36,7 @@ const Navbar = ({sendUserinfo}) => {
       sendUserinfo(userInfo);  // เรียกใช้ฟังก์ชันจาก parent
     }
   }, [session, userInfo]);
+  
 
   useEffect(() => {
     const handleScroll = () => {
@@ -363,7 +364,7 @@ const Navbar = ({sendUserinfo}) => {
                       <div className="flex flex-row">
                         <User className="text-[#7CE9BF] fill-[#7CE9BF]" />
                         <p className="text-gray-500 text-sm">
-                          {userInfo?.role === "student" ? "นักศึกษา" : userInfo?.role === "club" ? "นักศึกษาสังกัดชมรม" : "กองกิจการนักศึกษา"}
+                          {userInfo?.role === "student" ? "นักศึกษา" : userInfo?.role === "club" || userInfo?.role === "clubMember" ? "นักศึกษาสังกัดชมรม" : "กองกิจการนักศึกษา"}
                         </p>
                       </div>
                     </div>
