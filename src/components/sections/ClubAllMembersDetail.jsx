@@ -58,7 +58,7 @@ const ClubAllMembersDetail = ({info}) => {
 
   const handleSelectDuty = (duty) =>{
     setDutySelected(duty);
-    isDropdownOpen2(false);
+    setShowDropdown2(false);
   }
 
     useEffect(() => {
@@ -151,8 +151,6 @@ const ClubAllMembersDetail = ({info}) => {
       }
       console.log("Applicant role updated to 'club':", updateData);
 
-        
-
       window.location.reload();
 
       }
@@ -162,6 +160,27 @@ const ClubAllMembersDetail = ({info}) => {
   }
 
   const handleChangeDuty = async () => {
+    //console.log("ตำแหน่งเดิม : " + clubApplicant[0].clubPosition);
+    //console.log("ตำแหน่งที่เลือก : " + dutySelected);
+
+    try {
+      const { error: updateError } = await supabase
+        .from("clubMembers")
+        .update({ clubPosition: dutySelected })
+        .eq("email", email)
+        .eq("club_id", clubId);
+
+      if (updateError) {
+        console.error(`Failed to update event:`, updateError);
+      }
+
+      window.location.reload();
+
+      }
+      catch (err) {
+        console.error("Error during approve process:", err);
+      }
+    
   }
 
 
@@ -279,20 +298,23 @@ const ClubAllMembersDetail = ({info}) => {
                                         variant="outlined"
                                         color="error"
                                         sx={{
-                                          boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
-                                          mr: 2,
-                                          paddingX: "3vw",
-                                          bgcolor: "white",
-                                          color: "#1A1A1A7D",
-                                          borderWidth: "2px",
-                                          borderColor: "white",
-                                          "&:hover": {
                                             boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
-                                            cursor: "no-drop",
-                                          },
-                                        }}
+                                            mr: 2,
+                                            paddingX: "3vw",
+                                            bgcolor: "white",
+                                            color: "#1A1A1A7D",
+                                            borderWidth: "2px",
+                                            borderColor: "white",
+                                            "&:hover": {
+                                              boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                              cursor: "no-drop",
+                                            },
+                                            borderColor: "white",
+                                            width: "150", 
+                                            minWidth: "150",
+                                          }}
                                       >
-                                        เปลี่ยนตำแหน่ง
+                                        เปลี่ยน
                                       </Button>
                                     ) : (
                                       <Button
@@ -309,10 +331,12 @@ const ClubAllMembersDetail = ({info}) => {
                                           "&:hover": {
                                             boxShadow: "0px 0px 5px 1px #FF7E697D",
                                           },
+                                            width: "150", 
+                                            minWidth: "150",
                                         }}
                                         onClick={() => handleChangePosition()}
                                       >
-                                        เปลี่ยนตำแหน่ง
+                                        เปลี่ยน
                                       </Button>
                                     )}
                                   </div>
@@ -371,9 +395,11 @@ const ClubAllMembersDetail = ({info}) => {
                                             boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
                                             cursor: "no-drop",
                                           },
+                                          width: "200", 
+                                          minWidth: "200",
                                         }}
                                       >
-                                        เปลี่ยนตำแหน่ง
+                                        เปลี่ยน
                                       </Button>
                                     ) : (
                                       <Button
@@ -390,10 +416,12 @@ const ClubAllMembersDetail = ({info}) => {
                                           "&:hover": {
                                             boxShadow: "0px 0px 5px 1px #FF7E697D",
                                           },
+                                          width: "200", 
+                                          minWidth: "200",
                                         }}
                                         onClick={() => handleChangePosition()}
                                       >
-                                        เปลี่ยนตำแหน่ง
+                                        เปลี่ยน
                                       </Button>
                                     )}
                                   </div>
@@ -403,14 +431,13 @@ const ClubAllMembersDetail = ({info}) => {
 
                         </div>
 
-                        {/* ตำแหน่ง dropdown */}
+                        {/* หน้าที่ dropdown */}
                         <div className="flex items-center mb-6">
-                            <p className="mr-4"><strong>หน้าที่ :</strong></p>
+                            <p className="mr-4 pr-5"><strong>หน้าที่ :</strong></p>
                             
                             {info.email === email ? (    
                               <div>
                                 {clubApplicant[0].clubPosition || "ผู้ดูแลชมรม"}
-                                <button className="p-2 border border-transparent text-white">.</button>
                               </div>
                               ) : userClubPosition === "ประธานชมรม" ? (
                                 // Show dropdown and button if user is "ประธานชมรม"
@@ -460,9 +487,11 @@ const ClubAllMembersDetail = ({info}) => {
                                             boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
                                             cursor: "no-drop",
                                           },
+                                          width: "200", 
+                                          minWidth: "200",
                                         }}
                                       >
-                                        เปลี่ยนหน้าที่
+                                        เปลี่ยน
                                       </Button>
                                     ) : (
                                       <Button
@@ -479,10 +508,12 @@ const ClubAllMembersDetail = ({info}) => {
                                           "&:hover": {
                                             boxShadow: "0px 0px 5px 1px #FF7E697D",
                                           },
+                                          width: "200", 
+                                          minWidth: "200",
                                         }}
                                         onClick={() => handleChangeDuty()}
                                       >
-                                        เปลี่ยนหน้าที่
+                                        เปลี่ยน
                                       </Button>
                                     )}
                                   </div>
@@ -541,9 +572,11 @@ const ClubAllMembersDetail = ({info}) => {
                                             boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
                                             cursor: "no-drop",
                                           },
+                                          width: "200", 
+                                          minWidth: "200",
                                         }}
                                       >
-                                        เปลี่ยนหน้าที่
+                                        เปลี่ยน
                                       </Button>
                                     ) : (
                                       <Button
@@ -560,10 +593,12 @@ const ClubAllMembersDetail = ({info}) => {
                                           "&:hover": {
                                             boxShadow: "0px 0px 5px 1px #FF7E697D",
                                           },
+                                          width: "200", 
+                                          minWidth: "200",
                                         }}
                                         onClick={() => handleChangeDuty()}
                                       >
-                                        เปลี่ยนหน้าที่
+                                        เปลี่ยน
                                       </Button>
                                     )}
                                   </div>
