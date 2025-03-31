@@ -14,6 +14,7 @@ import Loading from "../loading";
 import supabaseService from "../../service/supabaseService";
 import AnnouncementList from "../AnnouncementList";
 import EventList from "../EventList";
+import ConfirmCard from "../confirmCard";
 
 const ClubManage = ({userinfo}) => {
   const supabase = supabaseService.getClient();
@@ -36,6 +37,19 @@ const ClubManage = ({userinfo}) => {
   const [clubAnnouncement, setClubAnnouncement] = useState([]);
 
   const [clubName, setClubName] = useState("");
+
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [opentype, setOpentype] = useState(null);
+
+  const handleConfirm = () => {
+    setOpentype("registrationClose")
+    setIsConfirmOpen(true);
+  };
+
+  const handelonclose = () => {
+    setIsConfirmOpen(false);
+    handleCloseRegistration();
+  };
 
   const isEventExpired = (endDate, endTime) => {
     const [day, month, year] = endDate.split("/").map(Number);
@@ -258,8 +272,23 @@ const ClubManage = ({userinfo}) => {
       {onLoading?(
         <Loading/>
       ):(<></>)}
-      <EventModal isOpen={isOpen} onClose={closeModal} clubId={clubId} userId={userinfo?.id}/>
-      <ClubFormManage isOpen={isformpopupOpen} onClose={()=>{setPopupopen(false)}} clubId={clubId} prevform={prevForm}/>
+      <EventModal 
+        isOpen={isOpen} 
+        onClose={closeModal} 
+        clubId={clubId} 
+        userId={userinfo?.id}/>
+      <ClubFormManage 
+        isOpen={isformpopupOpen} 
+        onClose={()=>{setPopupopen(false)}} 
+        clubId={clubId} 
+        prevform={prevForm}/>
+      <ConfirmCard
+        isOpen={isConfirmOpen}
+        onClose={() => setIsConfirmOpen(false)}
+        type={opentype}
+        onConfirm={handleConfirm}
+        onSecondConfirm={handelonclose}
+      />
       <div className="max-w-5xl mx-auto rounded-lg overflow-hidden">
       <div className="bg-white drop-shadow-lg mt-24">
         {/* Club Banner */}
@@ -323,7 +352,7 @@ const ClubManage = ({userinfo}) => {
                   color: "#1A1A1A",
                   "&:hover": { bgcolor: "#FF7E69",boxShadow:"0px 0px 2px #FF7E6960"},
                 }}
-                onClick={handleCloseRegistration}
+                onClick={handleConfirm}
               >
                 ปิดรับสมัคร
               </Button>):(<Button
