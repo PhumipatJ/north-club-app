@@ -25,11 +25,11 @@ const Navbar = ({sendUserinfo}) => {
   const [showClubCard, setShowClubCard] = useState(false);
   const clubCardRef = useRef(null);
   const navigate = useNavigate();
-
+  const prevSession = useRef(null);
   const [userClub, setUserClub] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
-
   const [userClubPosition, setUserClubPosition] = useState([]);
+  const [currentSession,setCurrentSession] = useState(null);
 
   useEffect(() => {
     if (session && userInfo) {
@@ -45,14 +45,14 @@ const Navbar = ({sendUserinfo}) => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
   useEffect(() => {
     const getSessionAndRole = async () => {
       const sessionData = await authService.getSession();
-      //console.log(sessionData);
       setSession(sessionData);
-      if(session === null){
+      
+      if(!session){
         console.log("now log out")
+        //window.location.reload()
       }
       else{
         console.log("am in")
@@ -71,6 +71,7 @@ const Navbar = ({sendUserinfo}) => {
     const { data: authListener } = authService.supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session);
+        
         if (session) {
           authService.getUserRole(session.user.id).then(setUserRole);
         }
@@ -80,7 +81,17 @@ const Navbar = ({sendUserinfo}) => {
     getSessionAndRole();
     return () => authListener.subscription.unsubscribe();
   }, []);
+  useEffect(() => {
+    const prevSessionString = JSON.stringify(prevSession.current);
+    const currentSessionString = JSON.stringify(session);
 
+    if (prevSession.current !== null && prevSessionString !== currentSessionString) {
+      console.log("🔄 Session changed! Reloading...");
+      window.location.reload();
+    }
+
+    prevSession.current = session; // อัปเดตค่าล่าสุดของ session
+  }, [session]);
   // Close profile dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {

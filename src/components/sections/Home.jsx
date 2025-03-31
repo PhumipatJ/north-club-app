@@ -310,7 +310,7 @@ const Home = () => {
               </thead>
               <tbody className="bg-white">
                 {
-                  EventList.sort((a, b) => {
+                  EventList?.sort((a, b) => {
                     const [ddA, mmA, yyyyA] = a.start_date.split("/");
                     const eventDateA = new Date(`${yyyyA}-${mmA}-${ddA}`);
                 

@@ -44,6 +44,21 @@ const AdmindatabaseBox =()=>{
         sx={{
           boxShadow: "none",
           width:'100%',
+          bgcolor: location.pathname ==='/database/doc'? '#FF7E69' : "white",
+          color: location.pathname ==='/database/doc'? 'white' : "#1A1A1A",
+          "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},
+          borderRadius:"0",
+        }}
+        onClick={() => navigate("/database/doc")}
+      >
+        เอกสาร
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{
+          boxShadow: "none",
+          width:'100%',
           bgcolor: location.pathname ==='/database/adminUserPreview'? '#FF7E69' : "white",
           color: location.pathname ==='/database/adminUserPreview'? 'white' : "#1A1A1A",
           "&:hover": { bgcolor: "#FF7E69",boxShadow:"none"},

@@ -66,7 +66,7 @@ const AdminActivities = () => {
   }
   return (
     <ThemeProvider theme={theme}>
-      <Container className="p-6 mt-24 min-h-[77vh] flex flex-col justify-center">
+      <Container className="p-6 mt-24 min-h-[77vh] flex flex-col justify-center ">
         <div className="flex max-w-6xl w-full">
           <div className=" w-full h-fit flex">
             <h1 className="text-4xl font-bold my-auto ">รายชื่อกิจกรรม</h1>

@@ -167,6 +167,30 @@ const confirmCardConfig = {
       confirmedTitle: "ปฏิเสธเรียบร้อย",
       confirmedDescription: "",
     },
+    uploadFile:{
+      title: "ยืนยันการอัพโหลด",
+      confirmText: "อัพโหลด",
+      cancelText: "ตรวจเช็คอีกครั้ง",
+      description: "",
+      confirmedTitle: "อัพโหลดเรียบร้อย",
+      confirmedDescription: "",
+    },
+    errorUploadFile: {
+      title: "ไม่มีไฟล์",
+      confirmText: "",
+      cancelText: "ตกลง",
+      description: "กรุณาเลือกไฟล์",
+      confirmedTitle: "",
+      confirmedDescription: "",  
+    },
+    deleteFile: {
+      title: "ยืนยันการลบไฟล์?",
+      confirmText: "ยืนยัน",
+      cancelText: "ยกเลิก",
+      description: "",
+      confirmedTitle: "ลบเรียบร้อย",
+      confirmedDescription: "ตกลง",  
+    },
   };
   
   export const getConfirmCardConfig = (type) =>

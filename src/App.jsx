@@ -28,6 +28,7 @@ import AdminActivityReqDetail from './components/sections/AdminActivityReqDetail
 import ClubApplicantsList from './components/sections/ClubApplicantsList';
 import ClubAllApplicants from './components/sections/ClubAllApplicants';
 import ClubApplicantsReqDetail from './components/sections/ClubApplicantsReqDetail';
+import AdminDoc from './components/sections/AdminDoc';
 function App() {
   const [userinfo,setinfo] = useState();
   const sendUserinfo = useCallback((info)=>{
@@ -42,7 +43,7 @@ function App() {
           <Route path="/" element={<><Home /><Footer /></>} />
           <Route path="/login" element={<><Login /><Footer /></>} />
           <Route path="/register" element={<><Register /><Footer /></>} />
-          <Route path="/clubs" element={<><Clublist /><Footer /></>} />
+          <Route path="/clubs" element={<><Clublist /><Footer /></>}/>
           <Route path="/clubs/:clubId" element={<><Clubpage info={userinfo}/><Footer /></>} />
           <Route path="/clubmember/:clubId" element={<><Clubmember/><Footer /></>} />
           <Route path="/stats" element={<><Statpage /><Footer /></>} />
@@ -63,6 +64,7 @@ function App() {
           <Route path="/clubmanage/:clubId/ClubAllApplicants" element={<Wrapper allowedRoles={['club']} ><ClubAllApplicants/></Wrapper>} />
           <Route path="/ClubApplicantsReqDetail/:clubId" element={<Wrapper allowedRoles={['club']} ><ClubApplicantsReqDetail/></Wrapper>} />
           <Route path="/database/adminActivities/:eventId" element={<Wrapper allowedRoles={['admin']} ><ActivityDetail /></Wrapper>} />
+          <Route path="/database/doc" element={<Wrapper allowedRoles={['admin']}><AdminDoc/></Wrapper>}/>
         </Routes>
       </Router>
     </>
