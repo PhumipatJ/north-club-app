@@ -67,7 +67,7 @@ const ApprovalPopup = ({ clubdata, count,clubId, onClose }) => {
       ]);
 
     if (insertError) {
-      console.error("updated history failed:", error);
+      console.error("updated history failed:", insertError);
       return;
     }
 
