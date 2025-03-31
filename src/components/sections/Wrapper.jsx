@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation , useParams} from "react-router-dom";
 import authService from "../../service/AuthService";
 import Loading from "../loading";
-function Wrapper({ children, allowedRoles }) {
+function Wrapper({ children, allowedRoles, prohibitedClubPosition }) {
   const [authenticated, setAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
+  const { clubId } = useParams();
+  const [clubPosition, setclubPosition] = useState(null);
 
   useEffect(() => {
     const getSessionAndRole = async () => {
@@ -16,6 +18,9 @@ function Wrapper({ children, allowedRoles }) {
         setAuthenticated(true);
         const role = await authService.getUserRole(session.user.id);
         setUserRole(role);
+
+        const clubPosition = await authService.getUniqueUserClubPosition(session.user.email,clubId);
+        setclubPosition(clubPosition);
       }
 
       setTimeout(() => {
@@ -26,7 +31,7 @@ function Wrapper({ children, allowedRoles }) {
     getSessionAndRole();
   }, []);
 
-  //console.log(userRole);
+  //console.log(prohibitedClubPosition);
   
   if (loading) {
     return <Loading/>;
@@ -37,6 +42,11 @@ function Wrapper({ children, allowedRoles }) {
   }
 
   if (!allowedRoles.includes(userRole)) {
+    //window.location.reload();
+    return <Navigate to="/" />;
+  }
+
+  if(prohibitedClubPosition !== null && clubPosition === prohibitedClubPosition){
     return <Navigate to="/" />;
   }
 

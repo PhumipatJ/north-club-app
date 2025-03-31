@@ -33,6 +33,7 @@ const AdminRespond = () => {
   const [clubdata,setClubdata] = useState([]);
   const [open,setopen] = useState(false);
   const supabase = supabaseService.getClient();
+
     useEffect(() => {
     const fetchPendingClubs = async () => {
       const { data, error } = await supabase
@@ -50,6 +51,7 @@ const AdminRespond = () => {
       if (merror) {
         console.error("Error fetching users:", );
       } else {
+        //console.log(data[0].club_id)
         setPendingClubs(
           data.map((club) => ({
             ...club,
@@ -73,7 +75,7 @@ const AdminRespond = () => {
     setRequestId(id);
     setOpenDetail(true);
     setCount(count);
-    console.log(pendingClubs)
+    //console.log(pendingClubs)
   };
   const handlePopup =()=>{
     setOpenDetail(false);
@@ -92,8 +94,9 @@ const AdminRespond = () => {
         <ConfirmCard isOpen={open} onClose={()=>setopen(false)} type={"event"}></ConfirmCard>
       )}
       {openDetail === true &&(
-        <ApprovalPopup clubdata={clubdata} count={membercount} onClose={handlePopup}/>
+        <ApprovalPopup clubdata={clubdata} count={membercount} clubId={requestID}  onClose={handlePopup}/>
       )}
+
       <Container className="p-6 mt-24 min-h-[77vh] flex flex-col justify-center">
       <div className="flex max-w-6xl w-full">
           <div className=" w-full h-fit flex">

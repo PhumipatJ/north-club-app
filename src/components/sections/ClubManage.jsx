@@ -14,6 +14,7 @@ import Loading from "../loading";
 import supabaseService from "../../service/supabaseService";
 import AnnouncementList from "../AnnouncementList";
 import EventList from "../EventList";
+import ConfirmCard from "../confirmCard";
 
 const ClubManage = ({userinfo}) => {
   const supabase = supabaseService.getClient();
@@ -37,6 +38,20 @@ const ClubManage = ({userinfo}) => {
 
   const [clubName, setClubName] = useState("");
 
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [opentype, setOpentype] = useState(null);
+
+
+  const handleConfirm = () => {
+    setOpentype("registrationClose")
+    setIsConfirmOpen(true);
+  };
+
+  const handelonclose = () => {
+    setIsConfirmOpen(false);
+    handleCloseRegistration();
+  };
+
   const isEventExpired = (endDate, endTime) => {
     const [day, month, year] = endDate.split("/").map(Number);
     const [hours, minutes] = endTime.split(":").map(Number);
@@ -49,12 +64,12 @@ const ClubManage = ({userinfo}) => {
 
   useEffect(()=>{
     setonLoad(true);
-    console.log(userinfo)
+    //console.log(userinfo)
     setTimeout(() => {
       setonLoad(false);
     }, 200);
   
-  },[location])
+  },[location]);
 
   useEffect(() => {
     const fetchClubEvent = async () => {
@@ -231,7 +246,7 @@ const ClubManage = ({userinfo}) => {
       }
       if(Formdata.length !== 0){
         setPrevform(Formdata);
-        console.log(Formdata);
+        //console.log(Formdata);
       }
       else{
         //console.log("test");
@@ -252,14 +267,54 @@ const ClubManage = ({userinfo}) => {
       window.location.reload(); 
     }
   };
-  
+
+  const fetchUserClubPosition = async () => {
+      const { data, error } = await supabase
+          .from("clubMembers")
+          .select("position")
+          .eq("email", userinfo.email)
+          .eq("club_id", clubId)
+          .single();
+
+      if (error) {
+        console.error("Error fetching clubs:", error);
+      } else {
+        return data.position;
+      }
+  };
+
+  const handleCheckRoleSetting = async () => {
+    const clubPosition = await fetchUserClubPosition();
+    console.log(clubPosition);
+    if (clubPosition === "สมาชิกชมรม") {
+      window.location.reload();
+    }
+  };
+  const handleDayselect = (value) =>{
+    console.log(value);
+  }
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50" onClick={() => handleCheckRoleSetting()}> 
       {onLoading?(
         <Loading/>
       ):(<></>)}
-      <EventModal isOpen={isOpen} onClose={closeModal} clubId={clubId} userId={userinfo?.id}/>
-      <ClubFormManage isOpen={isformpopupOpen} onClose={()=>{setPopupopen(false)}} clubId={clubId} prevform={prevForm}/>
+      <EventModal 
+        isOpen={isOpen} 
+        onClose={closeModal} 
+        clubId={clubId} 
+        userId={userinfo?.id}/>
+      <ClubFormManage 
+        isOpen={isformpopupOpen} 
+        onClose={()=>{setPopupopen(false)}} 
+        clubId={clubId} 
+        prevform={prevForm}/>
+      <ConfirmCard
+        isOpen={isConfirmOpen}
+        onClose={() => setIsConfirmOpen(false)}
+        type={opentype}
+        onConfirm={handleConfirm}
+        onSecondConfirm={handelonclose}
+      />
       <div className="max-w-5xl mx-auto rounded-lg overflow-hidden">
       <div className="bg-white drop-shadow-lg mt-24">
         {/* Club Banner */}
@@ -323,7 +378,7 @@ const ClubManage = ({userinfo}) => {
                   color: "#1A1A1A",
                   "&:hover": { bgcolor: "#FF7E69",boxShadow:"0px 0px 2px #FF7E6960"},
                 }}
-                onClick={handleCloseRegistration}
+                onClick={handleConfirm}
               >
                 ปิดรับสมัคร
               </Button>):(<Button
@@ -331,6 +386,7 @@ const ClubManage = ({userinfo}) => {
                 color="primary"
                 sx={{
                   boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                  width:'100%',
                   mr: 0,
                   paddingX: "2vw",
                   bgcolor: "white",
@@ -398,7 +454,7 @@ const ClubManage = ({userinfo}) => {
         <div className="flex flex-row p-6 mt-8 justify-between">
           <div className="w-fit ">
             <h1 className="text-2xl text-center self-stretch">ปฎิทินกิจกรรม</h1>
-            <Calendar className="mt-2"/>
+            <Calendar className="mt-2" daySelect={handleDayselect}/>
           </div>
           
           {/* Modal */}

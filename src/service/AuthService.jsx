@@ -51,6 +51,16 @@ class AuthService {
     return error ? null : data.map(item => item.position);
   }
 
+  async getUniqueUserClubPosition(email,clubId) {
+    const { data, error } = await this.supabase
+      .from("clubMembers")
+      .select("position")
+      .eq("email", email)
+      .eq("club_id",clubId)
+    return error ? null : data[0].position;
+  }
+  
+
   async getEmail(userId) {
     const { data, error } = await this.supabase
       .from("user")

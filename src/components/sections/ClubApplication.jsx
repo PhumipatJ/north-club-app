@@ -3,6 +3,7 @@ import { FileUp, ChevronDown, ChevronUp } from "lucide-react";
 import supabaseService from "../../service/supabaseService";
 import authService from "../../service/AuthService";
 import { useNavigate } from "react-router-dom"; 
+import ConfirmCard from "../confirmCard";
 
 const ClubApplication = () => {
   const supabase = supabaseService.getClient();
@@ -19,6 +20,10 @@ const ClubApplication = () => {
   const [clubAvatarPreview, setClubAvatarPreview] = useState(null);
 
   const [isOpen, setIsOpen] = useState(false);
+
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [opentype, setOpentype] = useState("");
+  const [opentext, setOpentext] = useState("");
   
   const [applicationDocument, setApplicationDocument] = useState(null);
   const [fileName, setFileName] = useState("using (png, jpg, webp)");
@@ -93,58 +98,63 @@ const ClubApplication = () => {
     return data.path;
   };
 
-  const isFormValid = () => {
-    console.log(clubType);
-    if (clubType === "") {
+  const isFormValid = async () => {
+    if (!clubName.trim()) {
+      setOpentype("errorEmpty");
       return false;
     }
   
-    //console.log(members);
+    if (clubType === "") {
+      setOpentype("errorEmpty");
+      return false;
+    }
   
-    // Check for duplicate emails
     const emailSet = new Set();
     for (const member of members) {
       if (emailSet.has(member.email)) {
+        setOpentype("errorEmail");
         return false; // Duplicate found
       }
       emailSet.add(member.email);
     }
   
-    return true; // No duplicates
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!isFormValid()) {
-      alert("Email duplicated or not select clubType");
-      return;
+    // Check if all email fields are filled
+    for (const member of members) {
+      if (!member.email.trim()) {
+        setOpentype("errorEmpty");
+        return false;
+      }
     }
-
-    alert(`Creating club... (Logged-in user: ${currentUserEmail})`);
-    
+  
     const emails = members.map((m) => m.email.trim()).filter((email) => email !== "");
-    console.log(emails);
-
     const { data: existingUsers, error: emailError } = await supabase
-        .from("user") 
-        .select("email")
-        .in("email", emails);
-
+      .from("user")
+      .select("email")
+      .in("email", emails);
+  
     if (emailError) {
-      console.error("Error checking emails:", emailError);
-      alert("Error checking member emails.");
-      return;
+      setOpentype("errorEmail");
+      return false;
     }
-
+  
     const existingEmails = existingUsers.map((user) => user.email);
     const invalidEmails = emails.filter((email) => !existingEmails.includes(email));
-
+  
     if (invalidEmails.length > 0) {
-      alert(`The following emails are not registered: ${invalidEmails.join(", ")}`);
+      setOpentype("errorEmail");
+      return false;
+    }
+  
+    return true; 
+  };
+
+  const handleSubmit = async () => {
+    if (!(await isFormValid())) {
+      setIsConfirmOpen(true);
+      alert("Form validation failed.");
       return;
     }
-    
+
     const avatarUrl = await uploadFile(clubAvatar, "club-avatars");
     const docUrl = await uploadFile(applicationDocument, "club-documents");
     const club_tag = clubDescription.split(",").map(tag => tag.trim());
@@ -172,6 +182,7 @@ const ClubApplication = () => {
         club_id: clubId,
         email: m.email,
         position: m.position,
+        clubPosition: "ผู้ดูแลชมรม"
       }));
       
       console.log(memberData);
@@ -185,139 +196,165 @@ const ClubApplication = () => {
       }
     }
     
-    alert("Club created successfully");
+    setIsConfirmOpen(false);
+    //  alert("Club created successfully");
     navigate("/")
   };
 
+  const handleConfirmSubmit = () => {
+    setOpentype("eventApprove");
+    setIsConfirmOpen(true);
+  };
+
+  const handleOpenConfirm = async () => {
+    if (!(await isFormValid())) {
+      setIsConfirmOpen(true);
+      return;
+    }
+    handleConfirmSubmit();
+  };
+
   return (
-    <form>
-    <div className="max-w-5xl mx-auto mt-24 p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-2xl font-bold mb-6">คำขอสร้างชมรม</h2>
-      <div className="grid grid-cols-2 gap-6">
-        <div>
-          <label className="block text-lg font-semibold mb-1">โลโก้ชมรม</label>
-          <div className="flex flex-col">
-            <div className="flex flex-row items-center p-4 rounded-md text-center">
-              <img src={clubAvatarPreview || "/assets/Maskgroup.png"} alt="Member" className="w-32 h-32 mx-4 rounded-full " />
+    <>
+      <ConfirmCard
+        isOpen={isConfirmOpen}
+        onClose={() => setIsConfirmOpen(false)}
+        type={opentype}
+        onConfirm={handleOpenConfirm}
+        onSecondConfirm={handleSubmit}
+      />
+      <form>
+        <div className="max-w-5xl mx-auto mt-24 p-6 bg-white shadow-md rounded-lg">
+          <h2 className="text-2xl font-bold mb-6">คำขอสร้างชมรม</h2>
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <label className="block text-lg font-semibold mb-1">โลโก้ชมรม</label>
               <div className="flex flex-col">
-                <div className="flex flex-row items-center">
-                  <label className="cursor-pointer flex items-center gap-2">
-                    <FileUp size={50} className="text-white fill-[#7CE9BF]" />
-                    <span className="text-gray-300">{clubAvatarName}</span>
-                    <input
-                      type="file"
-                      /*onChange={(e) => setClubAvatar(e.target.files[0]?.name || "using (png, jpg, webp)")}*/
-                      onChange={handleAvatarFileChange}
-                      className="hidden"
-                      required
-                    />
-                  </label>
+                <div className="flex flex-row items-center p-4 rounded-md text-center">
+                  <img src={clubAvatarPreview || "/assets/Maskgroup.png"} alt="Member" className="w-32 h-32 mx-4 rounded-full " />
+                  <div className="flex flex-col">
+                    <div className="flex flex-row items-center">
+                      <label className="cursor-pointer flex items-center gap-2">
+                        <FileUp size={50} className="text-white fill-[#7CE9BF]" />
+                        <span className="text-gray-300">{clubAvatarName}</span>
+                        <input
+                          type="file"
+                          /*onChange={(e) => setClubAvatar(e.target.files[0]?.name || "using (png, jpg, webp)")}*/
+                          onChange={handleAvatarFileChange}
+                          className="hidden"
+                          required
+                        />
+                      </label>
+                      </div>
+                    <h2 className="text-left text-gray-400">Upload</h2>
                   </div>
-                <h2 className="text-left text-gray-400">Upload</h2>
+                </div>
+                <div className="mb-6">
+                  <label className="block font-medium mb-1">ชื่อชมรม</label>
+                  <input type="text" placeholder="ชื่อชมรม" className="border border-[#FF7E69] rounded-md w-full p-2" onChange={(e) => setClubName(e.target.value)} required/>
+                </div>
+                <div className="mb-5">
+                  <label className="block font-medium mb-2" >อาจารย์ที่ปรึกษา</label>
+                  <input type="text" placeholder="ชื่อ นามสกุล" className="border border-[#FF7E69] rounded-md w-full p-2 mb-2" onChange={(e) => setClubAdviser(e.target.value)} required/>
+                  <input type="email" placeholder="Gmail อาจารย์ที่ปรึกษา" className="border border-[#FF7E69] rounded-md w-full p-2 mb-1" required/>
+                </div>
+                <div className="relative">
+          <button 
+            type="button"
+            onClick={() => setIsOpen(!isOpen)} 
+            className="border border-[#FF7E69] rounded-md w-full p-2 text-left bg-white"
+          >
+            <div className="flex flex-row items-center justify-between">
+              <div>
+                {clubType || "เลือกประเภทชมรม"}
+              </div>
+              <div className="text-[#FF7E69]">
+                {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
               </div>
             </div>
-            <div className="mb-6">
-              <label className="block font-medium mb-1">ชื่อชมรม</label>
-              <input type="text" placeholder="ชื่อชมรม" className="border border-[#FF7E69] rounded-md w-full p-2" onChange={(e) => setClubName(e.target.value)} required/>
-            </div>
-            <div className="mb-5">
-              <label className="block font-medium mb-2" >อาจารย์ที่ปรึกษา</label>
-              <input type="text" placeholder="ชื่อ นามสกุล" className="border border-[#FF7E69] rounded-md w-full p-2 mb-2" onChange={(e) => setClubAdviser(e.target.value)} required/>
-              <input type="email" placeholder="Gmail อาจารย์ที่ปรึกษา" className="border border-[#FF7E69] rounded-md w-full p-2 mb-1" required/>
-            </div>
-            <div className="relative">
-      <button 
-        type="button"
-        onClick={() => setIsOpen(!isOpen)} 
-        className="border border-[#FF7E69] rounded-md w-full p-2 text-left bg-white"
-      >
-        <div className="flex flex-row items-center justify-between">
-          <div>
-            {clubType || "เลือกประเภทชมรม"}
-          </div>
-          <div className="text-[#FF7E69]">
-            {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-          </div>
+          </button>
+          
+          {isOpen && (
+            <ul className="absolute w-full mt-1 rounded-md bg-white shadow-md z-10">
+              {clubTypes.map((type, index) => (
+                <li 
+                  key={index} 
+                  onClick={() => { handleClubTypeChange(type); setIsOpen(false); }} 
+                  className="p-2 cursor-pointer hover:bg-[#FF7E69] hover:rounded-md"
+                >
+                  {type}
+                </li>
+                
+              ))}
+            </ul>
+          )}
         </div>
-      </button>
-      
-      {isOpen && (
-        <ul className="absolute w-full mt-1 rounded-md bg-white shadow-md z-10">
-          {clubTypes.map((type, index) => (
-            <li 
-              key={index} 
-              onClick={() => { handleClubTypeChange(type); setIsOpen(false); }} 
-              className="p-2 cursor-pointer hover:bg-[#FF7E69] hover:rounded-md"
+              </div>
+            </div>
+            <div>
+              <label className="block font-medium mb-2">Gmail นักศึกษา</label>
+              <div className="space-y-2">
+                {members.map((member, index) => (
+                  <div className="flex flex-row mb-2">
+                    <input
+                      key={index}
+                      type="email"
+                      placeholder="Gmail นักศึกษา"
+                      className="border-1 border-[#FF7E69] rounded-md max-w-2/3 w-full p-2 mb-3"
+                      value={member.email}
+                      onChange={(e) => handleMemberChange(index, e.target.value)}
+                      disabled={index === 0}
+                      required
+                      style={{ opacity: index === 0 ? 0.5 : 1 }}
+                    />
+                    <h2 className="text-left pl-4">{member.position}</h2>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4">
+            <label className="block font-medium mb-1">Quote</label>
+           
+          </div>
+
+          <div className="mt-4">
+            <label className="block font-medium mb-1">Tag* (ใช้ "," คั่นระหว่าง tag)</label>
+            <input type="text" className="border border-[#FF7E69] rounded-md w-full p-2" onChange={(e) => setClubDescription(e.target.value)} required/>
+          </div>
+
+          <div className="mt-4">
+            <label className="block font-medium mb-1">ไฟล์เอกสาร</label>
+            <div className="flex flex-col">
+              <div className="flex flex-row items-center">
+                <label className="cursor-pointer flex items-center gap-2">
+                  <FileUp size={50} className="text-white fill-[#7CE9BF]" />
+                  <span className="text-gray-300">{fileName}</span>
+                  <input
+                    type="file"
+                    onChange={handleDocumentFileChange}
+                    className="hidden"
+                    required
+                  />
+                </label>
+              </div>
+              <h2 className="text-left text-gray-400">Upload</h2>
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              className="mt-6 w-1/4 bg-[#7CE9BF] text-white py-2 rounded-md hover:bg-emerald-400 active:bg-emerald-500"
+              type="button"
+              onClick={handleOpenConfirm}
             >
-              {type}
-            </li>
-            
-          ))}
-        </ul>
-      )}
-    </div>
+              ส่งคำขอ
+            </button>
           </div>
         </div>
-        <div>
-          <label className="block font-medium mb-2">Gmail นักศึกษา</label>
-          <div className="space-y-2">
-            {members.map((member, index) => (
-              <div className="flex flex-row mb-2">
-                <input
-                  key={index}
-                  type="email"
-                  placeholder="Gmail นักศึกษา"
-                  className="border-1 border-[#FF7E69] rounded-md max-w-2/3 w-full p-2 mb-3"
-                  value={member.email}
-                  onChange={(e) => handleMemberChange(index, e.target.value)}
-                  disabled={index === 0}
-                  required
-                  style={{ opacity: index === 0 ? 0.5 : 1 }}
-                />
-                <h2 className="text-left pl-4">{member.position}</h2>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-4">
-        <label className="block font-medium mb-1">Quote</label>
-        <textarea className="border border-[#FF7E69] rounded-md w-full p-2 h-20" onChange={(e) => setClubQuote(e.target.value)} required></textarea>
-      </div>
-
-      <div className="mt-4">
-        <label className="block font-medium mb-1">Tag* (ใช้ "," คั่นระหว่าง tag)</label>
-        <input type="text" className="border border-[#FF7E69] rounded-md w-full p-2" onChange={(e) => setClubDescription(e.target.value)} required/>
-      </div>
-
-      <div className="mt-4">
-        <label className="block font-medium mb-1">ไฟล์เอกสาร</label>
-        <div className="flex flex-col">
-          <div className="flex flex-row items-center">
-            <label className="cursor-pointer flex items-center gap-2">
-              <FileUp size={50} className="text-white fill-[#7CE9BF]" />
-              <span className="text-gray-300">{fileName}</span>
-              <input
-                type="file"
-                onChange={handleDocumentFileChange}
-                className="hidden"
-                required
-              />
-            </label>
-          </div>
-          <h2 className="text-left text-gray-400">Upload</h2>
-        </div>
-      </div>
-
-      <div className="flex justify-end">
-        <button className="mt-6 w-1/4 bg-[#7CE9BF] text-white py-2 rounded-md hover:bg-emerald-400 active:bg-emerald-500 "  
-        onClick={handleSubmit}>
-          ส่งคำขอ
-        </button>
-      </div>
-    </div>
-    </form>
+      </form>
+    </>
   );
 };
 

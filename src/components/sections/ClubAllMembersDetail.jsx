@@ -18,6 +18,7 @@ const ClubAllMembersDetail = ({info}) => {
   const { clubId } = useParams();
   const location = useLocation();
   const email = location.state?.email;
+  const duties = location.state?.duties;
   const [loading, setLoading] = useState(true);
   const [rejectReason,setReason] = useState('');
   const [isConfirmOpen,setopen] = useState(false);
@@ -47,10 +48,17 @@ const ClubAllMembersDetail = ({info}) => {
   const [isDropdownOpen, setShowDropdown] = useState(false);
   const [roleSelected,setRoleSelected] = useState('');
 
-  
   const handleSelectRole = (role) =>{
     setRoleSelected(role);
     setShowDropdown(false);
+  }
+
+  const [isDropdownOpen2, setShowDropdown2] = useState(false);
+  const [dutySelected,setDutySelected] = useState('');
+
+  const handleSelectDuty = (duty) =>{
+    setDutySelected(duty);
+    setShowDropdown2(false);
   }
 
     useEffect(() => {
@@ -79,13 +87,16 @@ const ClubAllMembersDetail = ({info}) => {
         const { data, error } = await supabase
             .from("clubMembers")
             .select("club_id, position, created_at,clubPosition, user(name,gender,faculty,department,admission_year)")
-            .eq("email", email);
+            .eq("email", email)
+            .eq("club_id", clubId)
+
 
       if (error) {
         console.error("Error fetching clubs:", error);
       } else {
         //console.log(data)
         setClubApplicant(data);
+        
       }
       setLoading(false);
     };
@@ -117,18 +128,95 @@ const ClubAllMembersDetail = ({info}) => {
     //console.log("ตำแหน่งผู้ใช้ : " + userClubPosition);
     //console.log("email ผู้ถูกเปลี่ยน : " + email);
 
-    const { error: updateError } = await supabase
-      .from("clubMembers")
-      .update({ position: roleSelected })
-      .eq("email", email)
-      .eq("club_id", clubId);
+    try {
+      const { error: updateError } = await supabase
+        .from("clubMembers")
+        .update({ position: roleSelected })
+        .eq("email", email)
+        .eq("club_id", clubId);
 
       if (updateError) {
         console.error(`Failed to update event:`, updateError);
       }
-      
+
+
+      const { data: updateData, error: updateRoleError } = await supabase
+        .from('user')
+        .update({ role: 'club' })
+        .eq('email', email);
+  
+      if (updateError) {
+          console.error("Error updating user role:", updateRoleError);
+          return;
+      }
+      console.log("Applicant role updated to 'club':", updateData);
+
       window.location.reload();
+
+      }
+      catch (err) {
+        console.error("Error during approve process:", err);
+      }
   }
+
+  const handleChangeDuty = async () => {
+    //console.log("ตำแหน่งเดิม : " + clubApplicant[0].clubPosition);
+    //console.log("ตำแหน่งที่เลือก : " + dutySelected);
+
+    try {
+      const { error: updateError } = await supabase
+        .from("clubMembers")
+        .update({ clubPosition: dutySelected })
+        .eq("email", email)
+        .eq("club_id", clubId);
+
+      if (updateError) {
+        console.error(`Failed to update event:`, updateError);
+      }
+
+      window.location.reload();
+
+      }
+      catch (err) {
+        console.error("Error during approve process:", err);
+      }
+    
+  }
+
+  const handleRepelMember = async () => {
+    try {
+      const { error: updateError } = await supabase
+        .from("clubMembers")
+        .delete()
+        .eq("email", email)
+        .eq("club_id", clubId);
+
+      if (updateError) {
+        console.error(`Failed to update event:`, updateError);
+      }
+
+      navigate(-1);
+
+      }
+      catch (err) {
+        console.error("Error during approve process:", err);
+      }
+    
+  }
+
+  const handleOpenConfirm = async () => {
+    setopen(true);
+  }
+  
+  const handleSecondConfirm = async () => {
+    if (Opentype === "changePosition") {
+      await handleChangePosition();
+    } else if (Opentype === "kickMember") {
+      await handleRepelMember();
+    }else if (Opentype === "changeDuty") {
+      await handleChangeDuty();
+    }
+  };
 
 
   return (
@@ -200,7 +288,7 @@ const ClubAllMembersDetail = ({info}) => {
 
                     <div className="flex flex-col">
                         {/* ตำแหน่ง dropdown */}
-                        <div className="flex items-center mb-6">
+                        <div className="flex items-center mb-6 z-20">
                             <p className="mr-4"><strong>ตำแหน่ง :</strong></p>
                             
                             {info.email === email ? (    
@@ -245,20 +333,23 @@ const ClubAllMembersDetail = ({info}) => {
                                         variant="outlined"
                                         color="error"
                                         sx={{
-                                          boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
-                                          mr: 2,
-                                          paddingX: "3vw",
-                                          bgcolor: "white",
-                                          color: "#1A1A1A7D",
-                                          borderWidth: "2px",
-                                          borderColor: "white",
-                                          "&:hover": {
                                             boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
-                                            cursor: "no-drop",
-                                          },
-                                        }}
+                                            mr: 2,
+                                            paddingX: "3vw",
+                                            bgcolor: "white",
+                                            color: "#1A1A1A7D",
+                                            borderWidth: "2px",
+                                            borderColor: "white",
+                                            "&:hover": {
+                                              boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                              cursor: "no-drop",
+                                            },
+                                            borderColor: "white",
+                                            width: "150", 
+                                            minWidth: "150",
+                                          }}
                                       >
-                                        เปลี่ยนตำแหน่ง
+                                        เปลี่ยน
                                       </Button>
                                     ) : (
                                       <Button
@@ -275,10 +366,15 @@ const ClubAllMembersDetail = ({info}) => {
                                           "&:hover": {
                                             boxShadow: "0px 0px 5px 1px #FF7E697D",
                                           },
+                                            width: "150", 
+                                            minWidth: "150",
                                         }}
-                                        onClick={() => handleChangePosition()}
+                                        onClick={() => {
+                                          setOpentype("changePosition");
+                                          setopen(true);
+                                        }}
                                       >
-                                        เปลี่ยนตำแหน่ง
+                                        เปลี่ยน
                                       </Button>
                                     )}
                                   </div>
@@ -337,9 +433,11 @@ const ClubAllMembersDetail = ({info}) => {
                                             boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
                                             cursor: "no-drop",
                                           },
+                                          width: "200", 
+                                          minWidth: "200",
                                         }}
                                       >
-                                        เปลี่ยนตำแหน่ง
+                                        เปลี่ยน
                                       </Button>
                                     ) : (
                                       <Button
@@ -356,10 +454,14 @@ const ClubAllMembersDetail = ({info}) => {
                                           "&:hover": {
                                             boxShadow: "0px 0px 5px 1px #FF7E697D",
                                           },
+                                          width: "200", 
+                                          minWidth: "200",
                                         }}
-                                        onClick={() => handleChangePosition()}
+                                        onClick={() => {
+                                          
+                                        }}
                                       >
-                                        เปลี่ยนตำแหน่ง
+                                        เปลี่ยน
                                       </Button>
                                     )}
                                   </div>
@@ -369,10 +471,188 @@ const ClubAllMembersDetail = ({info}) => {
 
                         </div>
 
-                        <p className="mb-6">
-                        <strong>หน้าที่ในชมรม : </strong>
-                        {clubApplicant[0].clubPosition || "ผู้ดูแลชมรม"}
-                        </p>
+                        {/* หน้าที่ dropdown */}
+                        <div className="flex items-center mb-6">
+                            <p className="mr-4 pr-5"><strong>หน้าที่ :</strong></p>
+                            
+                            {info.email === email ? (    
+                              <div>
+                                {clubApplicant[0].clubPosition || "ผู้ดูแลชมรม"}
+                              </div>
+                              ) : userClubPosition === "ประธานชมรม" ? (
+                                // Show dropdown and button if user is "ประธานชมรม"
+                                <div className="flex items-center">
+                                  <div className="relative">
+                                    <button
+                                      type="button"
+                                      onClick={() => setShowDropdown2(!isDropdownOpen2)}
+                                      className="cursor-pointer border border-[#FF7E69] rounded-md w-50 p-2 text-left bg-white"
+                                    >
+                                      <div className="flex flex-row items-center justify-between">
+                                        <div>{dutySelected || clubApplicant[0].clubPosition}</div>
+                                        <div className="text-[#FF7E69]">
+                                          {isDropdownOpen2 ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                                        </div>
+                                      </div>
+                                    </button>
+                                    {isDropdownOpen2 && (
+                                      <ul className="absolute w-50 mt-1 rounded-md bg-white shadow-md z-10">
+                                        {duties.map((type, index) => (
+                                          <li
+                                            key={index}
+                                            onClick={() => handleSelectDuty(type)}
+                                            className="p-2 cursor-pointer hover:bg-[#FF7E69] hover:rounded-md"
+                                          >
+                                            {type}
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    )}
+                                  </div>
+
+                                  <div className="relative ml-10">
+                                    {dutySelected === "" || dutySelected === clubApplicant[0].clubPosition ? (
+                                      <Button
+                                        variant="outlined"
+                                        color="error"
+                                        sx={{
+                                          boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                          mr: 2,
+                                          paddingX: "3vw",
+                                          bgcolor: "white",
+                                          color: "#1A1A1A7D",
+                                          borderWidth: "2px",
+                                          borderColor: "white",
+                                          "&:hover": {
+                                            boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                            cursor: "no-drop",
+                                          },
+                                          width: "200", 
+                                          minWidth: "200",
+                                        }}
+                                      >
+                                        เปลี่ยน
+                                      </Button>
+                                    ) : (
+                                      <Button
+                                        variant="outlined"
+                                        color="error"
+                                        sx={{
+                                          boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                          mr: 2,
+                                          paddingX: "3vw",
+                                          bgcolor: "#FF7E69",
+                                          color: "white",
+                                          borderColor: "#FF7E69",
+                                          borderWidth: "2px",
+                                          "&:hover": {
+                                            boxShadow: "0px 0px 5px 1px #FF7E697D",
+                                          },
+                                          width: "200", 
+                                          minWidth: "200",
+                                        }}
+                                        onClick={() => {
+                                          setOpentype("changeDuty");
+                                          setopen(true);
+                                        }}
+                                      >
+                                        เปลี่ยน
+                                      </Button>
+                                    )}
+                                  </div>
+                                </div>
+                              ) : userClubPosition !== "ประธานชมรม" && clubApplicant[0].position !== "สมาชิกชมรม" ? (
+                                // Show only text if user is not "ประธานชมรม" and position is not "สมาชิกชมรม"
+                                <div>
+                                   {clubApplicant[0].clubPosition || "ผู้ดูแลชมรม"}
+                                  <button className="p-2 border border-transparent text-white">.</button>
+                                </div>
+                              ) : (
+                                // Show dropdown and button for others
+                                <div className="flex items-center">
+                                  <div className="relative">
+                                    <button
+                                      type="button"
+                                      onClick={() => setShowDropdown2(!isDropdownOpen2)}
+                                      className="cursor-pointer border border-[#FF7E69] rounded-md w-50 p-2 text-left bg-white"
+                                    >
+                                      <div className="flex flex-row items-center justify-between">
+                                        <div>{dutySelected || clubApplicant[0].clubPosition}</div>
+                                        <div className="text-[#FF7E69]">
+                                          {isDropdownOpen2 ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                                        </div>
+                                      </div>
+                                    </button>
+                                    {isDropdownOpen2 && (
+                                      <ul className="absolute w-50 mt-1 rounded-md bg-white shadow-md z-10">
+                                        {duties.map((type, index) => (
+                                          <li
+                                            key={index}
+                                            onClick={() => handleSelectDuty(type)}
+                                            className="p-2 cursor-pointer hover:bg-[#FF7E69] hover:rounded-md"
+                                          >
+                                            {type}
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    )}
+                                  </div>
+
+                                  <div className="relative ml-10">
+                                    {dutySelected === "" || dutySelected === clubApplicant[0].clubPosition ? (
+                                      <Button
+                                        variant="outlined"
+                                        color="error"
+                                        sx={{
+                                          boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                          mr: 2,
+                                          paddingX: "3vw",
+                                          bgcolor: "white",
+                                          color: "#1A1A1A7D",
+                                          borderWidth: "2px",
+                                          borderColor: "white",
+                                          "&:hover": {
+                                            boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                            cursor: "no-drop",
+                                          },
+                                          width: "200", 
+                                          minWidth: "200",
+                                        }}
+                                      >
+                                        เปลี่ยน
+                                      </Button>
+                                    ) : (
+                                      <Button
+                                        variant="outlined"
+                                        color="error"
+                                        sx={{
+                                          boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                          mr: 2,
+                                          paddingX: "3vw",
+                                          bgcolor: "#FF7E69",
+                                          color: "white",
+                                          borderColor: "#FF7E69",
+                                          borderWidth: "2px",
+                                          "&:hover": {
+                                            boxShadow: "0px 0px 5px 1px #FF7E697D",
+                                          },
+                                          width: "200", 
+                                          minWidth: "200",
+                                        }}
+                                        onClick={() => {
+                                          setOpentype("changeDuty");
+                                          setopen(true);
+                                        }}
+                                      >
+                                        เปลี่ยน
+                                      </Button>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+
+
+                        </div>
                     </div>
                     </div>
                 </div>
@@ -381,65 +661,72 @@ const ClubAllMembersDetail = ({info}) => {
              
        
               {/* Reply */}
-              <div className="flex flex-col w-full bg-grey">
-                <div className="h-fit w-full flexbox justify-end mt-10  gap-1">
-                  <ThemeProvider theme={theme}> 
-                    <h3 className="text-lg font-semibold mb-2">ยุติการเป็นสมาชิกชมรม</h3>
-                    <div className="flex justify-end pl-10 mt-1">
-                      
-                    <input
-                            type="text"
-                            placeholder="เหตุผลในการยุติการเป็นสมาชิกชมรม"
-                            className="border border-[#1A1A1A7D] rounded-md w-full p-1 mr-4 focus:outline-none focus:border-[#FF7E69] focus:border-2"
-                            onChange={(e) => setReason(e.target.value)}
-                            required
-                          />
-                        {rejectReason===''?(<Button
-                          variant="outlined"
-                          color="error"
-                          sx={{
-                            boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
-                            mr: 2,
-                            paddingX: "3vw",
-                            bgcolor: "white",
-                            color: "#1A1A1A7D",
-                            borderWidth:'2px',
-                            borderColor:'white',
-                            "&:hover": {
-                              boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
-                              cursor: "no-drop",
-                            },
-                          }}
-                        >
-                          ตกลง
-                        </Button>):(
-                            <Button
+
+              {info.email === email ? (    
+                <div></div>
+              ) : userClubPosition === "ประธานชมรม" || (userClubPosition !== "ประธานชมรม" && clubApplicant[0].position === "สมาชิกชมรม")? (
+                <div className="flex flex-col w-full bg-grey">
+                  <div className="h-fit w-full flexbox justify-end mt-10  gap-1">
+                    <ThemeProvider theme={theme}> 
+                      <h3 className="text-lg font-semibold mb-2">ยุติการเป็นสมาชิกชมรม</h3>
+                      <div className="flex justify-end pl-10 mt-1">
+                        
+                      <input
+                              type="text"
+                              placeholder="เหตุผลในการยุติการเป็นสมาชิกชมรม"
+                              className="border border-[#1A1A1A7D] rounded-md w-full p-1 mr-4 focus:outline-none focus:border-[#FF7E69] focus:border-2"
+                              onChange={(e) => setReason(e.target.value)}
+                              required
+                            />
+                          {rejectReason===''?(<Button
                             variant="outlined"
                             color="error"
                             sx={{
                               boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
                               mr: 2,
                               paddingX: "3vw",
-                              bgcolor:"#FF7E69",
-                                color:'white',
-                              borderColor:'#FF7E69',
+                              bgcolor: "white",
+                              color: "#1A1A1A7D",
                               borderWidth:'2px',
+                              borderColor:'white',
                               "&:hover": {
-                                boxShadow: "0px 0px 5px 1px #FF7E697D",
-                                
+                                boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                cursor: "no-drop",
                               },
-                            }}
-                            onClick={() => {
-                              
                             }}
                           >
                             ตกลง
-                          </Button>
-                        )}
-                    </div>
-                  </ThemeProvider>
-                </div>
-              </div>
+                          </Button>):(
+                              <Button
+                              variant="outlined"
+                              color="error"
+                              sx={{
+                                boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                mr: 2,
+                                paddingX: "3vw",
+                                bgcolor:"#FF7E69",
+                                  color:'white',
+                                borderColor:'#FF7E69',
+                                borderWidth:'2px',
+                                "&:hover": {
+                                  boxShadow: "0px 0px 5px 1px #FF7E697D",
+                                },
+                              }}
+                              onClick={() => {
+                                setOpentype("kickMember");
+                                setopen(true);
+                              }}
+                            >
+                              ตกลง
+                            </Button>
+                          )}
+                      </div>
+                    </ThemeProvider>
+                  </div>
+                </div>                  
+              ) : (
+                <div></div>            
+              )}
 
             </div>
           </div>
@@ -449,8 +736,8 @@ const ClubAllMembersDetail = ({info}) => {
       <ConfirmCard
         isOpen={isConfirmOpen}
         onClose={() => setopen(false)}
-        onConfirm={handleConfirm}
-        type={Opentype} 
+        type={Opentype}
+        onConfirm={handleOpenConfirm}
         onSecondConfirm={handleSecondConfirm}
       />
     )}

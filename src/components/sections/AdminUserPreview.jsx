@@ -35,7 +35,7 @@ const AdminUserPreview = () => {
       if (error) {
         console.error("Error fetching clubs:", error);
       } else {
-        console.log(data)
+        //console.log(data)
         setPendingClubs(
           data.map((club) => ({
             ...club

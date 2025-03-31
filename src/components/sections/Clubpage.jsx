@@ -57,7 +57,7 @@ const Clubpage = ({info}) => {
 
   useEffect(()=>{
     setonLoad(true);
-    //console.log(userinfo)
+    //console.log(info)
     setTimeout(() => {
       setonLoad(false);
     }, 200);
@@ -300,6 +300,9 @@ const Clubpage = ({info}) => {
   }
   //console.log(clubTest);
   //console.log(members);
+  const handleDayselect = (value) =>{
+    
+  }
   return (
     <div className="bg-gray-50">
       <ConfirmCard 
@@ -436,7 +439,7 @@ const Clubpage = ({info}) => {
         <div className="flex flex-row p-6 mt-8 justify-between">
           <div className="w-fit ">
             <h1 className="text-2xl text-center self-stretch">ปฎิทินกิจกรรม</h1>
-            <Calendar className="mt-2"/>
+            <Calendar daySelect={handleDayselect} className="mt-2"/>
           </div>
 
           <div className="w-2/3 justify-start ">

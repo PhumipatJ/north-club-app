@@ -253,9 +253,8 @@ const ClubFormManage = ({ isOpen, onClose, clubId, prevform }) => {
           isOpen={isConfirmOpen}
           onClose={() => setIsConfirmOpen(false)}
           type={opentype}
-          text={opentext}
           onConfirm={handleConfirm}
-          onsecondConfirm={handelonclose}
+          onSecondConfirm={handelonclose}
         />
         </div>
       <div
@@ -412,7 +411,7 @@ const ClubFormManage = ({ isOpen, onClose, clubId, prevform }) => {
               <button
                 className="bg-[#7CE9BF] hover:bg-emerald-400 active:bg-emerald-500 px-6 py-2 rounded shadow "
                 type="button"
-                onClick={()=>{setIsConfirmOpen(true);setOpentype("applyRegistration");}}
+                onClick={()=>{setOpentype("applyRegistration");setIsConfirmOpen(true);}}
               >
                 เปิดรับสมัครสมาชิก
               </button>
