@@ -9,6 +9,7 @@ import {
 import supabaseService from "../../service/supabaseService";
 import theme from "../Theme";
 import { X, File } from "lucide-react";
+import ConfirmCard from "../confirmCard";
 
 const ApprovalPopup = ({ clubdata, count,clubId, onClose }) => {
   const supabase = supabaseService.getClient();
@@ -45,6 +46,9 @@ const ApprovalPopup = ({ clubdata, count,clubId, onClose }) => {
   const handleclose = () => {
     onClose();
   };
+
+  const [isConfirmOpen, setConfirmOpen] = useState(false);
+  const [confirmType, setConfirmType] = useState("");
 
   const handleApprove = async () => {
     // Insert into approvalHistory
@@ -107,6 +111,7 @@ const ApprovalPopup = ({ clubdata, count,clubId, onClose }) => {
 
     //alert("อนุมัติชมรมเรียบร้อย!");
     window.history.back(); // กลับไปหน้าก่อนหน้า
+    setConfirmOpen(false);
   };
 
   const handleReject = async () => {
@@ -144,15 +149,36 @@ const ApprovalPopup = ({ clubdata, count,clubId, onClose }) => {
     if (Cerror || CMerror) {
       console.error("Rejection failed:", Cerror || CMerror);
     } else {
-      alert("ปฏิเสธชมรมเรียบร้อย!");
+      //alert("ปฏิเสธชมรมเรียบร้อย!");
       window.history.back();
     }
+    setConfirmOpen(false);
   };
- 
+
+  const handleConfirm = () => {
+    setopen(true);
+  };
+
+  const handleSecondConfirm = () => {
+    if (confirmType === "approve") {
+      handleApprove();
+    } else if (confirmType === "reject") {
+      handleReject();
+    }
+  };
 
   return (
     <div className="bg-[rgba(16,16,16,0.5)] w-screen h-screen flex justify-center items-center fixed z-1000 top-0">
       <ThemeProvider theme={theme}>
+        {isConfirmOpen && (
+          <ConfirmCard
+            isOpen={isConfirmOpen}
+            onClose={() => setConfirmOpen(false)}
+            type={confirmType}
+            onConfirm={handleConfirm}
+            onSecondConfirm={handleSecondConfirm}
+          />
+        )}
         <div className="bg-white w-[60dvw] h-[70dvh] rounded-[8px] overflow-clip">
           <div className=" w-[100%] h-[10%] flex justify-between">
             <div className="h-[100%] w-fit  flex items-center px-5">
@@ -421,7 +447,10 @@ const ApprovalPopup = ({ clubdata, count,clubId, onClose }) => {
                         
                       },
                     }}
-                    onClick={() => handleReject()}
+                    onClick={() => {
+                      setConfirmType("reject");
+                      setConfirmOpen(true);
+                    }}
                   >
                     ปฏิเสธ
                   </Button>
@@ -440,7 +469,10 @@ const ApprovalPopup = ({ clubdata, count,clubId, onClose }) => {
                       boxShadow: "0px 0px 5px 0.1px #7CE9BF",
                     },
                   }}
-                  onClick={() => handleApprove()}
+                  onClick={() => {
+                    setConfirmType("approve");
+                    setConfirmOpen(true);
+                  }}
                 >
                   อนุมัติ
                 </Button>
