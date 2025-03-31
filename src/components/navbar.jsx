@@ -36,6 +36,7 @@ const Navbar = ({sendUserinfo}) => {
       sendUserinfo(userInfo);  // เรียกใช้ฟังก์ชันจาก parent
     }
   }, [session, userInfo]);
+  
 
   useEffect(() => {
     const handleScroll = () => {

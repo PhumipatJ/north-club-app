@@ -49,12 +49,23 @@ const ClubManage = ({userinfo}) => {
 
   useEffect(()=>{
     setonLoad(true);
-    console.log(userinfo)
+    //console.log(userinfo)
     setTimeout(() => {
       setonLoad(false);
     }, 200);
   
-  },[location])
+  },[location]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      //console.log(userinfo.role);
+      if(userinfo.role !== "club"){
+        window.location.reload();
+      }
+    }, 1000); 
+  
+    return () => clearInterval(interval); // Cleanup เมื่อ component ถูก unmount
+  }, []);
 
   useEffect(() => {
     const fetchClubEvent = async () => {

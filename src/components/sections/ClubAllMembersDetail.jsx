@@ -117,17 +117,49 @@ const ClubAllMembersDetail = ({info}) => {
     //console.log("ตำแหน่งผู้ใช้ : " + userClubPosition);
     //console.log("email ผู้ถูกเปลี่ยน : " + email);
 
-    const { error: updateError } = await supabase
-      .from("clubMembers")
-      .update({ position: roleSelected })
-      .eq("email", email)
-      .eq("club_id", clubId);
+    try {
+      const { error: updateError } = await supabase
+        .from("clubMembers")
+        .update({ position: roleSelected })
+        .eq("email", email)
+        .eq("club_id", clubId);
 
       if (updateError) {
         console.error(`Failed to update event:`, updateError);
       }
-      
+
+      if(roleSelected === "สมาชิกชมรม"){
+        const { data: updateData, error: updateRoleError } = await supabase
+        .from('user')
+        .update({ role: 'clubMember' })
+        .eq('email', email);
+  
+        if (updateError) {
+          console.error("Error updating user role:", updateRoleError);
+          return;
+        }
+        console.log("Applicant role updated to 'club':", updateData);
+      }
+      else{
+        const { data: updateData, error: updateRoleError } = await supabase
+        .from('user')
+        .update({ role: 'club' })
+        .eq('email', email);
+  
+        if (updateError) {
+          console.error("Error updating user role:", updateRoleError);
+          return;
+        }
+        console.log("Applicant role updated to 'club':", updateData);
+      }
+        
+
       window.location.reload();
+
+      }
+      catch (err) {
+        console.error("Error during approve process:", err);
+      }
   }
 
 

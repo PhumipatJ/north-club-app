@@ -37,6 +37,7 @@ function Wrapper({ children, allowedRoles }) {
   }
 
   if (!allowedRoles.includes(userRole)) {
+    //window.location.reload();
     return <Navigate to="/" />;
   }
 
