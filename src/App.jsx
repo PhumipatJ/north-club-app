@@ -34,6 +34,8 @@ function App() {
   const sendUserinfo = useCallback((info)=>{
     setinfo(info);
   })
+
+
   return (
     <>
       <Router>
@@ -47,8 +49,8 @@ function App() {
           <Route path="/clubs/:clubId" element={<><Clubpage info={userinfo}/><Footer /></>} />
           <Route path="/clubmember/:clubId" element={<><Clubmember/><Footer /></>} />
           <Route path="/stats" element={<><Statpage /><Footer /></>} />
-          <Route path="/clubApplication" element={<Wrapper allowedRoles={['student', 'club', 'admin', 'clubMember']} ><ClubApplication /><Footer /></Wrapper>} />
-          <Route path="/clubmanage/:clubId" element={<Wrapper allowedRoles={['club']} ><ClubManage userinfo={userinfo}/><Footer /></Wrapper>} />
+          <Route path="/clubApplication" element={<Wrapper allowedRoles={['student', 'club', 'admin']} ><ClubApplication /><Footer /></Wrapper>} />
+          <Route path="/clubmanage/:clubId" element={<Wrapper allowedRoles={['club']} prohibitedClubPosition = "สมาชิกชมรม"  ><ClubManage userinfo={userinfo}/><Footer /></Wrapper>} />
           <Route path="/docs" element={<><Clubfile /><Footer /></>} />
           <Route path="/database" element={<Wrapper allowedRoles={['admin']} ><AdminApprove /></Wrapper>} />
           <Route path="/database/adminRespond" element={<Wrapper allowedRoles={['admin']} ><AdminRespond /></Wrapper>} />

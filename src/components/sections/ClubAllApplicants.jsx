@@ -92,7 +92,7 @@ const ClubAllApplicants = () => {
             <h1 className="text-4xl font-bold my-auto ">จัดการสมาชิกชมรม</h1>
             <div className="my-auto flex ml-auto w-fit gap-5">
               <div className="flex items-center mr-5">
-                <User className="text-[#7CE9BF]"/>&nbsp;นักศึกษา
+                <User className="text-[#7CE9BF]"/>&nbsp;สมาชิกทั่วไป
               </div>
               <div className="flex items-center ">
                 <UserCog className="text-[#FF7E69]"/>&nbsp;ผู้ดูแลชมรม

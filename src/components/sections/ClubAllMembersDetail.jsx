@@ -79,13 +79,15 @@ const ClubAllMembersDetail = ({info}) => {
         const { data, error } = await supabase
             .from("clubMembers")
             .select("club_id, position, created_at,clubPosition, user(name,gender,faculty,department,admission_year)")
-            .eq("email", email);
+            .eq("email", email)
+            .eq("club_id", clubId)
 
       if (error) {
         console.error("Error fetching clubs:", error);
       } else {
         //console.log(data)
         setClubApplicant(data);
+        
       }
       setLoading(false);
     };
@@ -128,30 +130,18 @@ const ClubAllMembersDetail = ({info}) => {
         console.error(`Failed to update event:`, updateError);
       }
 
-      if(roleSelected === "สมาชิกชมรม"){
-        const { data: updateData, error: updateRoleError } = await supabase
-        .from('user')
-        .update({ role: 'clubMember' })
-        .eq('email', email);
-  
-        if (updateError) {
-          console.error("Error updating user role:", updateRoleError);
-          return;
-        }
-        console.log("Applicant role updated to 'club':", updateData);
-      }
-      else{
-        const { data: updateData, error: updateRoleError } = await supabase
+
+      const { data: updateData, error: updateRoleError } = await supabase
         .from('user')
         .update({ role: 'club' })
         .eq('email', email);
   
-        if (updateError) {
+      if (updateError) {
           console.error("Error updating user role:", updateRoleError);
           return;
-        }
-        console.log("Applicant role updated to 'club':", updateData);
       }
+      console.log("Applicant role updated to 'club':", updateData);
+
         
 
       window.location.reload();

@@ -112,7 +112,7 @@ const ClubApplicantsReqDetail = () => {
       // Step 3: Update the applicant's role to "club" in the 'user' table
       const { data: updateData, error: updateError } = await supabase
         .from('user')
-        .update({ role: 'clubMember' })
+        .update({ role: 'club' })
         .eq('id', clubApplicant[0]?.user_id); // Assuming you have the user ID for the applicant
   
       if (updateError) {

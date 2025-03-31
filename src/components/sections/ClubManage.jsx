@@ -41,6 +41,7 @@ const ClubManage = ({userinfo}) => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [opentype, setOpentype] = useState(null);
 
+
   const handleConfirm = () => {
     setOpentype("registrationClose")
     setIsConfirmOpen(true);
@@ -245,7 +246,7 @@ const ClubManage = ({userinfo}) => {
       }
       if(Formdata.length !== 0){
         setPrevform(Formdata);
-        console.log(Formdata);
+        //console.log(Formdata);
       }
       else{
         //console.log("test");
@@ -267,16 +268,31 @@ const ClubManage = ({userinfo}) => {
     }
   };
 
+  const fetchUserClubPosition = async () => {
+      const { data, error } = await supabase
+          .from("clubMembers")
+          .select("position")
+          .eq("email", userinfo.email)
+          .eq("club_id", clubId)
+          .single();
+
+      if (error) {
+        console.error("Error fetching clubs:", error);
+      } else {
+        return data.position;
+      }
+  };
+
   const handleCheckRoleSetting = async () => {
-    console.log(userinfo.role);
-    if(userinfo.role !== "club"){
+    const clubPosition = await fetchUserClubPosition();
+    console.log(clubPosition);
+    if (clubPosition === "สมาชิกชมรม") {
       window.location.reload();
     }
-    navigate(`/Clubprofile/${clubId}`)
   };
   
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50" onClick={() => handleCheckRoleSetting()}> 
       {onLoading?(
         <Loading/>
       ):(<></>)}
@@ -340,7 +356,7 @@ const ClubManage = ({userinfo}) => {
             {/* Setting */}
             <div className=" flex-col justify-between flex mb-6 ">
               <div className=" justify-end flex ">
-              <Settings className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => handleCheckRoleSetting()}/>
+              <Settings className="w-6 h-6 text-gray-500 cursor-pointer" onClick={() => navigate(`/Clubprofile/${clubId}`)}/>
               </div>
             <div className="justify-center mt-16 flex">
             
