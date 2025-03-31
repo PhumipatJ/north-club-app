@@ -183,6 +183,28 @@ const ClubAllMembersDetail = ({info}) => {
     
   }
 
+  const handleRepelMember = async () => {
+    try {
+      const { error: updateError } = await supabase
+        .from("clubMembers")
+        .delete()
+        .eq("email", email)
+        .eq("club_id", clubId);
+
+      if (updateError) {
+        console.error(`Failed to update event:`, updateError);
+      }
+
+      navigate(-1);
+
+      }
+      catch (err) {
+        console.error("Error during approve process:", err);
+      }
+    
+  }
+  
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -660,12 +682,9 @@ const ClubAllMembersDetail = ({info}) => {
                               borderWidth:'2px',
                               "&:hover": {
                                 boxShadow: "0px 0px 5px 1px #FF7E697D",
-                                
                               },
                             }}
-                            onClick={() => {
-                              
-                            }}
+                            onClick={() => handleRepelMember()}
                           >
                             ตกลง
                           </Button>
