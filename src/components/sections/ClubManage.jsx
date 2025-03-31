@@ -360,6 +360,7 @@ const ClubManage = ({userinfo}) => {
                 color="primary"
                 sx={{
                   boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                  width:'100%',
                   mr: 0,
                   paddingX: "2vw",
                   bgcolor: "white",
