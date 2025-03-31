@@ -203,7 +203,20 @@ const ClubAllMembersDetail = ({info}) => {
       }
     
   }
+
+  const handleOpenConfirm = async () => {
+    setopen(true);
+  }
   
+  const handleSecondConfirm = async () => {
+    if (Opentype === "changePosition") {
+      await handleChangePosition();
+    } else if (Opentype === "kickMember") {
+      await handleRepelMember();
+    }else if (Opentype === "changeDuty") {
+      await handleChangeDuty();
+    }
+  };
 
 
   return (
@@ -275,7 +288,7 @@ const ClubAllMembersDetail = ({info}) => {
 
                     <div className="flex flex-col">
                         {/* ตำแหน่ง dropdown */}
-                        <div className="flex items-center mb-6">
+                        <div className="flex items-center mb-6 z-20">
                             <p className="mr-4"><strong>ตำแหน่ง :</strong></p>
                             
                             {info.email === email ? (    
@@ -356,7 +369,10 @@ const ClubAllMembersDetail = ({info}) => {
                                             width: "150", 
                                             minWidth: "150",
                                         }}
-                                        onClick={() => handleChangePosition()}
+                                        onClick={() => {
+                                          setOpentype("changePosition");
+                                          setopen(true);
+                                        }}
                                       >
                                         เปลี่ยน
                                       </Button>
@@ -441,7 +457,9 @@ const ClubAllMembersDetail = ({info}) => {
                                           width: "200", 
                                           minWidth: "200",
                                         }}
-                                        onClick={() => handleChangePosition()}
+                                        onClick={() => {
+                                          
+                                        }}
                                       >
                                         เปลี่ยน
                                       </Button>
@@ -533,7 +551,10 @@ const ClubAllMembersDetail = ({info}) => {
                                           width: "200", 
                                           minWidth: "200",
                                         }}
-                                        onClick={() => handleChangeDuty()}
+                                        onClick={() => {
+                                          setOpentype("changeDuty");
+                                          setopen(true);
+                                        }}
                                       >
                                         เปลี่ยน
                                       </Button>
@@ -618,7 +639,10 @@ const ClubAllMembersDetail = ({info}) => {
                                           width: "200", 
                                           minWidth: "200",
                                         }}
-                                        onClick={() => handleChangeDuty()}
+                                        onClick={() => {
+                                          setOpentype("changeDuty");
+                                          setopen(true);
+                                        }}
                                       >
                                         เปลี่ยน
                                       </Button>
@@ -688,7 +712,10 @@ const ClubAllMembersDetail = ({info}) => {
                                   boxShadow: "0px 0px 5px 1px #FF7E697D",
                                 },
                               }}
-                              onClick={() => handleRepelMember()}
+                              onClick={() => {
+                                setOpentype("kickMember");
+                                setopen(true);
+                              }}
                             >
                               ตกลง
                             </Button>
@@ -709,8 +736,8 @@ const ClubAllMembersDetail = ({info}) => {
       <ConfirmCard
         isOpen={isConfirmOpen}
         onClose={() => setopen(false)}
-        onConfirm={handleConfirm}
-        type={Opentype} 
+        type={Opentype}
+        onConfirm={handleOpenConfirm}
         onSecondConfirm={handleSecondConfirm}
       />
     )}
