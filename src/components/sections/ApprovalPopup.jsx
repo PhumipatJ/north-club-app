@@ -10,9 +10,8 @@ import supabaseService from "../../service/supabaseService";
 import theme from "../Theme";
 import { X, File } from "lucide-react";
 
-const ApprovalPopup = ({ clubdata, count, onClose }) => {
+const ApprovalPopup = ({ clubdata, count,clubId, onClose }) => {
   const supabase = supabaseService.getClient();
-  const { clubId } = useParams();
   const club = clubdata;
   const [rejectReason,setReason] = useState("");
   const { data: urlData } = supabase.storage
@@ -46,8 +45,8 @@ const ApprovalPopup = ({ clubdata, count, onClose }) => {
   const handleclose = () => {
     onClose();
   };
-  const handleApprove = async (clubId) => {
-    console.log(member_count);
+
+  const handleApprove = async () => {
     // Insert into approvalHistory
     const { error: insertError } = await supabase
       .from("approvalHistory")
@@ -106,12 +105,12 @@ const ApprovalPopup = ({ clubdata, count, onClose }) => {
       }
     }
 
-    alert("อนุมัติชมรมเรียบร้อย!");
+    //alert("อนุมัติชมรมเรียบร้อย!");
     window.history.back(); // กลับไปหน้าก่อนหน้า
   };
 
-  const handleReject = async (clubId) => {
-    console.log(member_count);
+  const handleReject = async () => {
+
     // Insert into approvalHistory
     const { error: insertError } = await supabase
       .from("approvalHistory")
@@ -120,7 +119,7 @@ const ApprovalPopup = ({ clubdata, count, onClose }) => {
           club_name: club.club_name,
           club_avatar: club.club_avatar,
           club_type: club.club_type,
-          member_count: member_count,
+          member_count: count,
           approve_date: today,
           club_adviser: club.club_adviser,
           approval_status: false,
@@ -136,6 +135,7 @@ const ApprovalPopup = ({ clubdata, count, onClose }) => {
       .from("clubMembers")
       .delete()
       .eq("club_id", clubId);
+
     const { CMerror } = await supabase
       .from("clubs")
       .delete()
@@ -440,7 +440,7 @@ const ApprovalPopup = ({ clubdata, count, onClose }) => {
                       boxShadow: "0px 0px 5px 0.1px #7CE9BF",
                     },
                   }}
-                  onClick={() => handleApprove(clubId)}
+                  onClick={() => handleApprove()}
                 >
                   อนุมัติ
                 </Button>

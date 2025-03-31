@@ -18,6 +18,7 @@ const ClubAllMembersDetail = ({info}) => {
   const { clubId } = useParams();
   const location = useLocation();
   const email = location.state?.email;
+  const duties = location.state?.duties;
   const [loading, setLoading] = useState(true);
   const [rejectReason,setReason] = useState('');
   const [isConfirmOpen,setopen] = useState(false);
@@ -47,10 +48,17 @@ const ClubAllMembersDetail = ({info}) => {
   const [isDropdownOpen, setShowDropdown] = useState(false);
   const [roleSelected,setRoleSelected] = useState('');
 
-  
   const handleSelectRole = (role) =>{
     setRoleSelected(role);
     setShowDropdown(false);
+  }
+
+  const [isDropdownOpen2, setShowDropdown2] = useState(false);
+  const [dutySelected,setDutySelected] = useState('');
+
+  const handleSelectDuty = (duty) =>{
+    setDutySelected(duty);
+    isDropdownOpen2(false);
   }
 
     useEffect(() => {
@@ -81,6 +89,7 @@ const ClubAllMembersDetail = ({info}) => {
             .select("club_id, position, created_at,clubPosition, user(name,gender,faculty,department,admission_year)")
             .eq("email", email)
             .eq("club_id", clubId)
+
 
       if (error) {
         console.error("Error fetching clubs:", error);
@@ -150,6 +159,9 @@ const ClubAllMembersDetail = ({info}) => {
       catch (err) {
         console.error("Error during approve process:", err);
       }
+  }
+
+  const handleChangeDuty = async () => {
   }
 
 
@@ -391,10 +403,175 @@ const ClubAllMembersDetail = ({info}) => {
 
                         </div>
 
-                        <p className="mb-6">
-                        <strong>หน้าที่ในชมรม : </strong>
-                        {clubApplicant[0].clubPosition || "ผู้ดูแลชมรม"}
-                        </p>
+                        {/* ตำแหน่ง dropdown */}
+                        <div className="flex items-center mb-6">
+                            <p className="mr-4"><strong>หน้าที่ :</strong></p>
+                            
+                            {info.email === email ? (    
+                              <div>
+                                {clubApplicant[0].clubPosition || "ผู้ดูแลชมรม"}
+                                <button className="p-2 border border-transparent text-white">.</button>
+                              </div>
+                              ) : userClubPosition === "ประธานชมรม" ? (
+                                // Show dropdown and button if user is "ประธานชมรม"
+                                <div className="flex items-center">
+                                  <div className="relative">
+                                    <button
+                                      type="button"
+                                      onClick={() => setShowDropdown2(!isDropdownOpen2)}
+                                      className="cursor-pointer border border-[#FF7E69] rounded-md w-50 p-2 text-left bg-white"
+                                    >
+                                      <div className="flex flex-row items-center justify-between">
+                                        <div>{dutySelected || clubApplicant[0].clubPosition}</div>
+                                        <div className="text-[#FF7E69]">
+                                          {isDropdownOpen2 ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                                        </div>
+                                      </div>
+                                    </button>
+                                    {isDropdownOpen2 && (
+                                      <ul className="absolute w-50 mt-1 rounded-md bg-white shadow-md z-10">
+                                        {duties.map((type, index) => (
+                                          <li
+                                            key={index}
+                                            onClick={() => handleSelectDuty(type)}
+                                            className="p-2 cursor-pointer hover:bg-[#FF7E69] hover:rounded-md"
+                                          >
+                                            {type}
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    )}
+                                  </div>
+
+                                  <div className="relative ml-10">
+                                    {dutySelected === "" || dutySelected === clubApplicant[0].clubPosition ? (
+                                      <Button
+                                        variant="outlined"
+                                        color="error"
+                                        sx={{
+                                          boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                          mr: 2,
+                                          paddingX: "3vw",
+                                          bgcolor: "white",
+                                          color: "#1A1A1A7D",
+                                          borderWidth: "2px",
+                                          borderColor: "white",
+                                          "&:hover": {
+                                            boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                            cursor: "no-drop",
+                                          },
+                                        }}
+                                      >
+                                        เปลี่ยนหน้าที่
+                                      </Button>
+                                    ) : (
+                                      <Button
+                                        variant="outlined"
+                                        color="error"
+                                        sx={{
+                                          boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                          mr: 2,
+                                          paddingX: "3vw",
+                                          bgcolor: "#FF7E69",
+                                          color: "white",
+                                          borderColor: "#FF7E69",
+                                          borderWidth: "2px",
+                                          "&:hover": {
+                                            boxShadow: "0px 0px 5px 1px #FF7E697D",
+                                          },
+                                        }}
+                                        onClick={() => handleChangeDuty()}
+                                      >
+                                        เปลี่ยนหน้าที่
+                                      </Button>
+                                    )}
+                                  </div>
+                                </div>
+                              ) : userClubPosition !== "ประธานชมรม" && clubApplicant[0].position !== "สมาชิกชมรม" ? (
+                                // Show only text if user is not "ประธานชมรม" and position is not "สมาชิกชมรม"
+                                <div>
+                                   {clubApplicant[0].clubPosition || "ผู้ดูแลชมรม"}
+                                  <button className="p-2 border border-transparent text-white">.</button>
+                                </div>
+                              ) : (
+                                // Show dropdown and button for others
+                                <div className="flex items-center">
+                                  <div className="relative">
+                                    <button
+                                      type="button"
+                                      onClick={() => setShowDropdown2(!isDropdownOpen2)}
+                                      className="cursor-pointer border border-[#FF7E69] rounded-md w-50 p-2 text-left bg-white"
+                                    >
+                                      <div className="flex flex-row items-center justify-between">
+                                        <div>{dutySelected || clubApplicant[0].clubPosition}</div>
+                                        <div className="text-[#FF7E69]">
+                                          {isDropdownOpen2 ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                                        </div>
+                                      </div>
+                                    </button>
+                                    {isDropdownOpen2 && (
+                                      <ul className="absolute w-50 mt-1 rounded-md bg-white shadow-md z-10">
+                                        {duties.map((type, index) => (
+                                          <li
+                                            key={index}
+                                            onClick={() => handleSelectDuty(type)}
+                                            className="p-2 cursor-pointer hover:bg-[#FF7E69] hover:rounded-md"
+                                          >
+                                            {type}
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    )}
+                                  </div>
+
+                                  <div className="relative ml-10">
+                                    {dutySelected === "" || dutySelected === clubApplicant[0].clubPosition ? (
+                                      <Button
+                                        variant="outlined"
+                                        color="error"
+                                        sx={{
+                                          boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                          mr: 2,
+                                          paddingX: "3vw",
+                                          bgcolor: "white",
+                                          color: "#1A1A1A7D",
+                                          borderWidth: "2px",
+                                          borderColor: "white",
+                                          "&:hover": {
+                                            boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                            cursor: "no-drop",
+                                          },
+                                        }}
+                                      >
+                                        เปลี่ยนหน้าที่
+                                      </Button>
+                                    ) : (
+                                      <Button
+                                        variant="outlined"
+                                        color="error"
+                                        sx={{
+                                          boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                          mr: 2,
+                                          paddingX: "3vw",
+                                          bgcolor: "#FF7E69",
+                                          color: "white",
+                                          borderColor: "#FF7E69",
+                                          borderWidth: "2px",
+                                          "&:hover": {
+                                            boxShadow: "0px 0px 5px 1px #FF7E697D",
+                                          },
+                                        }}
+                                        onClick={() => handleChangeDuty()}
+                                      >
+                                        เปลี่ยนหน้าที่
+                                      </Button>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+
+
+                        </div>
                     </div>
                     </div>
                 </div>

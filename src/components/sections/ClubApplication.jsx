@@ -172,6 +172,7 @@ const ClubApplication = () => {
         club_id: clubId,
         email: m.email,
         position: m.position,
+        clubPosition: "ผู้ดูแลชมรม"
       }));
       
       console.log(memberData);

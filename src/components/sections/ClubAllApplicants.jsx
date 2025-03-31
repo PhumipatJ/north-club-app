@@ -29,12 +29,13 @@ const ClubAllApplicants = () => {
   const supabase = supabaseService.getClient();
   const location = useLocation();
   const { clubId } = useParams();
+  const [userClubDuty, setUserClubDuty] = useState([]);
 
   useEffect(() => {
     const fetchClubMembers = async () => {
       const { data, error } = await supabase
         .from("clubMembers")
-        .select("club_id, email, position, created_at, user(name, email)")
+        .select("club_id, email, position, clubPosition, created_at, user(name, email)")
         .eq("club_id", clubId);
   
       if (error) {
@@ -57,6 +58,15 @@ const ClubAllApplicants = () => {
   
         //console.log(sortedData);
         setClubMembers(sortedData);
+
+        // Extract unique clubPosition values from the sortedData
+        const uniquePositions = [...new Set(sortedData.map(item => item.clubPosition))];
+
+        // Replace null with "ผู้ดูแลชมรม"
+        const updatedPositions = uniquePositions.filter(position => position !== null);
+
+        // Update the state with the unique club positions
+        setUserClubDuty(updatedPositions);
       }
       setTimeout(() => {
         setLoading(false);
@@ -101,6 +111,7 @@ const ClubAllApplicants = () => {
           </div>
         </div>
         
+
         <div className="flex justify-between gap-10 h-[calc(100vh-184px)]">
           <ClubApplicantsBox clubId={clubId}/>
           <TableContainer
@@ -150,7 +161,7 @@ const ClubAllApplicants = () => {
                 ) : (
                   clubMembers.map((club) => (
                     <TableRow key={club.club_id} sx={{'&:hover':{backgroundColor:'#f9f9f9' , cursor:'pointer'}}} 
-                    onClick={() => navigate(`/ClubAllMembersDetail/${clubId}`, { state: { email: club.user?.email } })}>
+                    onClick={() => navigate(`/ClubAllMembersDetail/${clubId}`, { state: { email: club.user?.email, duties : userClubDuty } })}>
                       <TableCell sx={{ textAlign: 'center', borderColor: '#fff' }}>
                         {club.position !== "สมาชิกชมรม" ? (
                           <UserCog className="text-[#FF7E69]" />

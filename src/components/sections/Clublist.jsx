@@ -185,7 +185,7 @@ const Clublist = () => {
                       </span>
                     ))}
                   </div>
-                  <p className="text-sm mt-4">ประธานชมรม: {club.president}</p>
+
                 </div>
               </div>
             )}
