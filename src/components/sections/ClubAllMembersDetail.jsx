@@ -637,62 +637,69 @@ const ClubAllMembersDetail = ({info}) => {
              
        
               {/* Reply */}
-              <div className="flex flex-col w-full bg-grey">
-                <div className="h-fit w-full flexbox justify-end mt-10  gap-1">
-                  <ThemeProvider theme={theme}> 
-                    <h3 className="text-lg font-semibold mb-2">ยุติการเป็นสมาชิกชมรม</h3>
-                    <div className="flex justify-end pl-10 mt-1">
-                      
-                    <input
-                            type="text"
-                            placeholder="เหตุผลในการยุติการเป็นสมาชิกชมรม"
-                            className="border border-[#1A1A1A7D] rounded-md w-full p-1 mr-4 focus:outline-none focus:border-[#FF7E69] focus:border-2"
-                            onChange={(e) => setReason(e.target.value)}
-                            required
-                          />
-                        {rejectReason===''?(<Button
-                          variant="outlined"
-                          color="error"
-                          sx={{
-                            boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
-                            mr: 2,
-                            paddingX: "3vw",
-                            bgcolor: "white",
-                            color: "#1A1A1A7D",
-                            borderWidth:'2px',
-                            borderColor:'white',
-                            "&:hover": {
-                              boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
-                              cursor: "no-drop",
-                            },
-                          }}
-                        >
-                          ตกลง
-                        </Button>):(
-                            <Button
+
+              {info.email === email ? (    
+                <div></div>
+              ) : userClubPosition === "ประธานชมรม" || (userClubPosition !== "ประธานชมรม" && clubApplicant[0].position === "สมาชิกชมรม")? (
+                <div className="flex flex-col w-full bg-grey">
+                  <div className="h-fit w-full flexbox justify-end mt-10  gap-1">
+                    <ThemeProvider theme={theme}> 
+                      <h3 className="text-lg font-semibold mb-2">ยุติการเป็นสมาชิกชมรม</h3>
+                      <div className="flex justify-end pl-10 mt-1">
+                        
+                      <input
+                              type="text"
+                              placeholder="เหตุผลในการยุติการเป็นสมาชิกชมรม"
+                              className="border border-[#1A1A1A7D] rounded-md w-full p-1 mr-4 focus:outline-none focus:border-[#FF7E69] focus:border-2"
+                              onChange={(e) => setReason(e.target.value)}
+                              required
+                            />
+                          {rejectReason===''?(<Button
                             variant="outlined"
                             color="error"
                             sx={{
                               boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
                               mr: 2,
                               paddingX: "3vw",
-                              bgcolor:"#FF7E69",
-                                color:'white',
-                              borderColor:'#FF7E69',
+                              bgcolor: "white",
+                              color: "#1A1A1A7D",
                               borderWidth:'2px',
+                              borderColor:'white',
                               "&:hover": {
-                                boxShadow: "0px 0px 5px 1px #FF7E697D",
+                                boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                cursor: "no-drop",
                               },
                             }}
-                            onClick={() => handleRepelMember()}
                           >
                             ตกลง
-                          </Button>
-                        )}
-                    </div>
-                  </ThemeProvider>
-                </div>
-              </div>
+                          </Button>):(
+                              <Button
+                              variant="outlined"
+                              color="error"
+                              sx={{
+                                boxShadow: "0px 0px 2px rgba(26,26,26,0.25)",
+                                mr: 2,
+                                paddingX: "3vw",
+                                bgcolor:"#FF7E69",
+                                  color:'white',
+                                borderColor:'#FF7E69',
+                                borderWidth:'2px',
+                                "&:hover": {
+                                  boxShadow: "0px 0px 5px 1px #FF7E697D",
+                                },
+                              }}
+                              onClick={() => handleRepelMember()}
+                            >
+                              ตกลง
+                            </Button>
+                          )}
+                      </div>
+                    </ThemeProvider>
+                  </div>
+                </div>                  
+              ) : (
+                <div></div>            
+              )}
 
             </div>
           </div>
