@@ -255,7 +255,7 @@ const ClubFormManage = ({ isOpen, onClose, clubId, prevform }) => {
           type={opentype}
           text={opentext}
           onConfirm={handleConfirm}
-          onsecondConfirm={handelonclose}
+          onSecondConfirm={handelonclose}
         />
         </div>
       <div
