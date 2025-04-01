@@ -415,7 +415,7 @@ const ClubManage = ({userinfo}) => {
                     }}
                     onClick={() => navigate(`/clubmanage/${clubId}/ClubApplicantsList`, { state: { clubId } })}
                   >
-                    จัดการรายชื่อผู้สมัคร
+                    จัดการสมาชิก
                   </Button>
                 </ThemeProvider>
               </div>

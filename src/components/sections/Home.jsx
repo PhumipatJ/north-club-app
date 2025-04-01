@@ -30,6 +30,11 @@ const Home = () => {
         return "bg-black";
     }
   };
+  const sectionRef = useRef(null);
+
+  const scrollToSection = () => {
+    sectionRef.current.scrollIntoView({ behavior: "smooth" });
+  };
   const NextArrow = ({ onClick }) => (
     <div
       onClick={onClick}
@@ -128,19 +133,22 @@ const Home = () => {
           console.error("Error fetching events:", elError);
           return;
         }
-    
-        const upcomingEvents = Eventlist
-          .map(event => {
-            const [dd, mm, yyyy] = event.start_date.split("/");
-            const eventDate = new Date(`${yyyy}-${mm}-${dd}`);
-            return { ...event, eventDate };
-          })
-          .filter(event =>
-            event.eventDate >= today &&
-            event.eventDate <= twoWeeksLater
-          );
-        console.log(upcomingEvents);
-        setEventlist(upcomingEvents);
+        else{
+            console.log(Eventlist);
+            const upcomingEvents = Eventlist
+            .map(event => {
+              const [dd, mm, yyyy] = event.start_date.split("/");
+              const eventDate = new Date(`${yyyy}-${mm}-${dd}`);
+              return { ...event, eventDate };
+            })
+            .filter(event =>
+              event.eventDate >= today &&
+              event.eventDate <= twoWeeksLater
+            );
+          console.log(upcomingEvents);
+          setEventlist(upcomingEvents);
+        }
+        
       };
     fetchEventimg();
     fetchEventlist();
@@ -194,6 +202,13 @@ const Home = () => {
 
     preloadImages();
   }, [carouselEventImg]);
+  useState(()=>{
+    const fetchEventbyDay = async () =>{
+        const{data,error} = await supabase
+        .from("event")
+        .select("*")
+    }
+  },[day])
   const handleDayselect = (value) =>{
     const dayweek = ['จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์','อาทิตย์']
     const thisday = dayweek.indexOf(value[3]);
@@ -219,7 +234,6 @@ const Home = () => {
         currentDate.setDate(currentDate.getDate()+1);
     }
     setDay(newDays);
-
   }
   useEffect(()=>{
     console.log(day)
@@ -233,7 +247,7 @@ const Home = () => {
     );
   }
   return (
-    <div className="flex flex-col items-center justify-center px-6 py-16 bg-white font-prompt">
+    <div className="flex flex-col items-center justify-center px-6 py-16 bg-white font-prompt scroll-smooth">
       {/* Header Text */}
       <div className="pt-8 text-center md:text-right">
         <h2 className="text-lg font-semibold text-gray-600">
@@ -252,7 +266,8 @@ const Home = () => {
             ติดตามทุกกิจกรรม รอบรั้วมหาลัย
           </p>
           <a
-            href="#calender"
+          onClick={scrollToSection}
+            href="#section1"
             className="mt-4 inline-block bg-[#FF7E69] text-white py-2 px-4 rounded-lg shadow-md hover:shadow-[0px_0px_5px_2px_#FF7E697D] transition-shadow ease-in-out duration-200"
           >
             ตารางกิจกรรม
@@ -339,7 +354,7 @@ const Home = () => {
         </div>
 
         {/* Right: "Today's Activity" Section */}
-        <div id="calender" className="w-full mt-10 md:mt-0 ">
+        <div ref={sectionRef} className="w-full mt-10 md:mt-0 ">
           <h2 className="text-2xl font-bold text-[#FF7E69]">
             กิจกรรมที่จะมาถึงใน 2 อาทิตย์
           </h2>
@@ -393,15 +408,26 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="mt-10 w-full px-40 flex flex-col bg-amber-200 h-fit">
+      <div className="mt-10 w-full px-40 flex flex-col h-fit">
         <h2 className="text-3xl font-bold text-[#7CE9BF] mb-1 w-full text-center">
           ปฎิทินกิจกรรม
         </h2>
         <div className="flex">
           <Calendar daySelect={handleDayselect}></Calendar>
-          <div className="bg-red-200 w-full flex flex-wrap">
+          <div className="w-full flex flex-wrap mt-10">
                 {day.map((item,index)=>(
-                    <div key={index} className="w-[20%] p-2 text-center">{item.daytext}</div>
+                    <div key={index} className="w-[20%] text-center ">
+                        <div className="border-b-2 pb-5 border-[#FF7E69]">
+                        <h1 className="font-[600] text-[15px] text-[#FF7E69]">{item.day}/{item.month}</h1>
+                        <h1 className="font-semibold text-[18px] text-[#FF7E69]">{item.daytext}</h1>
+                        </div>
+                        <div>
+                        <div className="border-1 border-[#7CE9BF] ">
+                            sasdf
+                        </div>
+                        </div>
+                        
+                    </div>
                 ))}
           </div>
         </div>
