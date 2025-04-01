@@ -17,9 +17,7 @@ const Clubfile = () => {
         console.log(error);
       } else {
         const uniqueTypes = [...new Set(data?.map((item) => item.type))];
-        console.log(uniqueTypes);
         setUq(uniqueTypes);
-        console.log(data);
         setFolders(
           uniqueTypes.map((type) => ({
             name: type,

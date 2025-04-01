@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -15,6 +15,9 @@ const Home = () => {
   const [EventList, setEventlist] = useState();
   const [currentSlide, setCurrent] = useState(0);
   const dotShapes = ["triangle", "square", "circle"];
+  const loadedImages = useRef([]);
+  const [allLoaded, setAllLoaded] = useState(false);
+  const [day,setDay] = useState([]);
   const getDotShapeClass = (shape) => {
     switch (shape) {
       case "triangle":
@@ -136,7 +139,7 @@ const Home = () => {
             event.eventDate >= today &&
             event.eventDate <= twoWeeksLater
           );
-    
+        console.log(upcomingEvents);
         setEventlist(upcomingEvents);
       };
     fetchEventimg();
@@ -169,10 +172,59 @@ const Home = () => {
 
     return `${day} ${monthNames[monthIndex]} ${yyyy}`;
   };
+  useEffect(() => {
+    const preloadImages = async () => {
+      const promises = carouselEventImg.map((src, index) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = src;
+          img.onload = () => resolve({ src, index });
+          img.onerror = () => resolve({ src: null, index }); // กัน error
+          //console.log(src);
+        });
+      });
+
+      const results = await Promise.all(promises);
+      loadedImages.current = results.filter(img => img.src !== null).map(img => img.src);
+      setTimeout(() => {
+        setAllLoaded(true);
+      }, 1000);
+      
+    };
+
+    preloadImages();
+  }, [carouselEventImg]);
   const handleDayselect = (value) =>{
-    console.log(value);
+    const dayweek = ['จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์','อาทิตย์']
+    const thisday = dayweek.indexOf(value[3]);
+    const startdate = new Date(value[2],value[1]-1,value[0]);
+    const newDays = [];
+    newDays.push({
+        day:value[0],
+        month:value[1],
+        year:value[2],
+        daytext:dayweek[thisday],
+    })
+    let currentDate = new Date(startdate);
+    for(let i =0;i<4;i++){
+        const dayOfWeek = currentDate.getDay();
+        const dayText = dayweek[dayOfWeek];
+        //console.log(i,currentDate.getDay(),currentDate.getMonth()+1,currentDate.getFullYear(),dayText)
+        newDays.push({
+            day:currentDate.getDate(),
+            month:currentDate.getMonth()+1,
+            year:currentDate.getFullYear(),
+            daytext:dayText,
+        })
+        currentDate.setDate(currentDate.getDate()+1);
+    }
+    setDay(newDays);
+
   }
-  if (loading) {
+  useEffect(()=>{
+    console.log(day)
+  },[day])
+  if (loading || !allLoaded) {
     return (
       <>
         <Loading />
@@ -274,7 +326,7 @@ const Home = () => {
         {/* Left: Carousel */}
         <div className="max-w-xs md:max-w-2xs mr-0 md:mr-16 ">
           <Slider {...carouselSettings}>
-            {carouselEventImg.map((img, index) => (
+            {loadedImages?.current.map((img, index) => (
               <div key={index} className="flex justify-center">
                 <img
                   src={img}
@@ -341,12 +393,17 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="mt-10 w-full px-40 flex flex-col">
+      <div className="mt-10 w-full px-40 flex flex-col bg-amber-200 h-fit">
         <h2 className="text-3xl font-bold text-[#7CE9BF] mb-1 w-full text-center">
           ปฎิทินกิจกรรม
         </h2>
         <div className="flex">
           <Calendar daySelect={handleDayselect}></Calendar>
+          <div className="bg-red-200 w-full flex flex-wrap">
+                {day.map((item,index)=>(
+                    <div key={index} className="w-[20%] p-2 text-center">{item.daytext}</div>
+                ))}
+          </div>
         </div>
       </div>
     </div>

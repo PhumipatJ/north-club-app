@@ -88,14 +88,16 @@ const AnnouncementList = ({ id, clubName }) => {
       {isModalOpen && (
         <>
         <div className="fixed inset-0 bg-black/30 flex justify-center items-center z-50"> 
-          <div className="max-w-4xl mx-auto h-[85%] p-12 shadow-lg rounded-xl border border-gray-200 bg-white mt-24 mb-8">
+          <div className="max-w-4xl mx-auto h-[85%] shadow-lg rounded-xl border border-gray-200 bg-white mt-24 mb-8">
+            <div className="py-3 flex justify-end px-5">
             <button
-              className="absolute top-26 right-83 text-gray-500 hover:text-gray-700"
+              className="text-gray-500 hover:text-gray-700"
               onClick={() => setIsModalOpen(false)}
             >
               <X size={24} />
             </button> 
-              <div className="flex flex-col w-full">
+            </div>
+              <div className="flex flex-col w-full px-10">
                   <div className="flex flex-wrap md:flex-nowrap gap-4">
                       <div className="flex items-center justify-center relative overflow-hidden rounded-lg w-full md:w-2/5 aspect-[4/5]">
                           <img
@@ -122,7 +124,7 @@ const AnnouncementList = ({ id, clubName }) => {
                   <div className="flex flex-wrap items-center gap-4 mt-4">
                       <p className="text-sm text-gray-700">ดูเอกสารเพิ่มเติม:</p>
                       <a
-                          href={announcementData.document}
+                          href={`${supabase.storage.from("club-documents").getPublicUrl(announcementData.document).data.publicUrl}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-blue-500 text-sm">

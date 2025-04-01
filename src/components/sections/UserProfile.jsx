@@ -56,7 +56,6 @@ const UserProfile = () => {
                           ? "กรรมการชมรม"
                           : "กองกิจการนักศึกษา"}
         </div>
-        <Settings className="absolute top-0 right-0 w-6 h-6 text-gray-500 cursor-pointer" />
       </div>
 
       <div className="flex flex-row justify-between w-3/5 mt-6">

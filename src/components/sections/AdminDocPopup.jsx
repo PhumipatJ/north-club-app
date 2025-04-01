@@ -65,10 +65,7 @@ const AdminDocPopup = ({ onClose ,filetype}) => {
     e.preventDefault();
     setDragActive(true);
   };
-  const handleDelete = ()=>{
-    setOpentype('deleteFile');
-    setConfirmopen(true);
-  }
+  
   const handleSubmit = async () => {
     try {
       const uploaded = await Promise.all(

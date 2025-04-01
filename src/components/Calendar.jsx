@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import weekday from "dayjs/plugin/weekday"; 
+import localeData from "dayjs/plugin/localeData";
+import "dayjs/locale/th"; // ถ้าอยากให้เป็นภาษาไทย
+dayjs.extend(localizedFormat);
+dayjs.extend(weekday);
+dayjs.extend(localeData);
+dayjs.locale("th");
 
 const Calendar = ({daySelect}) => {
   const today = dayjs();
@@ -17,8 +25,11 @@ const Calendar = ({daySelect}) => {
     setCurrentDate(currentDate.add(increment, "month"));
   };
   useEffect(()=>{
-    daySelect(`${selectedDay}/${selectedMonth}/${selectedYear}`);
+    const selectedDate = dayjs(`${selectedYear}-${selectedMonth}-${selectedDay}`); // วันที่ 15 มีนาคม 2025
+  const dayOfWeek = selectedDate.format("dddd");
+    daySelect([selectedDay,selectedMonth,selectedYear,dayOfWeek]);
   },[selectedDate])
+
   const selectedFullDate = currentDate.date(selectedDate);
   const selectedDay = selectedFullDate.date(); // Day of the month
   const selectedMonth = selectedFullDate.month() + 1; // Month (0-based, so add 1)
@@ -37,9 +48,9 @@ const Calendar = ({daySelect}) => {
         </h2>
         <ChevronRight onClick={() => handleMonthChange(1)} className="text-lg font-bold cursor-pointer"/>
       </div>
-      <p className="text-center text-sm text-gray-400">Today: {today.format("DD MMMM YYYY")}</p>
+      <p className="text-center text-sm text-gray-400">วันนี้: {today.format("DD MMMM YYYY")}</p>
       <div className="grid grid-cols-7 gap-2 mt-4 text-center text-gray-600">
-        {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
+        {["อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"].map((day) => (
           <div key={day} className="font-semibold">{day}</div>
         ))}
         {[...Array(startDay)].map((_, i) => (

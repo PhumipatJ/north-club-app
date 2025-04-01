@@ -148,21 +148,12 @@ const EventModal = ({ isOpen, onClose, clubId ,userId}) => {
         //console.log(thirtyDaysAhead);
 
         if (selectedDateObj < thirtyDaysAhead) {
-          setOpentype("errorTimeInterval")
           errors.push("Selected date must be more than " + thirtyDaysAhead);
         }
       }
 
       if (!startTime || !endTime) {
-        setOpentype("errorEmpty")
           errors.push("Start time and end time are required.");
-      } 
-      
-      //console.log(startTime);
-      //console.log(endTime);
-      if (startTime >= endTime) {
-        setOpentype("errorStartTime");
-        errors.push("Start time must be earlier than end time.");
       }
         
       if(!location.trim()) {
@@ -174,11 +165,13 @@ const EventModal = ({ isOpen, onClose, clubId ,userId}) => {
             setOpentype("errorURL");
             errors.push("Location must be a valid URL for Online status.");
           }
-        } 
+        } else if (statusText === "Offline") {
+          setOpentype("errorEmpty");
+          errors.push("Location is required for Offline status.");
+        }
       }
       
       if (!eventDescription.trim()) {
-        setOpentype("errorEmpty");
         errors.push("eventDescription is required.");
       }
         
@@ -191,8 +184,8 @@ const EventModal = ({ isOpen, onClose, clubId ,userId}) => {
       }
                  
       if (!announcementDescription) {
-        setOpentype("errorEmpty")
         errors.push("announcementDescription is required.");
+        setOpentype("errorEmpty")
       }
         
     }
@@ -214,10 +207,8 @@ const EventModal = ({ isOpen, onClose, clubId ,userId}) => {
       return false;
     }
 
-    setOpentype('event');
     return true;
   };
-
   const handleConfirmEvent = async () => {
     if (!isFormValid()) {
       setIsConfirmOpen(true)
@@ -344,7 +335,7 @@ const EventModal = ({ isOpen, onClose, clubId ,userId}) => {
             </button>
           </div>
                   <div className="text-gray-400">
-                  *กรุณาประกาศก่อนล่วงหน้า 1 เดือน
+                  *กรุณาประกาศกิจกรรมก่อนล่วงหน้า 1 เดือน
                   </div>
           <div
             className="h-[100%] w-fit  flex items-center px-2 cursor-pointer"
@@ -369,7 +360,7 @@ const EventModal = ({ isOpen, onClose, clubId ,userId}) => {
                     <input
                       type="text"
                       id="eventName"
-                      placeholder="Enter Event Name"
+                      placeholder="กรอกชื่อกิจกรรม"
                       className="w-full border border-[#FF7E69] rounded px-3 py-2"
                       onChange={(e) => setEventTitle(e.target.value)}
                     />
@@ -471,7 +462,7 @@ const EventModal = ({ isOpen, onClose, clubId ,userId}) => {
                     </label>
                     <textarea
                       id="description"
-                      placeholder="Enter Event Details"
+                      placeholder="กรอกรายละเอียดกิจกรรม"
                       className="w-full border border-[#FF7E69] rounded px-3 pt-2 h-32 max-h-[50vh]"
                       onChange={(e) => setEventDescription(e.target.value)}
                     />
@@ -484,7 +475,7 @@ const EventModal = ({ isOpen, onClose, clubId ,userId}) => {
               <h2 className="text-xl font-bold mb-2">หัวข้อ</h2>
               <textarea
                 id="Annoucement"
-                placeholder="Enter Announcement Details"
+                placeholder="กรอกหัวข้อประกาศ"
                 className="w-full border border-[#FF7E69] rounded px-3 py-2 max-h-[20vh] min-h-[45px]"
                 onChange={(e) => setAnnouncementTitle(e.target.value)}
               />
@@ -498,7 +489,7 @@ const EventModal = ({ isOpen, onClose, clubId ,userId}) => {
                 </label>
                 <textarea
                   id="description"
-                  placeholder="Enter Event Details"
+                  placeholder="กรอกรายละเอียดประกาศ"
                   className="w-full border border-[#FF7E69] rounded px-3 py-2 h-35 max-h-[54vh] min-h-[45px]"
                   onChange={(e) => setAnnouncementDescription(e.target.value)}
                 />
