@@ -26,9 +26,13 @@ const Clublist = () => {
   };
 
   const filteredClubs = clubs.filter((club) =>
-    club.name.toLowerCase().includes(search.toLowerCase()) &&
-    (selectedTags.length === 0 || 
-      (Array.isArray(club.type) ? club.type.some(t => selectedTags.includes(t)) : selectedTags.includes(club.type)))
+    (club.name.toLowerCase().includes(search.toLowerCase()) ||
+      (Array.isArray(club.tag) &&
+        club.tag.some((tag) => tag.toLowerCase().includes(search.toLowerCase())))) &&
+    (selectedTags.length === 0 ||
+      (Array.isArray(club.type)
+        ? club.type.some((t) => selectedTags.includes(t))
+        : selectedTags.includes(club.type)))
   );
   
   useEffect(() => {
