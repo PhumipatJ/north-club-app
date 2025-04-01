@@ -332,7 +332,7 @@ const ClubManage = ({userinfo}) => {
               <div className="text-gray-500 text-left ">
                 <p>สร้างเมื่อ: { new Date(club?.approve_date)
               .toLocaleDateString("th-TH", { day: "2-digit", month: "2-digit", year: "numeric" })}</p>
-                <p>ที่ตั้งชมรม: {club?.location}</p>
+
                 <div className="flexbox">
                   <div className="flex items-center mb-1"> {/* Container for email */}
                   <Mail className="w-5 h-5 text-[#7CE9BF]"/>
