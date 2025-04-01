@@ -403,7 +403,7 @@ const Home = () => {
           alt="Astro"
           className="absolute w-120 h-120 right-[16vw]"
         />
-        <h2 className="text-3xl font-bold text-[#7CE9BF] mb-1 w-full text-center">
+        <h2 className="text-3xl font-bold text-[#7CE9BF] mb-1 w-full text-center " id="section1">
           ปฎิทินกิจกรรม
         </h2>
         <div className="flex">
