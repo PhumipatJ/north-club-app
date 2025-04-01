@@ -13,13 +13,6 @@ const Home = () => {
   const [carouselEventImg, setEventimg] = useState([]);
   const [loading, setLoading] = useState(true);
   const [EventList, setEventlist] = useState();
-  const carouselImages = [
-    "/assets/image 30.webp",
-    "/assets/image 31.webp",
-    "/assets/image 32.webp",
-    "/assets/image 33.webp",
-    "/assets/image 34.webp",
-  ];
   const [currentSlide, setCurrent] = useState(0);
   const dotShapes = ["triangle", "square", "circle"];
   const getDotShapeClass = (shape) => {
