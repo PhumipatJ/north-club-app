@@ -106,7 +106,7 @@ const Clubform = ({ formdata, onClose ,userInfo}) => {
                         .from("club-avatars")
                         .getPublicUrl("/" + formdata.Pic).data.publicUrl
                     }`}
-                    className="max-h-[60vh] rounded-[5px]"
+                    className="h-100 rounded-[5px] aspect-[4/5] object-cover"
                     alt="poster รับสมัคร"
                   />
                   <div className="p-5">

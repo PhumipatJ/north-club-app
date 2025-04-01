@@ -40,7 +40,7 @@ const Calendar = ({daySelect}) => {
   // console.log(selectedYear);
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-md p-4 scale-80 min-h-[430px] select-none">
+    <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-md p-4 scale-80 min-h-[430px] max-h-[430px] select-none">
       <div className="flex justify-between items-center mb-4">
         <ChevronLeft onClick={() => handleMonthChange(-1)} className="text-lg font-bold cursor-pointer" />
         <h2 className="text-xl font-semibold text-center text-gray-900">

@@ -283,7 +283,7 @@ const Clubpage = ({info}) => {
         setOpentype('adminProhibit');
         setConfirm(true);
       }
-      else if(info?.role === 'club'){
+      else if(await isJoined() !== null){
         setOpentype('alreadyInClub');
         setConfirm(true);
       }

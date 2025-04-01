@@ -139,7 +139,7 @@ const confirmCardConfig = {
       title: "คุณอยู่ชมรมนี้แล้ว",
       confirmText: "",
       cancelText: "ตกลง",
-      description: "คุณไม่สามารถสมัครชมรมที่คุณมีรายชื่อยู่แล้วได้",
+      description: "คุณไม่สามารถสมัครชมรมที่คุณมีรายชื่ออยู่แล้วได้",
       confirmedTitle: "",
       confirmedDescription: "",
     },

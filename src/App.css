@@ -2,8 +2,8 @@
 
 * {
   scrollbar-width: thin; /* Firefox */
-  scrollbar-color: #7CE9BF #fff
-
+  scrollbar-color: #7CE9BF #fff;
+  scroll-behavior: smooth;
 }
 
 body {
