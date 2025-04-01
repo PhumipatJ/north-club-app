@@ -116,63 +116,37 @@ const Home = () => {
       }
     };
     const fetchEventlist = async () => {
-<<<<<<< Updated upstream
         const today = new Date();
         const twoWeeksLater = new Date();
         twoWeeksLater.setDate(today.getDate() + 64);
     
         const { data: Eventlist, error: elError } = await supabase
           .from("event")
-          .select("*, clubs ( club_avatar )")
+          .select("*, clubs ( club_avatar ,club_name)")
           .order("start_date", { ascending: true });
     
         if (elError) {
           console.error("Error fetching events:", elError);
           return;
         }
-    
-        const upcomingEvents = Eventlist
-          .map(event => {
-            const [dd, mm, yyyy] = event.start_date.split("/");
-            const eventDate = new Date(`${yyyy}-${mm}-${dd}`);
-            return { ...event, eventDate };
-          })
-          .filter(event =>
-            event.eventDate >= today &&
-            event.eventDate <= twoWeeksLater
-          );
-        console.log(upcomingEvents);
-        setEventlist(upcomingEvents);
+        else{
+          setAllevnt(Eventlist);
+            //console.log(Eventlist);
+            const upcomingEvents = Eventlist
+            .map(event => {
+              const [dd, mm, yyyy] = event.start_date.split("/");
+              const eventDate = new Date(`${yyyy}-${mm}-${dd}`);
+              return { ...event, eventDate };
+            })
+            .filter(event =>
+              event.eventDate >= today &&
+              event.eventDate <= twoWeeksLater
+            );
+          //console.log(upcomingEvents);
+          setEventlist(upcomingEvents);
+        }
+        
       };
-=======
-      const today = new Date();
-      const twoWeeksLater = new Date();
-      twoWeeksLater.setDate(today.getDate() + 64);
-
-      const { data: Eventlist, error: elError } = await supabase
-        .from("event")
-        .select("*, clubs ( club_avatar ,club_name)")
-        .order("start_date", { ascending: true });
-
-      if (elError) {
-        console.error("Error fetching events:", elError);
-        return;
-      } else {
-        setAllevnt(Eventlist);
-        console.log(Eventlist);
-        const upcomingEvents = Eventlist.map((event) => {
-          const [dd, mm, yyyy] = event.start_date.split("/");
-          const eventDate = new Date(`${yyyy}-${mm}-${dd}`);
-          return { ...event, eventDate };
-        }).filter(
-          (event) =>
-            event.eventDate >= today && event.eventDate <= twoWeeksLater
-        );
-        console.log(upcomingEvents);
-        setEventlist(upcomingEvents);
-      }
-    };
->>>>>>> Stashed changes
     fetchEventimg();
     fetchEventlist();
     setTimeout(() => {
@@ -226,55 +200,27 @@ const Home = () => {
 
     preloadImages();
   }, [carouselEventImg]);
-<<<<<<< Updated upstream
   const handleDayselect = (value) =>{
-    const dayweek = ['จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์','อาทิตย์']
-=======
-  useState(() => {
-    const fetchEventbyDay = async () => {
-      const { data, error } = await supabase.from("event").select("*");
-    };
-  }, [day]);
-  const handleDayselect = (value) => {
-    const dayweek = [
-      "จันทร์",
-      "อังคาร",
-      "พุธ",
-      "พฤหัสบดี",
-      "ศุกร์",
-      "เสาร์",
-      "อาทิตย์",
-    ];
->>>>>>> Stashed changes
+    const dayweek = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์']
     const thisday = dayweek.indexOf(value[3]);
     const startdate = new Date(value[2], value[1] - 1, value[0]);
     const newDays = [];
     let currentDate = new Date(startdate);
-    for (let i = 0; i < 5; i++) {
-      const dayOfWeek = currentDate.getDay();
-      const dayText = dayweek[dayOfWeek-1];
-      //console.log(i,currentDate.getDate(),currentDate.getMonth()+1,currentDate.getFullYear(),dayText)
-      newDays.push({
-        day: currentDate.getDate(),
-        month: currentDate.getMonth() + 1,
-        year: currentDate.getFullYear(),
-        daytext: dayText,
-      });
-      currentDate.setDate(currentDate.getDate() + 1);
+    for(let i =0;i<5;i++){
+        const dayOfWeek = currentDate.getDay();
+        const dayText = dayweek[dayOfWeek];
+        //console.log(dayText,dayOfWeek);
+        //console.log(i,currentDate.getDay(),currentDate.getMonth()+1,currentDate.getFullYear(),dayText)
+        newDays.push({
+            day:currentDate.getDate(),
+            month:currentDate.getMonth()+1,
+            year:currentDate.getFullYear(),
+            daytext:dayText,
+        })
+        currentDate.setDate(currentDate.getDate()+1);
     }
     setDay(newDays);
-<<<<<<< Updated upstream
-
   }
-  useEffect(()=>{
-    console.log(day)
-  },[day])
-=======
-  };
-  useEffect(() => {
-    console.log(day);
-  }, [day]);
->>>>>>> Stashed changes
   if (loading || !allLoaded) {
     return (
       <>
@@ -303,12 +249,7 @@ const Home = () => {
             ติดตามทุกกิจกรรม รอบรั้วมหาลัย
           </p>
           <a
-<<<<<<< Updated upstream
-            href="#calender"
-=======
-            onClick={scrollToSection}
             href="#section1"
->>>>>>> Stashed changes
             className="mt-4 inline-block bg-[#FF7E69] text-white py-2 px-4 rounded-lg shadow-md hover:shadow-[0px_0px_5px_2px_#FF7E697D] transition-shadow ease-in-out duration-200"
           >
             ตารางกิจกรรม
@@ -450,18 +391,12 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="mt-10 w-full px-40 flex flex-col bg-amber-200 h-fit">
+      <div className="mt-10 w-full px-40 flex flex-col  h-fit">
         <h2 className="text-3xl font-bold text-[#7CE9BF] mb-1 w-full text-center">
           ปฎิทินกิจกรรม
         </h2>
         <div className="flex">
           <Calendar daySelect={handleDayselect}></Calendar>
-<<<<<<< Updated upstream
-          <div className="bg-red-200 w-full flex flex-wrap">
-                {day.map((item,index)=>(
-                    <div key={index} className="w-[20%] p-2 text-center">{item.daytext}</div>
-                ))}
-=======
           <div className="w-full flex flex-wrap mt-10">
             {day.map((item, index1) => (
               <div key={index1} className="w-[20%]  ">
@@ -487,9 +422,10 @@ const Home = () => {
                       );
                     }).map((itm, index) => (
                       <div className="border-2 border-[#7CE9BF] rounded-[5px] mt-2 mx-1 text-[12px] p-2 " key={index}>
-                        <h1>{itm?.title}</h1>
-                        <div className="flex">
-                          <p>สถานที่</p>{itm.status === 'Online'?'Online':itm?.location}
+                        <h1 className="text-[17px] font-semibold text-[#FF7E69]">{itm?.title}</h1>
+                        <div className="flex ">
+                          <p className="mr-1 font-semibold text-[#FF7E69]">สถานที่:</p>
+                          <p className="w-37">{itm.status === 'Online'?'Online':itm?.location}</p>
                         </div>
                         <div className="flex">
                           <p className="mr-1 font-semibold text-[#FF7E69]">เวลา:</p>{itm?.start_time} - {itm?.end_time} น.
@@ -501,7 +437,6 @@ const Home = () => {
                 </div>
               </div>
             ))}
->>>>>>> Stashed changes
           </div>
         </div>
       </div>
