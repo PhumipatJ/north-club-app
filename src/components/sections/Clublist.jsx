@@ -31,9 +31,6 @@ const Clublist = () => {
       (Array.isArray(club.type) ? club.type.some(t => selectedTags.includes(t)) : selectedTags.includes(club.type)))
   );
   
-  
-  
-
   useEffect(() => {
     const fetchActiveClubs = async () => {
       const { data: clubsData, error: clubsError } = await supabase

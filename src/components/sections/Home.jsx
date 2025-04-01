@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Calendar from "../Calendar";
 import supabase from "../../../supabaseClient";
 import Loading from "../loading";
-
+import dayjs from "dayjs";
 const Home = () => {
   const navigate = useNavigate();
   const supabaseKey = import.meta.env.VITE_SUPABASE_API_KEY;
@@ -17,7 +17,8 @@ const Home = () => {
   const dotShapes = ["triangle", "square", "circle"];
   const loadedImages = useRef([]);
   const [allLoaded, setAllLoaded] = useState(false);
-  const [day,setDay] = useState([]);
+  const [day, setDay] = useState([]);
+  const [allEvent,setAllevnt] = useState([]);
   const getDotShapeClass = (shape) => {
     switch (shape) {
       case "triangle":
@@ -126,7 +127,7 @@ const Home = () => {
     
         const { data: Eventlist, error: elError } = await supabase
           .from("event")
-          .select("*, clubs ( club_avatar )")
+          .select("*, clubs ( club_avatar ,club_name)")
           .order("start_date", { ascending: true });
     
         if (elError) {
@@ -134,7 +135,8 @@ const Home = () => {
           return;
         }
         else{
-            console.log(Eventlist);
+          setAllevnt(Eventlist);
+            //console.log(Eventlist);
             const upcomingEvents = Eventlist
             .map(event => {
               const [dd, mm, yyyy] = event.start_date.split("/");
@@ -145,7 +147,7 @@ const Home = () => {
               event.eventDate >= today &&
               event.eventDate <= twoWeeksLater
             );
-          console.log(upcomingEvents);
+          //console.log(upcomingEvents);
           setEventlist(upcomingEvents);
         }
         
@@ -193,11 +195,12 @@ const Home = () => {
       });
 
       const results = await Promise.all(promises);
-      loadedImages.current = results.filter(img => img.src !== null).map(img => img.src);
+      loadedImages.current = results
+        .filter((img) => img.src !== null)
+        .map((img) => img.src);
       setTimeout(() => {
         setAllLoaded(true);
       }, 1000);
-      
     };
 
     preloadImages();
@@ -210,20 +213,15 @@ const Home = () => {
     }
   },[day])
   const handleDayselect = (value) =>{
-    const dayweek = ['จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์','อาทิตย์']
+    const dayweek = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์']
     const thisday = dayweek.indexOf(value[3]);
-    const startdate = new Date(value[2],value[1]-1,value[0]);
+    const startdate = new Date(value[2], value[1] - 1, value[0]);
     const newDays = [];
-    newDays.push({
-        day:value[0],
-        month:value[1],
-        year:value[2],
-        daytext:dayweek[thisday],
-    })
     let currentDate = new Date(startdate);
-    for(let i =0;i<4;i++){
+    for(let i =0;i<5;i++){
         const dayOfWeek = currentDate.getDay();
         const dayText = dayweek[dayOfWeek];
+        //console.log(dayText,dayOfWeek);
         //console.log(i,currentDate.getDay(),currentDate.getMonth()+1,currentDate.getFullYear(),dayText)
         newDays.push({
             day:currentDate.getDate(),
@@ -235,9 +233,6 @@ const Home = () => {
     }
     setDay(newDays);
   }
-  useEffect(()=>{
-    console.log(day)
-  },[day])
   if (loading || !allLoaded) {
     return (
       <>
@@ -266,7 +261,6 @@ const Home = () => {
             ติดตามทุกกิจกรรม รอบรั้วมหาลัย
           </p>
           <a
-          onClick={scrollToSection}
             href="#section1"
             className="mt-4 inline-block bg-[#FF7E69] text-white py-2 px-4 rounded-lg shadow-md hover:shadow-[0px_0px_5px_2px_#FF7E697D] transition-shadow ease-in-out duration-200"
           >
@@ -369,16 +363,16 @@ const Home = () => {
                 </tr>
               </thead>
               <tbody className="bg-white">
-                {
-                  EventList?.sort((a, b) => {
-                    const [ddA, mmA, yyyyA] = a.start_date.split("/");
-                    const eventDateA = new Date(`${yyyyA}-${mmA}-${ddA}`);
-                
-                    const [ddB, mmB, yyyyB] = b.start_date.split("/");
-                    const eventDateB = new Date(`${yyyyB}-${mmB}-${ddB}`);
-                
-                    return eventDateA - eventDateB; // เรียงจากวันที่ใกล้สุดไปไกลสุด
-                  }).slice(0, 7)
+                {EventList?.sort((a, b) => {
+                  const [ddA, mmA, yyyyA] = a.start_date.split("/");
+                  const eventDateA = new Date(`${yyyyA}-${mmA}-${ddA}`);
+
+                  const [ddB, mmB, yyyyB] = b.start_date.split("/");
+                  const eventDateB = new Date(`${yyyyB}-${mmB}-${ddB}`);
+
+                  return eventDateA - eventDateB; // เรียงจากวันที่ใกล้สุดไปไกลสุด
+                })
+                  .slice(0, 7)
                   .map((item, index) => (
                     <tr key={index} className="hover:bg-[#FF7E69] duration-300">
                       <td className="p-2 justify-center flex select-none">
@@ -393,7 +387,9 @@ const Home = () => {
                           className="w-7 rounded-full"
                         />
                       </td>
-                      <td className="p-2 text-center select-none">{item.title}</td>
+                      <td className="p-2 text-center select-none">
+                        {item.title}
+                      </td>
                       <td className="p-2 text-center select-none">
                         {formatDateThai(item.start_date)}
                       </td>
@@ -401,34 +397,58 @@ const Home = () => {
                         {item.start_time} - {item.end_time}
                       </td>
                     </tr>
-                  ))
-                }
+                  ))}
               </tbody>
             </table>
           </div>
         </div>
       </div>
-      <div className="mt-10 w-full px-40 flex flex-col h-fit">
+      <div className="mt-10 w-full px-40 flex flex-col  h-fit">
         <h2 className="text-3xl font-bold text-[#7CE9BF] mb-1 w-full text-center">
           ปฎิทินกิจกรรม
         </h2>
         <div className="flex">
           <Calendar daySelect={handleDayselect}></Calendar>
           <div className="w-full flex flex-wrap mt-10">
-                {day.map((item,index)=>(
-                    <div key={index} className="w-[20%] text-center ">
-                        <div className="border-b-2 pb-5 border-[#FF7E69]">
-                        <h1 className="font-[600] text-[15px] text-[#FF7E69]">{item.day}/{item.month}</h1>
-                        <h1 className="font-semibold text-[18px] text-[#FF7E69]">{item.daytext}</h1>
+            {day.map((item, index1) => (
+              <div key={index1} className="w-[20%]  ">
+                <div className="border-b-2 pb-5 border-[#FF7E69] text-center">
+                  <h1 className="font-[600] text-[15px] text-[#FF7E69]">
+                    {item.day}/{item.month}
+                  </h1>
+                  <h1 className="font-semibold text-[18px] text-[#FF7E69]">
+                    {item.daytext}
+                  </h1>
+                </div>
+                <div>
+                  <div>
+                    {allEvent.filter((item2) => {
+                    if (!item2.start_date || !item.year || !item.month || !item.day) return false;
+                      const [ddB, mmB, yyyyB] = item2.start_date.split("/");
+                      const eventDateB = dayjs(`${yyyyB}-${mmB}-${ddB}`);
+                      const cur = dayjs(
+                        `${item.year}-${item.month}-${item.day}`
+                      );
+                      return (
+                        eventDateB.isSame(cur, "day")
+                      );
+                    }).map((itm, index) => (
+                      <div className="border-2 border-[#7CE9BF] rounded-[5px] mt-2 mx-1 text-[12px] p-2 " key={index}>
+                        <h1 className="text-[17px] font-semibold text-[#FF7E69]">{itm?.title}</h1>
+                        <div className="flex ">
+                          <p className="mr-1 font-semibold text-[#FF7E69]">สถานที่:</p>
+                          <p className="w-37">{itm.status === 'Online'?'Online':itm?.location}</p>
                         </div>
-                        <div>
-                        <div className="border-1 border-[#7CE9BF] ">
-                            sasdf
+                        <div className="flex">
+                          <p className="mr-1 font-semibold text-[#FF7E69]">เวลา:</p>{itm?.start_time} - {itm?.end_time} น.
                         </div>
-                        </div>
-                        
-                    </div>
-                ))}
+                        {itm?.clubs?.club_name??"ไม่ระบุ"}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
