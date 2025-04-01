@@ -117,8 +117,12 @@ const Clubprofile = () => {
     setIsConfirmOpen(true);
     return true;
   };
+
+  const handleConfirm = () => {
+    setIsConfirmOpen(true);
+  }
   
-  const handleConfirm = async () => {
+  const handleSecondConfirm = async () => {
     if (opentype !== "profile") {
       return;
     }
@@ -149,6 +153,9 @@ const Clubprofile = () => {
     } else {
       //alert("Club updated successfully!");
     }
+
+    setIsConfirmOpen(false);
+    window.location.reload();
   };
 
     return (
@@ -273,6 +280,7 @@ const Clubprofile = () => {
             onClose={() => setIsConfirmOpen(false)}
             type={opentype}
             onConfirm={handleConfirm}
+            onSecondConfirm={handleSecondConfirm}
           />
         </div>
     </div>   
