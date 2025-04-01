@@ -128,7 +128,7 @@ const Home = () => {
         const { data: Eventlist, error: elError } = await supabase
           .from("event")
           .select("*, clubs ( club_avatar ,club_name)")
-          .order("start_date", { ascending: true });
+          .order("created_at", { ascending: true });
     
         if (elError) {
           console.error("Error fetching events:", elError);
@@ -205,13 +205,6 @@ const Home = () => {
 
     preloadImages();
   }, [carouselEventImg]);
-  useState(()=>{
-    const fetchEventbyDay = async () =>{
-        const{data,error} = await supabase
-        .from("event")
-        .select("*")
-    }
-  },[day])
   const handleDayselect = (value) =>{
     const dayweek = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์']
     const thisday = dayweek.indexOf(value[3]);
@@ -349,6 +342,7 @@ const Home = () => {
 
         {/* Right: "Today's Activity" Section */}
         <div ref={sectionRef} className="w-full mt-10 md:mt-0 ">
+          
           <h2 className="text-2xl font-bold text-[#FF7E69]">
             กิจกรรมที่จะมาถึงใน 2 อาทิตย์
           </h2>
@@ -403,7 +397,12 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="mt-10 w-full px-40 flex flex-col  h-fit">
+      <div className="mt-10 w-full px-20 flex flex-col  h-fit">
+      <img
+          src="/assets/Pacheco.svg"
+          alt="Astro"
+          className="absolute w-120 h-120 right-[16vw]"
+        />
         <h2 className="text-3xl font-bold text-[#7CE9BF] mb-1 w-full text-center">
           ปฎิทินกิจกรรม
         </h2>
@@ -433,16 +432,16 @@ const Home = () => {
                         eventDateB.isSame(cur, "day")
                       );
                     }).map((itm, index) => (
-                      <div className="border-2 border-[#7CE9BF] rounded-[5px] mt-2 mx-1 text-[12px] p-2 " key={index}>
-                        <h1 className="text-[17px] font-semibold text-[#FF7E69]">{itm?.title}</h1>
-                        <div className="flex ">
+                      <div className="border-2 border-[#7CE9BF] rounded-[5px] mt-2 mx-1 text-[10px] p-2 " key={index}>
+                        <h1 className="text-[11px] font-bold text-[#FF7E69]">{itm?.title}</h1>
+                        <div className="flex text-[10px]">
                           <p className="mr-1 font-semibold text-[#FF7E69]">สถานที่:</p>
-                          <p className="w-37">{itm.status === 'Online'?'Online':itm?.location}</p>
+                          <p className="w-27">{itm.status === 'Online'?'Online':itm?.location}</p>
                         </div>
-                        <div className="flex">
-                          <p className="mr-1 font-semibold text-[#FF7E69]">เวลา:</p>{itm?.start_time} - {itm?.end_time} น.
+                        <div className="flex text-[10px]">
+                          <p className="text-[10px] mr-1 font-semibold text-[#FF7E69]">เวลา:</p>{itm?.start_time} - {itm?.end_time} น.
                         </div>
-                        {itm?.clubs?.club_name??"ไม่ระบุ"}
+                        <p className="font-semibold">{itm?.clubs?.club_name??"ไม่ระบุ"}</p>
                       </div>
                     ))}
                   </div>

@@ -54,7 +54,7 @@ const Clubmember = () => {
   const supabase = supabaseService.getClient();
   const { clubId } = useParams();
   const navigate = useNavigate();
-
+  const positionOrder = ["ประธานชมรม", "รองประธานชมรม", "เลขานุการ", "ผู้ช่วยเลขานุการ", "กรรมการ", "สมาชิกชมรม"];
   // Find the club that matches the URL parameter
   const club = clubInfo[0];
 
@@ -176,7 +176,7 @@ const Clubmember = () => {
         <div div className="p-6 mt-8">
           <h2 className="text-xl font-semibold">สมาชิก ({members.length} คน)</h2>
           <div className="grid grid-cols-5 gap-4 mt-4">
-            {members.map((member, index) => (
+            {members.sort((a, b) => positionOrder.indexOf(a.position) - positionOrder.indexOf(b.position)).map((member, index) => (
               <div key={index} className="bg-white p-4 rounded-lg flex flex-col items-center">
                 <img src={member.image || "/assets/Maskgroup.png"} alt="Member" className="w-20 h-20 rounded-full object-cover" />
                 <p className="mt-2 font-semibold text-center">{member.name}</p>

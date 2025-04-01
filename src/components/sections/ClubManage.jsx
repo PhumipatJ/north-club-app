@@ -40,7 +40,7 @@ const ClubManage = ({userinfo}) => {
 
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [opentype, setOpentype] = useState(null);
-
+  const positionOrder = ["ประธานชมรม", "รองประธานชมรม", "เลขานุการ", "ผู้ช่วยเลขานุการ", "กรรมการ", "สมาชิกชมรม"];
 
   const handleConfirm = () => {
     setOpentype("registrationClose")
@@ -430,7 +430,7 @@ const ClubManage = ({userinfo}) => {
         <div div className="mt-8 h-fit">
           <h2 className="text-xl font-semibold">สมาชิก ({members.length} คน)</h2>
           <div className="flex flex-cols-6 gap-4 mt-4 ">
-            {members.slice(0, 5).map((member, index) => (
+            {members.sort((a, b) => positionOrder.indexOf(a.position) - positionOrder.indexOf(b.position)).slice(0, 5).map((member, index) => (
               <div key={index} className="bg-white rounded-lg flex flex-col w-[20%] h-[25vh] items-center pt-7">
                 <img src={member.image || "/assets/Maskgroup.png"} alt="Member" className="w-20 h-20 rounded-full object-cover" />
                 <p className="mt-2 font-semibold text-center">{member.name}</p>

@@ -26,9 +26,13 @@ const Clublist = () => {
   };
 
   const filteredClubs = clubs.filter((club) =>
-    club.name.toLowerCase().includes(search.toLowerCase()) &&
-    (selectedTags.length === 0 || 
-      (Array.isArray(club.type) ? club.type.some(t => selectedTags.includes(t)) : selectedTags.includes(club.type)))
+    (club.name.toLowerCase().includes(search.toLowerCase()) ||
+      (Array.isArray(club.tag) &&
+        club.tag.some((tag) => tag.toLowerCase().includes(search.toLowerCase())))) &&
+    (selectedTags.length === 0 ||
+      (Array.isArray(club.type)
+        ? club.type.some((t) => selectedTags.includes(t))
+        : selectedTags.includes(club.type)))
   );
   
   useEffect(() => {
@@ -106,7 +110,7 @@ const Clublist = () => {
     </>
   }
   return (
-    <div className="max-w-4xl mx-auto p-4 mt-24 ">
+    <div className="max-w-4xl mx-auto p-4 mt-24 min-h-[77.8vh]">
       <div className="flex flex-row items-center justify-between">
         <h1 className="text-4xl font-bold mb-4">ชมรมทั้งหมด</h1>
         
