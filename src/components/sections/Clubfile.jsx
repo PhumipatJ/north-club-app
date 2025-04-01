@@ -28,7 +28,10 @@ const Clubfile = () => {
               .map((item) => ({ name: item.filename, url: item.filestorage })),
           }))
         );
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
+        
       }
     };
     fetchingFolder();
