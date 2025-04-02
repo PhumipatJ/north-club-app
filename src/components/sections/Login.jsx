@@ -113,14 +113,8 @@ const Login = () => {
         <div className="max-w-2xl w-md bg-white shadow-lg rounded-lg overflow-hidden z-10">
           <div className="flex-1 p-8">
             <h2 className="text-center text-3xl font-bold text-gray-900 mb-6">Login</h2>
-            <div className="mb-4">
-              <button onClick={googlelogin} className="cursor-pointer flex items-center justify-center w-full border-1 border-gray-300 py-2 rounded-md text-gray-700 hover:bg-gray-100">
-                <FcGoogle className="mr-2" size={20} /> Sign in with Google
-              </button>
-            </div>
+
             <div className="relative text-center mb-4">
-              <span className="absolute inset-x-0 top-1/2 border-t"></span>
-              <span className="relative bg-white px-2 text-gray-500">or</span>
             </div>
             {message && <p className="text-red-500 text-sm text-center mb-4">{message}</p>}
             <form onSubmit={handleSubmit} className="space-y-4">
