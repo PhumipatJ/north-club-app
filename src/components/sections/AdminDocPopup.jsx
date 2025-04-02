@@ -67,6 +67,10 @@ const AdminDocPopup = ({ onClose ,filetype}) => {
   };
   
   const handleSubmit = async () => {
+    if (FolderName === null || FolderName === ""){
+      setOpentype("errorEmpty")
+      return;
+    } 
     try {
       const uploaded = await Promise.all(
         selectedFile.map(async (file,index) => {
