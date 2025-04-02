@@ -80,7 +80,7 @@ const confirmCardConfig = {
       confirmedDescription: "",  
     },
     errorTimeInterval: {
-      title: "เวลาประกาศไม่ถูกต้อง",
+      title: "วันที่ประกาศไม่ถูกต้อง",
       confirmText: "",
       cancelText: "ตกลง",
       description: "กรุณาเลือกเวลาประกาศล่วงหน้าก่อน 1 เดือน",

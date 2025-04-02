@@ -148,27 +148,33 @@ const EventModal = ({ isOpen, onClose, clubId ,userId}) => {
         //console.log(thirtyDaysAhead);
 
         if (selectedDateObj < thirtyDaysAhead) {
+          setOpentype("errorTimeInterval");
           errors.push("Selected date must be more than " + thirtyDaysAhead);
         }
       }
 
       if (!startTime || !endTime) {
+        setOpentype("errorEmpty");
+          errors.push("Start time and end time are required.");
+      }
+
+      if (startTime >= endTime) {
+        setOpentype("errorStartTime");
           errors.push("Start time and end time are required.");
       }
         
-      if(!location.trim()) {
-        setOpentype("errorEmpty")
-      }else {
-        if (statusText === "Online") {
-          const urlPattern = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}.*$/;
-          if (!urlPattern.test(location.trim())) {
-            setOpentype("errorURL");
-            errors.push("Location must be a valid URL for Online status.");
-          }
-        } else if (statusText === "Offline") {
-          setOpentype("errorEmpty");
-          errors.push("Location is required for Offline status.");
+      if (statusText === "Online") {
+        const urlPattern = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}.*$/;
+        if (!urlPattern.test(location.trim())) {
+          setOpentype("errorURL");
+          errors.push("Location must be a valid URL for Online status.");
         }
+      } 
+      
+
+      if (statusText === "Offline" && !location.trim()) {
+        setOpentype("errorEmpty");
+        errors.push("Location is required for Offline status.");
       }
       
       if (!eventDescription.trim()) {
@@ -209,6 +215,16 @@ const EventModal = ({ isOpen, onClose, clubId ,userId}) => {
 
     return true;
   };
+
+  const handleConfirm = () => {
+    if (!isFormValid()) {
+      setIsConfirmOpen(true)
+      return;
+    }
+
+    setIsConfirmOpen(true);
+  }
+
   const handleConfirmEvent = async () => {
     if (!isFormValid()) {
       setIsConfirmOpen(true)
@@ -268,6 +284,7 @@ const EventModal = ({ isOpen, onClose, clubId ,userId}) => {
       }
     }
 
+    setIsConfirmOpen(false);
     window.location.reload();
 
     /*
@@ -565,7 +582,8 @@ const EventModal = ({ isOpen, onClose, clubId ,userId}) => {
           isOpen={isConfirmOpen}
           onClose={() => setIsConfirmOpen(false)}
           type={opentype}
-          onConfirm={handleConfirmEvent}
+          onConfirm={handleConfirm}
+          onSecondConfirm={handleConfirmEvent}
         />
       </div>
     </div>
