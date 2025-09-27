@@ -466,9 +466,10 @@ const Navbar = ({sendUserinfo}) => {
                     onClick={async () => {
                       setShowProfileMenu(false);
                       await authService.logout();
+                      navigate('/login')
                     }}
                   >
-                    <span>ออกจากระบบ</span>
+                    ออกจากระบบ
                   </button>
                 </div>
               )}
@@ -534,6 +535,7 @@ const Navbar = ({sendUserinfo}) => {
               <button
                 onClick={async () => {
                   await authService.logout();
+                  navigate('/login')
                 }}
                 className="bg-red-500 text-white font-bold px-4 py-1 rounded-full hover:bg-red-400"
               >
@@ -551,6 +553,7 @@ const Navbar = ({sendUserinfo}) => {
               <button
                 onClick={async () => {
                   await authService.logout();
+                  navigate('/login')
                 }}
                 className="bg-red-500 text-white font-bold px-4 py-1 rounded-full hover:bg-red-400"
               >
