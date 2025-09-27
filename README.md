@@ -6,6 +6,4 @@ Club
 email : s6604062600036@email.kmutnb.ac.th
 password : password
 
-Admin
-email : adminClub@gmail.com
-password : password
+
