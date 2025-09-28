@@ -13,7 +13,7 @@ const RotatingImage = styled.img`
 `;
 const Loading = () => {
   return (
-    <div className="bg-[rgba(16,16,16,0.5)] w-screen h-screen flex justify-center items-center fixed z-1000 ">
+    <div data-testid="loading-indicator" className="bg-[rgba(16,16,16,0.5)] w-screen h-screen flex justify-center items-center fixed z-1000 ">
       <div className="z-1 h-fit w-fit translate-x-10 translate-y-10" 
         style={{ clipPath: 'inset(0px 27px 27px 0px)',borderRadius: '5px' }} >
        <RotatingImage src="/assets/earth.svg" />
