@@ -166,7 +166,7 @@ const Clublist = () => {
             </button>
 
             {hoveredClub === index && (
-              <div className={`absolute top-0 bg-gray-50 shadow-lg p-4 rounded-lg w-96 text-black z-10 
+              <div data-testid="HoverCard" className={`absolute top-0 bg-gray-50 shadow-lg p-4 rounded-lg w-96 text-black z-10 
                   ${index % 3 === 2 ? "right-0" : "left-0 translate-x-2/3"}`}
                   onMouseLeave={() => setHoveredClub(null)}
                 >
